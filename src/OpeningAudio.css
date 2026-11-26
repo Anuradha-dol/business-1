@@ -1,19 +1,21 @@
 .opening-audio {
   position: fixed;
   z-index: 100;
-  top: max(14px, env(safe-area-inset-top));
-  right: max(14px, env(safe-area-inset-right));
+  top: max(12px, env(safe-area-inset-top));
+  right: max(12px, env(safe-area-inset-right));
   display: inline-flex;
   align-items: center;
-  gap: 7px;
-  padding: 10px 14px;
-  border: 1px solid #c99a5a;
+  gap: 6px;
+  padding: 7px 12px;
+  border: 1px solid rgba(201, 154, 90, 0.75);
   border-radius: 999px;
-  background: rgba(255, 247, 232, .94);
+  background: rgba(255, 247, 232, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   color: #80521f;
-  box-shadow: 0 3px 14px #6d441c26;
-  font: 600 11px/1.2 Georgia, serif;
-  letter-spacing: .03em;
+  box-shadow: 0 3px 14px rgba(109, 68, 28, 0.14);
+  font: 600 10px/1.2 Georgia, serif;
+  letter-spacing: .04em;
 }
 
 .opening-audio:focus-visible {

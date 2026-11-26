@@ -11,6 +11,6 @@ export const wedding = {
     name: 'Jetwing Lighthouse',
     city: 'Galle, Sri Lanka',
     address: 'Dadella, Galle 80000',
-    mapUrl: 'https://maps.google.com/?q=Jetwing+Lighthouse+Galle+Sri+Lanka',
+    mapUrl: 'https://www.google.com/maps/search/?api=1&query=Jetwing+Lighthouse+Galle+Sri+Lanka',
   },
 } as const;

@@ -2,7 +2,7 @@ import {
   useEffect, useRef, useState, useCallback, type FormEvent, type ReactNode
 } from 'react';
 import {
-  CalendarDays, ChevronDown, ExternalLink, Heart, Mail, MapPin, Music2, Pause, Play, RotateCcw
+  CalendarDays, ChevronLeft, ChevronRight, ExternalLink, Heart, Mail, MapPin, Music2, Pause, Play, RotateCcw
 } from 'lucide-react';
 import { wedding } from '../../data/wedding';
 import './Invitation.css';
@@ -125,7 +125,7 @@ const VenueSunsetIcon = () => (
 /* ── Carousel Gold Badges ────────────────────────────────────────────────── */
 function IconStory() {
   return (
-    <svg width="44" height="44" viewBox="0 0 44 44" fill="none" aria-hidden="true">
+    <svg width="42" height="42" viewBox="0 0 44 44" fill="none" aria-hidden="true">
       <circle cx="22" cy="22" r="20" fill="url(#ig-s)" stroke="rgba(185,135,55,.45)" strokeWidth="1" />
       <defs>
         <radialGradient id="ig-s" cx="40%" cy="30%" r="70%">
@@ -142,7 +142,7 @@ function IconStory() {
 
 function IconDay() {
   return (
-    <svg width="44" height="44" viewBox="0 0 44 44" fill="none" aria-hidden="true">
+    <svg width="42" height="42" viewBox="0 0 44 44" fill="none" aria-hidden="true">
       <circle cx="22" cy="22" r="20" fill="url(#ig-d)" stroke="rgba(185,135,55,.45)" strokeWidth="1" />
       <defs>
         <radialGradient id="ig-d" cx="40%" cy="30%" r="70%">
@@ -161,7 +161,7 @@ function IconDay() {
 
 function IconVenue() {
   return (
-    <svg width="44" height="44" viewBox="0 0 44 44" fill="none" aria-hidden="true">
+    <svg width="42" height="42" viewBox="0 0 44 44" fill="none" aria-hidden="true">
       <circle cx="22" cy="22" r="20" fill="url(#ig-v)" stroke="rgba(185,135,55,.45)" strokeWidth="1" />
       <defs>
         <radialGradient id="ig-v" cx="40%" cy="30%" r="70%">
@@ -178,7 +178,7 @@ function IconVenue() {
 
 function IconRSVP() {
   return (
-    <svg width="44" height="44" viewBox="0 0 44 44" fill="none" aria-hidden="true">
+    <svg width="42" height="42" viewBox="0 0 44 44" fill="none" aria-hidden="true">
       <circle cx="22" cy="22" r="20" fill="url(#ig-r)" stroke="rgba(185,135,55,.45)" strokeWidth="1" />
       <defs>
         <radialGradient id="ig-r" cx="40%" cy="30%" r="70%">
@@ -239,13 +239,13 @@ function GoldenParticles({ active }: { active: boolean }) {
     resize();
     const ro = new ResizeObserver(resize); ro.observe(canvas);
     type P = { x: number; y: number; vx: number; vy: number; size: number; alpha: number; life: number; maxLife: number; hue: number };
-    const pts: P[] = []; const MAX = 50;
+    const pts: P[] = []; const MAX = 48;
     const spawn = () => {
       if (pts.length >= MAX) return;
       pts.push({
         x: Math.random() * canvas.width, y: canvas.height + 10,
         vx: (Math.random() - .5) * .6, vy: -(Math.random() * .85 + .35),
-        size: Math.random() * 2.6 + 1, alpha: 0, life: 0,
+        size: Math.random() * 2.5 + 1, alpha: 0, life: 0,
         maxLife: 200 + Math.random() * 150, hue: Math.random() * 20 - 10,
       });
     };
@@ -283,7 +283,7 @@ function PetalRain({ active }: { active: boolean }) {
     resize();
     const ro = new ResizeObserver(resize); ro.observe(canvas);
     type P = { x: number; y: number; vx: number; vy: number; rot: number; vrot: number; w: number; h: number; alpha: number; life: number; maxLife: number };
-    const petals: P[] = []; const MAX = 22;
+    const petals: P[] = []; const MAX = 20;
     const spawn = () => {
       if (petals.length >= MAX) return;
       const w = 8 + Math.random() * 9;
@@ -299,14 +299,14 @@ function PetalRain({ active }: { active: boolean }) {
       rafRef.current = requestAnimationFrame(draw);
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       frame++;
-      if (frame % 20 === 0) spawn();
+      if (frame % 22 === 0) spawn();
       for (let i = petals.length - 1; i >= 0; i--) {
         const p = petals[i];
         p.x += p.vx + Math.sin(p.life * .025) * .5; p.y += p.vy; p.rot += p.vrot; p.life++;
         const t = p.life / p.maxLife;
         p.alpha = t < .1 ? t / .1 : t > .85 ? (1 - t) / .15 : 1;
         if (p.life > p.maxLife || p.y > canvas.height + 20) { petals.splice(i, 1); continue; }
-        ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot); ctx.globalAlpha = p.alpha * .55;
+        ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot); ctx.globalAlpha = p.alpha * .52;
         const g = ctx.createRadialGradient(0, 0, 0, 0, 0, p.w);
         g.addColorStop(0, '#fdf0e8'); g.addColorStop(.5, '#f7cfc1'); g.addColorStop(1, 'rgba(220,120,100,0)');
         ctx.fillStyle = g; ctx.beginPath(); ctx.ellipse(0, 0, p.w, p.h, 0, 0, Math.PI * 2); ctx.fill(); ctx.restore();
@@ -416,20 +416,10 @@ function Countdown({ targetISO }: { targetISO: string }) {
   );
 }
 
-/* ── Timeline Item ───────────────────────────────────────────────────────── */
+/* ── Staggered Timeline Item ─────────────────────────────────────────────── */
 function TimelineItem({ icon, title, detail, delay }: { icon: ReactNode; title: string; detail: string; delay: number }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [vis, setVis] = useState(false);
-  useEffect(() => {
-    const el = ref.current; if (!el) return;
-    const obs = new IntersectionObserver(([e]) => {
-      if (e.isIntersecting) { setTimeout(() => setVis(true), delay); obs.disconnect(); }
-    }, { threshold: 0.15 });
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, [delay]);
   return (
-    <div ref={ref} className={`timeline-item${vis ? ' timeline-item--visible' : ''}`}>
+    <div className="timeline-item timeline-item--visible" style={{ animationDelay: `${delay}ms` }}>
       <div className="timeline-icon">{icon}</div>
       <div className="timeline-content">
         <strong>{title}</strong>
@@ -514,7 +504,7 @@ function SceneCarousel({ onNavigate }: { onNavigate: (p: SectionId) => void }) {
             <h3 className="scene-card__label">{card.label}</h3>
             <p className="scene-card__desc">{card.desc}</p>
             <span className="scene-card__cta">
-              View
+              Open
               <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
                 <path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
@@ -536,6 +526,7 @@ function SceneCarousel({ onNavigate }: { onNavigate: (p: SectionId) => void }) {
 /* ── Constants ───────────────────────────────────────────────────────────── */
 const draftKey = 'wedding-rsvp-draft';
 const emptyDraft: RsvpDraft = { name: '', attendance: '', guests: '1', message: '' };
+const order: SectionId[] = ['home', 'story', 'day', 'venue', 'rsvp'];
 const navItems: { id: SectionId; label: string; icon: typeof Heart }[] = [
   { id: 'home',  label: 'Home',      icon: Heart },
   { id: 'story', label: 'Our Story', icon: Heart },
@@ -545,16 +536,11 @@ const navItems: { id: SectionId; label: string; icon: typeof Heart }[] = [
 ];
 
 /* ══════════════════════════════════════════════════════════════════════════
-   MAIN SCROLLABLE INVITATION EXPERIENCE
+   MAIN 100SVH LUXURY SCENE SWITCHER (App-like experience, zero scroll jump)
    ══════════════════════════════════════════════════════════════════════════ */
 export default function Invitation({ onReplay, music }: Props) {
-  const [activeSection, setActiveSection] = useState<SectionId>('home');
-  const [scrolled, setScrolled] = useState(false);
+  const [active, setActive] = useState<SectionId>('home');
   const { playing, needsGesture, toggle } = music;
-
-  const sectionRefs = useRef<Record<SectionId, HTMLElement | null>>({
-    home: null, story: null, day: null, venue: null, rsvp: null,
-  });
 
   const [draft, setDraft] = useState<RsvpDraft>(() => {
     try { return { ...emptyDraft, ...JSON.parse(localStorage.getItem(draftKey) || '{}') }; } catch { return emptyDraft; }
@@ -577,39 +563,9 @@ export default function Invitation({ onReplay, music }: Props) {
     } catch { setSaveStatus('error'); }
   };
 
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 24);
-    window.addEventListener('scroll', onScroll, { passive: true });
-
-    const observer = new IntersectionObserver(
-      entries => {
-        const visible = entries
-          .filter(e => e.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-        if (visible.length > 0) {
-          const id = visible[0].target.getAttribute('data-section') as SectionId | null;
-          if (id) setActiveSection(id);
-        }
-      },
-      { rootMargin: '-30% 0px -40% 0px', threshold: [0.1, 0.35, 0.6] }
-    );
-
-    (Object.keys(sectionRefs.current) as SectionId[]).forEach(id => {
-      const el = sectionRefs.current[id];
-      if (el) observer.observe(el);
-    });
-
-    return () => {
-      window.removeEventListener('scroll', onScroll);
-      observer.disconnect();
-    };
-  }, []);
-
-  const scrollToSection = useCallback((id: SectionId) => {
-    setActiveSection(id);
-    const el = sectionRefs.current[id];
-    if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, []);
+  const idx = order.indexOf(active);
+  const goPrev = () => setActive(order[(idx - 1 + order.length) % order.length]);
+  const goNext = () => setActive(order[(idx + 1) % order.length]);
 
   return (
     <main className="wedding-home">
@@ -627,9 +583,9 @@ export default function Invitation({ onReplay, music }: Props) {
       <Sparkle x="7%"  y="68%" size={8}  delay={1.1} />
       <Sparkle x="91%" y="72%" size={10} delay={.3} />
 
-      {/* Sticky Header */}
-      <header className={`wedding-home__header${scrolled ? ' wedding-home__header--scrolled' : ''}`}>
-        <button className="wedding-home__monogram" onClick={() => scrollToSection('home')} aria-label="Home">
+      {/* Header */}
+      <header className="wedding-home__header wedding-home__header--scrolled">
+        <button className="wedding-home__monogram" onClick={() => setActive('home')} aria-label="Home">
           {wedding.monogram}<span>⌁ ❧ ⌁</span>
         </button>
 
@@ -637,9 +593,9 @@ export default function Invitation({ onReplay, music }: Props) {
           {navItems.map(item => (
             <button
               key={item.id}
-              className={activeSection === item.id ? 'active' : ''}
-              onClick={() => scrollToSection(item.id)}
-              aria-current={activeSection === item.id ? 'page' : undefined}
+              className={active === item.id ? 'active' : ''}
+              onClick={() => setActive(item.id)}
+              aria-current={active === item.id ? 'page' : undefined}
             >
               {item.label}
             </button>
@@ -658,302 +614,282 @@ export default function Invitation({ onReplay, music }: Props) {
         {needsGesture && <span className="wedding-home__music-error" role="status">Tap Music to play the song.</span>}
       </header>
 
-      {/* Scrollable Sections */}
-      <div className="wedding-scenes">
+      {/* Active Scene Stage — fits 100% inside viewport with smooth transition */}
+      <div className="wedding-stage">
 
-        {/* ── 1. HOME HERO ─────────────────────────────────────────────────── */}
-        <section
-          id="scene-home"
-          data-section="home"
-          ref={el => { sectionRefs.current.home = el; }}
-          className="scene-section scene-section--hero"
-          aria-labelledby="wedding-home-title"
-        >
-          <GoldenParticles active={true} />
-          <div className="wedding-hero">
-            <div className="wedding-hero__shell" aria-hidden="true">
-              <span /><LinkedHearts size={40} /><span />
-            </div>
-            <p className="wedding-hero__eyebrow"><span />The wedding of<span /></p>
-            <h1 id="wedding-home-title">
-              {wedding.bride} <span>&amp;</span> {wedding.groom}
-            </h1>
-            <FloralDivider />
-            <div className="wedding-hero__date">
-              <span aria-hidden="true">❧</span>
-              <time dateTime={wedding.dateISO}>
-                <strong>{wedding.day}</strong>{wedding.month} {wedding.year}
-              </time>
-              <span aria-hidden="true">☙</span>
-            </div>
-
-            <SceneCarousel onNavigate={scrollToSection} />
-
-            <button
-              type="button"
-              className="scroll-cue"
-              onClick={() => scrollToSection('story')}
-              aria-label="Scroll to Our Story"
-            >
-              <span>Scroll to continue</span>
-              <ChevronDown size={16} />
-            </button>
-          </div>
-        </section>
-
-        {/* ── 2. OUR STORY (Uniform Card) ─────────────────────────────────── */}
-        <section
-          id="scene-story"
-          data-section="story"
-          ref={el => { sectionRefs.current.story = el; }}
-          className="scene-section"
-          aria-labelledby="story-title"
-        >
-          <div className="luxury-card luxury-card--story">
-            <FloralCornerArt />
-            <PetalRain active={true} />
-
-            <div className="luxury-card__inner">
-              <LinkedHearts size={28} className="luxury-card__hearts" />
-              <p className="luxury-card__eyebrow">Himeshi &amp; Madhawa</p>
-              <h2 id="story-title" className="luxury-card__title">Our Story</h2>
-              <p className="scene-intro">Together with our families, we invite you to celebrate our wedding.</p>
+        {active === 'home' && (
+          <section key="home" className="stage-scene stage-scene--home" aria-labelledby="wedding-home-title">
+            <GoldenParticles active={true} />
+            <div className="wedding-hero">
+              <div className="wedding-hero__shell" aria-hidden="true">
+                <span /><LinkedHearts size={38} /><span />
+              </div>
+              <p className="wedding-hero__eyebrow"><span />The wedding of<span /></p>
+              <h1 id="wedding-home-title">
+                {wedding.bride} <span>&amp;</span> {wedding.groom}
+              </h1>
               <FloralDivider />
-
-              <div className="story-timeline">
-                <TimelineItem icon={<StoryWaveIcon />} title="Where We Met" detail="Two paths crossed, and everything felt right." delay={0} />
-                <TimelineItem icon={<StorySparkIcon />} title="Growing Closer" detail="Years of shared laughter, family, and friendship." delay={110} />
-                <TimelineItem icon={<StoryRingsIcon />} title="The Engagement" detail="A quiet promise to walk through life together." delay={220} />
-                <TimelineItem icon={<StoryChapterIcon />} title="15 January 2027" detail="Beginning our next chapter in Galle with everyone we love." delay={330} />
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ── 3. THE DAY (Uniform Card) ───────────────────────────────────── */}
-        <section
-          id="scene-day"
-          data-section="day"
-          ref={el => { sectionRefs.current.day = el; }}
-          className="scene-section"
-          aria-labelledby="day-title"
-        >
-          <div className="luxury-card luxury-card--day">
-            <FloralCornerArt />
-
-            <div className="luxury-card__inner">
-              <LinkedHearts size={28} className="luxury-card__hearts" />
-              <p className="luxury-card__eyebrow">Save the Date</p>
-              <h2 id="day-title" className="luxury-card__title">The Day</h2>
-              <FloralDivider />
-
-              <div className="day-countdown">
-                <Countdown targetISO={wedding.dateISO} />
+              <div className="wedding-hero__date">
+                <span aria-hidden="true">❧</span>
+                <time dateTime={wedding.dateISO}>
+                  <strong>{wedding.day}</strong>{wedding.month} {wedding.year}
+                </time>
+                <span aria-hidden="true">☙</span>
               </div>
 
-              <WaveDivider />
+              <SceneCarousel onNavigate={setActive} />
 
-              <time className="day-date-display" dateTime={wedding.dateISO}>
-                <span className="day-date-display__day">{wedding.day}</span>
-                <span className="day-date-display__month-year">{wedding.month} {wedding.year}</span>
-              </time>
-
-              <div className="day-timeline">
-                <TimelineItem icon={<DaySunriseIcon />} title="Wedding Ceremony" detail="Time to be confirmed" delay={0} />
-                <TimelineItem icon={<DayToastIcon />} title="Cocktail &amp; Reception" detail="Time to be confirmed" delay={120} />
-                <TimelineItem icon={<DayMoonIcon />} title="Dinner &amp; Celebration" detail="Time to be confirmed" delay={240} />
-              </div>
-
-              <p className="luxury-card__note">Exact timings and dress code will be shared closer to the wedding.</p>
-            </div>
-          </div>
-        </section>
-
-        {/* ── 4. VENUE — JETWING LIGHTHOUSE, GALLE (Uniform Card) ─────────── */}
-        <section
-          id="scene-venue"
-          data-section="venue"
-          ref={el => { sectionRefs.current.venue = el; }}
-          className="scene-section"
-          aria-labelledby="venue-title"
-        >
-          <div className="luxury-card luxury-card--venue">
-            <FloralCornerArt />
-            <SeaShimmer />
-
-            <div className="luxury-card__inner">
-              <LinkedHearts size={28} className="luxury-card__hearts" />
-              <p className="luxury-card__eyebrow">Galle, Sri Lanka</p>
-              <h2 id="venue-title" className="luxury-card__title">Venue</h2>
-              <FloralDivider />
-
-              <div className="venue-icon-wrap" aria-hidden="true">
-                <MapPin size={30} strokeWidth={1.3} />
-                <div className="venue-ping" />
-                <div className="venue-ping venue-ping--2" />
-              </div>
-
-              <h3 className="venue-subtitle">{wedding.venue.name}</h3>
-              <p className="venue-address">{wedding.venue.address}</p>
-              <p className="venue-desc">
-                Located along the southern coast in Galle, overlooking the Indian Ocean.
-              </p>
-
-              <div className="venue-highlights">
-                <div className="venue-highlight">
-                  <VenueBeachIcon />
-                  <span>Indian Ocean</span>
-                </div>
-                <div className="venue-highlight">
-                  <VenuePalmIcon />
-                  <span>Galle Coast</span>
-                </div>
-                <div className="venue-highlight">
-                  <VenueSunsetIcon />
-                  <span>15 Jan 2027</span>
-                </div>
-              </div>
-
-              <a
-                className="venue-map-btn"
-                href={wedding.venue.mapUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <MapPin size={14} />
-                <span>Open in Google Maps</span>
-                <ExternalLink size={12} />
-              </a>
-            </div>
-          </div>
-        </section>
-
-        {/* ── 5. RSVP (Uniform Card) ──────────────────────────────────────── */}
-        <section
-          id="scene-rsvp"
-          data-section="rsvp"
-          ref={el => { sectionRefs.current.rsvp = el; }}
-          className="scene-section scene-section--rsvp"
-          aria-labelledby="rsvp-title"
-        >
-          <div className="luxury-card luxury-card--rsvp">
-            <FloralCornerArt />
-            <GoldenParticles active={saveStatus === 'saved'} />
-
-            <div className="luxury-card__inner">
-              <LinkedHearts size={28} className="luxury-card__hearts" />
-              <p className="luxury-card__eyebrow">Kindly Reply</p>
-              <h2 id="rsvp-title" className="luxury-card__title">RSVP</h2>
-              <FloralDivider />
-
-              {confirmed && (
-                <div className="rsvp-confirmation" role="status" aria-live="polite">
-                  <div className="wax-seal" aria-hidden="true">
-                    <span>{wedding.monogram}</span>
-                  </div>
-                  <div className="rsvp-confirmation__body">
-                    <strong>Response Saved</strong>
-                    <span>
-                      {draft.attendance === 'accept'
-                        ? 'Thank you — we look forward to celebrating with you in Galle.'
-                        : 'Thank you for letting us know.'}
-                    </span>
-                  </div>
-                </div>
-              )}
-
-              <form className="luxury-rsvp" onSubmit={saveRsvp}>
-                <p className="luxury-rsvp__note">Please let us know if you will be able to join us. Saved locally on your device.</p>
-
-                <div className="luxury-rsvp__field">
-                  <label className="luxury-rsvp__label" htmlFor="rsvp-name">Full Name</label>
-                  <input
-                    id="rsvp-name"
-                    className="luxury-rsvp__input"
-                    required
-                    value={draft.name}
-                    onChange={e => changeDraft('name', e.target.value)}
-                    autoComplete="name"
-                    placeholder="Your name"
-                  />
-                </div>
-
-                <div className="luxury-rsvp__field">
-                  <span className="luxury-rsvp__label">Will you be attending?</span>
-                  <div className="rsvp-toggle" role="group" aria-label="Attendance">
-                    <button
-                      type="button"
-                      className={`rsvp-toggle__btn${draft.attendance === 'accept' ? ' rsvp-toggle__btn--on' : ''}`}
-                      onClick={() => changeDraft('attendance', 'accept')}
-                    >
-                      <Heart size={14} strokeWidth={1.8} />
-                      <span>Joyfully Accepts</span>
-                    </button>
-                    <button
-                      type="button"
-                      className={`rsvp-toggle__btn${draft.attendance === 'decline' ? ' rsvp-toggle__btn--off' : ''}`}
-                      onClick={() => changeDraft('attendance', 'decline')}
-                    >
-                      <span>Unable to Attend</span>
-                    </button>
-                  </div>
-                </div>
-
-                <div className="luxury-rsvp__field luxury-rsvp__field--inline">
-                  <span className="luxury-rsvp__label">Guests</span>
-                  <div className="guest-stepper">
-                    <button
-                      type="button"
-                      className="guest-stepper__btn"
-                      aria-label="Decrease guests"
-                      onClick={() => changeDraft('guests', String(Math.max(1, Number(draft.guests) - 1)))}
-                    >−</button>
-                    <span className="guest-stepper__val">{draft.guests}</span>
-                    <button
-                      type="button"
-                      className="guest-stepper__btn"
-                      aria-label="Increase guests"
-                      onClick={() => changeDraft('guests', String(Math.min(20, Number(draft.guests) + 1)))}
-                    >+</button>
-                  </div>
-                </div>
-
-                <div className="luxury-rsvp__field">
-                  <label className="luxury-rsvp__label" htmlFor="rsvp-msg">Message <span>(optional)</span></label>
-                  <textarea
-                    id="rsvp-msg"
-                    className="luxury-rsvp__input"
-                    rows={2}
-                    value={draft.message}
-                    onChange={e => changeDraft('message', e.target.value)}
-                    placeholder="Write a note or dietary preference…"
-                  />
-                </div>
-
-                <button
-                  type="submit"
-                  className={`luxury-rsvp__submit${saveStatus === 'saved' ? ' luxury-rsvp__submit--saved' : ''}`}
-                >
-                  {saveStatus === 'saved' ? '✦ Saved on This Device' : 'Save Response'}
+              {onReplay && (
+                <button className="wedding-home__replay" onClick={onReplay}>
+                  <RotateCcw size={12} /> Replay opening invitation
                 </button>
-                {saveStatus === 'error' && (
-                  <p className="luxury-rsvp__error" role="alert">Unable to save. Please check browser storage settings.</p>
-                )}
-              </form>
+              )}
             </div>
-          </div>
+          </section>
+        )}
 
-          <footer className="wedding-footer">
-            <div className="wedding-hero__bottom" aria-hidden="true">❧ ♡ ❧</div>
-            {onReplay && (
-              <button className="wedding-home__replay" onClick={onReplay}>
-                <RotateCcw size={13} /> Replay opening invitation
-              </button>
-            )}
-          </footer>
-        </section>
+        {active === 'story' && (
+          <section key="story" className="stage-scene" aria-labelledby="story-title">
+            <div className="luxury-card luxury-card--story">
+              <FloralCornerArt />
+              <PetalRain active={true} />
+              <div className="luxury-card__inner">
+                <LinkedHearts size={26} className="luxury-card__hearts" />
+                <p className="luxury-card__eyebrow">Himeshi &amp; Madhawa</p>
+                <h2 id="story-title" className="luxury-card__title">Our Story</h2>
+                <p className="scene-intro">Together with our families, we invite you to celebrate our wedding.</p>
+                <FloralDivider />
+                <div className="story-timeline">
+                  <TimelineItem icon={<StoryWaveIcon />} title="Where We Met" detail="Two paths crossed, and everything felt right." delay={60} />
+                  <TimelineItem icon={<StorySparkIcon />} title="Growing Closer" detail="Years of shared laughter, family, and friendship." delay={140} />
+                  <TimelineItem icon={<StoryRingsIcon />} title="The Engagement" detail="A quiet promise to walk through life together." delay={220} />
+                  <TimelineItem icon={<StoryChapterIcon />} title="15 January 2027" detail="Beginning our next chapter in Galle with everyone we love." delay={300} />
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {active === 'day' && (
+          <section key="day" className="stage-scene" aria-labelledby="day-title">
+            <div className="luxury-card luxury-card--day">
+              <FloralCornerArt />
+              <div className="luxury-card__inner">
+                <LinkedHearts size={26} className="luxury-card__hearts" />
+                <p className="luxury-card__eyebrow">Save the Date</p>
+                <h2 id="day-title" className="luxury-card__title">The Day</h2>
+                <FloralDivider />
+                <div className="day-countdown">
+                  <Countdown targetISO={wedding.dateISO} />
+                </div>
+                <WaveDivider />
+                <time className="day-date-display" dateTime={wedding.dateISO}>
+                  <span className="day-date-display__day">{wedding.day}</span>
+                  <span className="day-date-display__month-year">{wedding.month} {wedding.year}</span>
+                </time>
+                <div className="day-timeline">
+                  <TimelineItem icon={<DaySunriseIcon />} title="Wedding Ceremony" detail="Time to be confirmed" delay={60} />
+                  <TimelineItem icon={<DayToastIcon />} title="Cocktail &amp; Reception" detail="Time to be confirmed" delay={150} />
+                  <TimelineItem icon={<DayMoonIcon />} title="Dinner &amp; Celebration" detail="Time to be confirmed" delay={240} />
+                </div>
+                <p className="luxury-card__note">Exact timings and dress code will be shared closer to the wedding.</p>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {active === 'venue' && (
+          <section key="venue" className="stage-scene" aria-labelledby="venue-title">
+            <div className="luxury-card luxury-card--venue">
+              <FloralCornerArt />
+              <SeaShimmer />
+              <div className="luxury-card__inner">
+                <LinkedHearts size={26} className="luxury-card__hearts" />
+                <p className="luxury-card__eyebrow">Galle, Sri Lanka</p>
+                <h2 id="venue-title" className="luxury-card__title">Venue</h2>
+                <FloralDivider />
+
+                {/* Clickable Location Pin — opens Google Maps directly */}
+                <a
+                  className="venue-icon-wrap"
+                  href={wedding.venue.mapUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Track Jetwing Lighthouse location on Google Maps"
+                  title="Tap to open in Google Maps"
+                >
+                  <MapPin size={30} strokeWidth={1.4} />
+                  <span className="venue-ping" aria-hidden="true" />
+                  <span className="venue-ping venue-ping--2" aria-hidden="true" />
+                </a>
+                <span className="venue-tap-hint">Tap pin to track on Google Maps</span>
+
+                <h3 className="venue-subtitle">{wedding.venue.name}</h3>
+                <p className="venue-address">{wedding.venue.address}</p>
+                <p className="venue-desc">
+                  Located along the southern coast in Galle, overlooking the Indian Ocean.
+                </p>
+
+                <div className="venue-highlights">
+                  <div className="venue-highlight">
+                    <VenueBeachIcon />
+                    <span>Indian Ocean</span>
+                  </div>
+                  <div className="venue-highlight">
+                    <VenuePalmIcon />
+                    <span>Galle Coast</span>
+                  </div>
+                  <div className="venue-highlight">
+                    <VenueSunsetIcon />
+                    <span>15 Jan 2027</span>
+                  </div>
+                </div>
+
+                <a
+                  className="venue-map-btn"
+                  href={wedding.venue.mapUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <MapPin size={14} />
+                  <span>Track on Google Maps</span>
+                  <ExternalLink size={12} />
+                </a>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {active === 'rsvp' && (
+          <section key="rsvp" className="stage-scene" aria-labelledby="rsvp-title">
+            <div className="luxury-card luxury-card--rsvp">
+              <FloralCornerArt />
+              <GoldenParticles active={saveStatus === 'saved'} />
+              <div className="luxury-card__inner">
+                <LinkedHearts size={26} className="luxury-card__hearts" />
+                <p className="luxury-card__eyebrow">Kindly Reply</p>
+                <h2 id="rsvp-title" className="luxury-card__title">RSVP</h2>
+                <FloralDivider />
+
+                {confirmed && (
+                  <div className="rsvp-confirmation" role="status" aria-live="polite">
+                    <div className="wax-seal" aria-hidden="true">
+                      <span>{wedding.monogram}</span>
+                    </div>
+                    <div className="rsvp-confirmation__body">
+                      <strong>Response Saved</strong>
+                      <span>
+                        {draft.attendance === 'accept'
+                          ? 'Thank you — we look forward to celebrating with you in Galle.'
+                          : 'Thank you for letting us know.'}
+                      </span>
+                    </div>
+                  </div>
+                )}
+
+                <form className="luxury-rsvp" onSubmit={saveRsvp}>
+                  <p className="luxury-rsvp__note">Please let us know if you will be able to join us. Saved locally on your device.</p>
+
+                  <div className="luxury-rsvp__field">
+                    <label className="luxury-rsvp__label" htmlFor="rsvp-name">Full Name</label>
+                    <input
+                      id="rsvp-name"
+                      className="luxury-rsvp__input"
+                      required
+                      value={draft.name}
+                      onChange={e => changeDraft('name', e.target.value)}
+                      autoComplete="name"
+                      placeholder="Your name"
+                    />
+                  </div>
+
+                  <div className="luxury-rsvp__field">
+                    <span className="luxury-rsvp__label">Will you be attending?</span>
+                    <div className="rsvp-toggle" role="group" aria-label="Attendance">
+                      <button
+                        type="button"
+                        className={`rsvp-toggle__btn${draft.attendance === 'accept' ? ' rsvp-toggle__btn--on' : ''}`}
+                        onClick={() => changeDraft('attendance', 'accept')}
+                      >
+                        <Heart size={14} strokeWidth={1.8} />
+                        <span>Joyfully Accepts</span>
+                      </button>
+                      <button
+                        type="button"
+                        className={`rsvp-toggle__btn${draft.attendance === 'decline' ? ' rsvp-toggle__btn--off' : ''}`}
+                        onClick={() => changeDraft('attendance', 'decline')}
+                      >
+                        <span>Unable to Attend</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="luxury-rsvp__field luxury-rsvp__field--inline">
+                    <span className="luxury-rsvp__label">Guests</span>
+                    <div className="guest-stepper">
+                      <button
+                        type="button"
+                        className="guest-stepper__btn"
+                        aria-label="Decrease guests"
+                        onClick={() => changeDraft('guests', String(Math.max(1, Number(draft.guests) - 1)))}
+                      >−</button>
+                      <span className="guest-stepper__val">{draft.guests}</span>
+                      <button
+                        type="button"
+                        className="guest-stepper__btn"
+                        aria-label="Increase guests"
+                        onClick={() => changeDraft('guests', String(Math.min(20, Number(draft.guests) + 1)))}
+                      >+</button>
+                    </div>
+                  </div>
+
+                  <div className="luxury-rsvp__field">
+                    <label className="luxury-rsvp__label" htmlFor="rsvp-msg">Message <span>(optional)</span></label>
+                    <textarea
+                      id="rsvp-msg"
+                      className="luxury-rsvp__input"
+                      rows={2}
+                      value={draft.message}
+                      onChange={e => changeDraft('message', e.target.value)}
+                      placeholder="Write a note or dietary preference…"
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    className={`luxury-rsvp__submit${saveStatus === 'saved' ? ' luxury-rsvp__submit--saved' : ''}`}
+                  >
+                    {saveStatus === 'saved' ? '✦ Saved on This Device' : 'Save Response'}
+                  </button>
+                  {saveStatus === 'error' && (
+                    <p className="luxury-rsvp__error" role="alert">Unable to save. Please check browser storage settings.</p>
+                  )}
+                </form>
+              </div>
+            </div>
+          </section>
+        )}
 
       </div>
+
+      {/* Subtle App-like Bottom Stepper Bar (for non-home scenes) */}
+      {active !== 'home' && (
+        <div className="scene-pager">
+          <button type="button" className="scene-pager__btn" onClick={goPrev} aria-label="Previous section">
+            <ChevronLeft size={16} />
+            <span>Prev</span>
+          </button>
+          <span className="scene-pager__dots" aria-hidden="true">
+            {order.map(id => (
+              <span key={id} className={active === id ? 'active' : ''} />
+            ))}
+          </span>
+          <button type="button" className="scene-pager__btn" onClick={goNext} aria-label="Next section">
+            <span>Next</span>
+            <ChevronRight size={16} />
+          </button>
+        </div>
+      )}
     </main>
   );
 }
