@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1536 1024" fill="none">
+  <defs>
+    <linearGradient id="gold" x1="0" y1="0" x2="160" y2="180" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#f9e2a8"/><stop offset=".42" stop-color="#be8337"/><stop offset=".76" stop-color="#ebc474"/><stop offset="1" stop-color="#a56b28"/>
+    </linearGradient>
+    <!-- An airy, hand-drawn scroll complements the painted leaves and keeps
+         the middle of the invitation clear for the editable lettering. -->
+    <g id="scroll" stroke="url(#gold)" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M10 207 C15 171 21 134 42 99 C62 67 94 45 128 46 C149 47 161 60 155 74 C151 84 138 87 131 80 C124 73 129 64 136 65" stroke-width="4"/>
+      <path d="M20 174 C42 146 66 136 87 136 C105 136 116 145 115 158 C114 169 101 176 92 169 C86 164 88 155 95 154" stroke-width="3"/>
+      <path d="M36 118 C54 101 68 91 84 87 C98 83 110 85 119 92 M47 107 C44 88 51 72 66 62 M28 152 C31 135 25 124 16 117" stroke-width="3"/>
+      <path d="M77 87 C80 75 89 67 101 65 C99 75 91 83 77 87 Z M44 111 C36 103 34 94 38 84 C47 90 49 100 44 111 Z M55 133 C62 122 72 119 83 121 C76 130 66 133 55 133 Z M24 150 C15 148 9 143 8 134 C17 135 23 141 24 150 Z" fill="#ebc477" fill-opacity=".5" stroke-width="2"/>
+      <path d="M66 63 C66 50 74 40 86 37 C86 48 78 59 66 63 Z M103 66 C106 54 116 47 127 47" stroke-width="2.5"/>
+      <circle cx="15" cy="114" r="4" fill="#cb9348" stroke="none"/><circle cx="122" cy="93" r="3.5" fill="#cb9348" stroke="none"/><circle cx="87" cy="36" r="3.5" fill="#cb9348" stroke="none"/>
+    </g>
+  </defs>
+  <g opacity=".8">
+    <use href="#scroll" transform="translate(81 202) rotate(-10 80 110)"/>
+    <use href="#scroll" transform="translate(1455 202) scale(-1 1) rotate(-10 80 110)"/>
+    <use href="#scroll" transform="translate(81 822) scale(1 -1) rotate(-10 80 110)"/>
+    <use href="#scroll" transform="translate(1455 822) scale(-1 -1) rotate(-10 80 110)"/>
+  </g>
+</svg>

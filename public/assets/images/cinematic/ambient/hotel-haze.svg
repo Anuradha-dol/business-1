@@ -1,0 +1,4 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1648 928" preserveAspectRatio="none" aria-hidden="true">
+  <defs><radialGradient id="haze"><stop stop-color="#f8dfbd" stop-opacity=".65"/><stop offset=".56" stop-color="#fae5cb" stop-opacity=".4"/><stop offset="1" stop-color="#fbe5ce" stop-opacity="0"/></radialGradient></defs>
+  <rect x="1020" y="230" width="800" height="490" fill="url(#haze)"/>
+</svg>

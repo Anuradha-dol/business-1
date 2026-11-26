@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1648 928" preserveAspectRatio="none">
+  <defs>
+    <linearGradient id="breeze" x1="0" y1="0" x2="1" y2="0">
+      <stop stop-color="#fffdf5" stop-opacity="0"/>
+      <stop offset=".22" stop-color="#fffdf5" stop-opacity=".35"/>
+      <stop offset=".53" stop-color="#fffdf5" stop-opacity=".7"/>
+      <stop offset=".8" stop-color="#fffdf5" stop-opacity=".24"/>
+      <stop offset="1" stop-color="#fffdf5" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="soft" x="-20%" y="-80%" width="140%" height="260%"><feGaussianBlur stdDeviation="4"/></filter>
+  </defs>
+  <g fill="none" stroke="url(#breeze)" stroke-linecap="round">
+    <g filter="url(#soft)" opacity=".75">
+      <path stroke-width="17" d="M1620 300 C1460 272 1360 315 1230 304 S990 266 845 302"/>
+      <path stroke-width="12" d="M740 627 C570 598 482 639 340 620 S130 591 -30 620"/>
+    </g>
+    <g opacity=".8">
+      <path stroke-width="3" d="M1620 300 C1460 272 1360 315 1230 304 S990 266 845 302"/>
+      <path stroke-width="2" d="M1580 314 C1440 292 1350 331 1210 318 S1040 286 920 310"/>
+      <path stroke-width="3" d="M740 627 C570 598 482 639 340 620 S130 591 -30 620"/>
+      <path stroke-width="2" d="M690 640 C550 618 470 655 330 635 S120 609 10 630"/>
+    </g>
+  </g>
+</svg>

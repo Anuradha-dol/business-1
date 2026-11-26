@@ -1,0 +1,249 @@
+.invitation-opening{width:100%;min-height:100svh;display:grid;place-items:center;overflow:hidden;background:#f1d5ad;color:#80531d;}
+.portrait-stage{position:relative;isolation:isolate;width:100%;height:100svh;overflow:hidden;background:#f1d5ad;container-type:inline-size;}
+.scene{position:absolute;z-index:1;left:50%;top:50%;width:min(100vw,177.586svh);aspect-ratio:1648/928;transform:translate(-50%,-50%);isolation:isolate;container-type:inline-size;}
+.art,.closed-view,.animated-open,.final-open,.card-clip,.card-motion{position:absolute;inset:0;width:100%;height:100%;}
+.art{object-fit:fill;pointer-events:none;user-select:none;}
+.closed-view,.animated-open,.final-open{z-index:1;pointer-events:none;}
+.animated-open,.final-open,.fold-flap,.sky-cover{visibility:hidden;}
+.card-clip{z-index:2;clip-path:polygon(23% 0,70% 0,77% 77%,33% 86%);}
+.pocket{z-index:3;}
+.sky-cover{z-index:4;clip-path:inset(0 0 0 0);}
+.fold-flap{z-index:5;transform-origin:50% 39.5%;}
+.card-lettering{position:absolute;left:30%;top:29.2%;width:36.4%;text-align:center;transform:rotate(-2.7deg);color:#80531d;z-index:2;pointer-events:none;}
+.card-lettering p{margin:0;letter-spacing:.16em;text-transform:uppercase;font:500 .88cqw/1.35 Georgia,serif;}
+.card-lettering h2{font:400 3.02cqw/1.08 'Great Vibes','Brush Script MT','Z003',Georgia,serif;white-space:nowrap;margin:.45cqw 0 .55cqw;}
+.card-lettering time{font:500 1.03cqw/1.2 Georgia,serif;text-transform:uppercase;letter-spacing:.18em;}
+.monogram{position:absolute;z-index:4;transform:translate(-50%,-50%);font:400 1.6cqw/1 'Great Vibes','Brush Script MT','Z003',Georgia,serif;color:#ffe9b3;text-shadow:0 1px 1px #6b4319;white-space:nowrap;}
+.closed-monogram{left:53.2%;top:62%;}.open-monogram{left:52%;top:64.6%;}
+.heading{position:absolute;inset:0;z-index:8;text-align:center;pointer-events:none;color:#80531d;}
+.heading p,.heading h1,.heading time{position:absolute;left:50%;transform:translateX(-50%);margin:0;white-space:nowrap;}
+.heading p{top:10.1%;font:500 1.3cqw/1.3 Georgia,serif;letter-spacing:.22em;text-transform:uppercase;}
+.heading h1{top:13%;font:400 6.4cqw/1.17 'Great Vibes','Brush Script MT','Z003',Georgia,serif;}
+.heading time{top:31.3%;font:500 1.5cqw/1.2 Georgia,serif;text-transform:uppercase;letter-spacing:.22em;}
+.envelope-hit{position:absolute;z-index:9;left:24%;top:39%;width:53%;height:48%;border:0;background:transparent;cursor:pointer;}
+.action-area{position:absolute;z-index:10;bottom:max(3%,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);display:flex;justify-content:center;}
+.open-action{display:flex;align-items:center;gap:14px;padding:13px 24px;border-radius:99px;border:1px solid #be975a;background:#fff8e9ed;color:#79501f;box-shadow:0 4px 22px #69420e28;font:500 12px/1.2 Georgia,serif;text-transform:uppercase;letter-spacing:.19em;white-space:nowrap;cursor:pointer;min-height:44px;}
+.open-action span{font-size:17px;line-height:1;color:#a67738;}
+.open-action:focus-visible,.envelope-hit:focus-visible{outline:2px solid #a67534;outline-offset:4px;}
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;}
+.mobile-open-caption{display:none;}
+/* Keep the entire illustration visible when the viewport is wider or taller
+   than the artwork. The soft extensions fill any space around the scene. */
+@media(min-aspect-ratio:4/5){
+ .portrait-stage::before,.portrait-stage::after{content:'';position:absolute;left:0;width:100%;pointer-events:none;}
+ .portrait-stage::before{inset:0;background:linear-gradient(#f7dfc9a0,#f3d4ada0),var(--sky-art) center / cover;}
+ .portrait-stage::after{bottom:0;height:28%;background:linear-gradient(to bottom,transparent,#ead0ad88),var(--sand-art) center / cover;mask-image:linear-gradient(to bottom,transparent,black 65%);}
+ .scene{z-index:1;}
+}
+@media(max-aspect-ratio:4/5){
+ .portrait-stage{background:linear-gradient(180deg,#f9e7d3 0%,#f9e7d3 25%,#f2d6af 70%,#ead0a9 100%);height:100svh;}
+ .portrait-stage::before,.portrait-stage::after{content:'';position:absolute;left:0;width:100%;z-index:0;pointer-events:none;}
+ .portrait-stage::before{top:0;height:43%;background:linear-gradient(180deg,#faeee0 0%,#f7e5d2b0 70%,#f5d8b200 100%),var(--sky-art) center / cover;}
+ .portrait-stage::after{bottom:0;height:40%;background:linear-gradient(0deg,#ead0ad 0%,#efd3ad80 65%,#efd3ad00 100%),var(--sand-art) center / cover;}
+ .scene{z-index:1;width:146%;top:49%;left:50%;transform:translate(-50%,-50%);mask-image:linear-gradient(to bottom,transparent 0%,black 6%,black 91%,transparent 100%);}
+ .heading{top:8%;width:66%;}
+ .heading p{font-size:1.6cqw;letter-spacing:.16em;}
+ .heading h1{font-size:6.7cqw;white-space:normal;margin:.7cqw 0 .6cqw;line-height:1.05;}
+ .heading time{font-size:2.15cqw;letter-spacing:.14em;}
+ .card-lettering p{font-size:1.05cqw;letter-spacing:.1em;}
+ .card-lettering h2{font-size:3.05cqw;}
+ .card-lettering time{font-size:1.18cqw;}
+ .action-area{bottom:max(11%,env(safe-area-inset-bottom));}
+ .mobile-open-caption{display:flex;flex-direction:column;align-items:center;position:absolute;top:12%;left:50%;transform:translateX(-50%);width:88%;z-index:2;text-align:center;pointer-events:none;color:#80531d;}
+ .mobile-open-caption p{font:500 11px/1.5 Georgia,serif;text-transform:uppercase;letter-spacing:.16em;margin:0;}
+ .mobile-open-caption span{font:400 clamp(30px,9vw,46px)/1.25 'Great Vibes','Brush Script MT','Z003',Georgia,serif;margin:8px 0;}
+}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;}}
+.card-lettering h2{font-size:3.35cqw;margin:.85cqw 0 0;}
+.card-lettering time{position:absolute;left:50%;top:9.45cqw;transform:translateX(-50%);white-space:nowrap;}
+.mobile-heading{display:none;}
+@media(max-aspect-ratio:4/5){
+ .heading{display:none;}
+ .mobile-heading{display:block;position:absolute;z-index:2;top:9%;left:50%;transform:translateX(-50%);width:92%;text-align:center;color:#80531d;pointer-events:none;}
+ .mobile-heading p{font:500 10px/1.5 Georgia,serif;letter-spacing:.17em;text-transform:uppercase;margin:0;}
+ .mobile-heading h1{font:400 clamp(36px,10vw,55px)/1.12 'Great Vibes','Brush Script MT','Z003',Georgia,serif;margin:12px 0 14px;}
+ .mobile-heading time{font:500 12px/1.2 Georgia,serif;text-transform:uppercase;letter-spacing:.20em;}
+ .scene{top:51%;width:154%;mask-image:linear-gradient(to bottom,transparent 0%,black 4%,black 89%,transparent 100%);}
+ .portrait-stage::before{height:45%;background:linear-gradient(180deg,#faeee0 0%,#f7e5d2b0 60%,#f5d8b200 100%),var(--sky-art) center / cover;}
+ .portrait-stage::after{height:44%;background:linear-gradient(0deg,#ead0ad 0%,#efd3ad80 65%,#efd3ad00 100%),var(--sand-art) center / cover;}
+ .action-area{bottom:max(12%,env(safe-area-inset-bottom));}
+}
+
+/* Separate layers preserve the original artwork while the card leaves it. */
+.opening-scene-content { position:absolute; inset:0; }
+.opening-assembly,.floating-card { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
+.opening-assembly { z-index:2; visibility:hidden; }
+.floating-card { z-index:2; }
+.card-paper { position:absolute; left:27.2%; top:19.1%; width:43%; height:48%; transform:rotate(-2.7deg); background:#f8dfb8; border:2px solid #c99551; box-shadow:inset 0 0 0 5px #f9e6c8,inset 0 0 0 6px #d9b071,0 7px 18px #643c1b35; }
+.opening-assembly .pocket { z-index:3; }
+.opening-assembly .card-lettering { z-index:2; }
+.ambient { position:absolute; inset:0; z-index:5; pointer-events:none; }
+.ambient-palm-left { clip-path:polygon(0 0, 28% 0, 28% 4%, 19% 32%, 0 35%); mask-image:linear-gradient(to bottom,black 10%,transparent 100%); transform-origin:0 0; animation:palm-left 8s ease-in-out infinite alternate; }
+.ambient-palm-right { clip-path:polygon(73% 0,100% 0,100% 34%,86% 30%); mask-image:linear-gradient(to bottom,black 10%,transparent 100%); transform-origin:100% 0; animation:palm-right 9s ease-in-out infinite alternate; }
+.ambient-waves { clip-path:polygon(0 50%,23% 50%,23% 69%,0 70%); mask-image:linear-gradient(to bottom,transparent,black 40%,transparent); animation:wave-shimmer 7s ease-in-out infinite alternate; }
+.ambient-cloth { clip-path:polygon(0 66%,23% 66%,27% 100%,0 100%); mask-image:linear-gradient(135deg,transparent,black 55%,transparent); transform-origin:0 100%; animation:cloth-breathe 8s ease-in-out infinite alternate; }
+.hotel-haze { position:absolute; z-index:6; inset:0; pointer-events:none; background:radial-gradient(ellipse 17% 19% at 91% 53%,#f8dcb45c,transparent 78%); }
+@keyframes palm-left { from { transform:rotate(-.3deg); } to { transform:rotate(.4deg); } }
+@keyframes palm-right { from { transform:rotate(.25deg); } to { transform:rotate(-.45deg); } }
+@keyframes wave-shimmer { from { transform:translateX(-.15%); opacity:.7; } to { transform:translateX(.25%); opacity:1; } }
+@keyframes cloth-breathe { from { transform:skewY(-.2deg); } to { transform:skewY(.3deg); } }
+@media(prefers-reduced-motion:reduce) { .ambient { animation:none; } }
+.ambient-light { z-index:6; opacity:.7; }
+.hotel-haze-art { z-index:6; opacity:.65; }
+/* Conceal the unfinished fills in the source cutouts with continuous surfaces. */
+.envelope-lining { position:absolute; inset:0; z-index:1; clip-path:polygon(24.1% 39%,24.7% 29%,27.6% 21.5%,49% 3%,67.7% 21.5%,69% 29%,69.4% 39%,51.7% 64%); background:radial-gradient(ellipse at 49% 14%,#edbb6e 0%,#c78b43 34%,#a76d31 74%,#8f5d2a 100%); }
+.envelope-leaf { position:absolute; inset:0; z-index:1; clip-path:polygon(39% 9%,56% 9%,56% 18%,39% 18%); }
+.floating-card .card-art { mask-image:linear-gradient(to bottom,#000 0%,#000 39%,transparent 46%); }
+.card-paper { background:radial-gradient(ellipse at 48% 20%,#ffecd8 0%,#fce3c8 56%,#f5d5b0 100%); border:1px solid #bd8a4a; box-shadow:inset 0 0 0 4px #fae4ca,inset 0 0 0 5px #d4a563,0 7px 18px #643c1b35; }
+.envelope-vanish-mist { position:absolute; inset:0; z-index:2; visibility:hidden; pointer-events:none; background:linear-gradient(to bottom,#f8e1c5 18%,#f4d8b3 60%,#eac99f 90%); mask-image:radial-gradient(ellipse 36% 43% at 49% 55%,#000 35%,transparent 100%); }
+.envelope-front { position:absolute; inset:0; z-index:3; pointer-events:none; }
+
+/* Hold the finished open illustration, then move the whole envelope together. */
+.opened-view,.departure-scene,.whole-envelope,.envelope-body {position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
+.opened-view{z-index:2;visibility:hidden;}
+.departure-scene{z-index:3;visibility:hidden;}
+.departure-background{z-index:0;}
+.whole-envelope{z-index:1;transform-origin:50% 58%;}
+.envelope-body{clip-path:polygon(23.4% 39%,23.5% 32%,25% 26%,28% 21%,47% 2%,50% 1%,53% 2%,68% 18%,70% 24%,70.5% 32%,70% 39%,76.8% 78%,32% 88%,23.4% 39%);}
+.whole-envelope .envelope-lining{z-index:1;clip-path:polygon(24% 39%,24.5% 32%,27% 25%,47% 5%,50% 3%,53% 5%,68% 21%,69.5% 30%,69% 39%,51% 63%);background:radial-gradient(ellipse at 50% 11%,#edc27d 0%,#ce9651 55%,#ad763b 100%);}
+.whole-envelope .pocket{z-index:2;}
+.whole-envelope .monogram{z-index:3;}
+.departure-scene .floating-card{z-index:2;}
+/* Strong enough to read on a still scene, with soft masks hiding crop edges. */
+.ambient-palm-left{animation-duration:5.4s;mask-image:radial-gradient(ellipse 80% 85% at 0 0,#000 32%,transparent 95%);}
+.ambient-palm-right{animation-duration:6.1s;mask-image:radial-gradient(ellipse 80% 85% at 100% 0,#000 32%,transparent 95%);}
+.ambient-waves{animation-duration:4.5s;}
+.ambient-cloth{animation-duration:5.8s;}
+@keyframes palm-left{from{transform:rotate(-1.1deg)}to{transform:rotate(1.25deg)}}
+@keyframes palm-right{from{transform:rotate(1deg)}to{transform:rotate(-1.2deg)}}
+@keyframes wave-shimmer{from{transform:translateX(-.7%);opacity:.65}to{transform:translateX(.8%);opacity:1}}
+@keyframes cloth-breathe{from{transform:skewY(-.65deg) translateY(0)}to{transform:skewY(.65deg) translateY(-.4%)}}
+.gust .ambient{animation-duration:2.5s;}
+@media(prefers-reduced-motion:reduce){.ambient,.gust .ambient{animation:none;}}
+.isolated-envelope{position:absolute;left:14.3%;top:0;width:72.5%;height:91.2%;object-fit:fill;pointer-events:none;}
+/* Feather each moving area to transparent before its boundary, avoiding hard patch edges. */
+.ambient-palm-left{clip-path:none;mask-image:radial-gradient(ellipse 28% 34% at 0 0,#000 12%,transparent 100%);}
+.ambient-palm-right{clip-path:none;mask-image:radial-gradient(ellipse 28% 34% at 100% 0,#000 12%,transparent 100%);}
+.ambient-waves{clip-path:none;mask-image:radial-gradient(ellipse 14% 10% at 10% 60%,#000 10%,transparent 100%);}
+.ambient-cloth{clip-path:none;mask-image:radial-gradient(ellipse 24% 24% at 7% 88%,#000 10%,transparent 100%);}
+.departure-background{mask-image:linear-gradient(to right,transparent 5%,black 22%,black 80%,transparent 96%),linear-gradient(to bottom,black 0%,black 89%,transparent 100%);mask-composite:intersect;}
+.front-overlay{position:absolute;inset:0;z-index:3;pointer-events:none;}
+.front-overlay{clip-path:polygon(23.3% 39%,51.5% 64.5%,73.6% 38%,77% 91%,20% 91%);}
+
+/* Move the illustration itself rather than cross-fading a second copy. */
+.ambient-palm-left,.ambient-palm-right,.ambient-waves,.ambient-cloth { display:none; }
+.complete-card { position:absolute; left:27.2%; top:19.1%; width:43%; height:48%; object-fit:fill; transform:rotate(-2.7deg); }
+.complete-card { left:25.8%; top:15.6%; width:45.5%; height:52%; }
+/* Filters live inline so browser animation timelines update their primitives. */
+.wind-filters { position:absolute; width:0; height:0; overflow:hidden; pointer-events:none; }
+.closed-view > .art,.opened-view > .art,.departure-background { filter:url('#scene-breeze'); }
+.gust .closed-view > .art,.gust .opened-view > .art,.gust .departure-background { filter:url('#scene-gust'); }
+@media(prefers-reduced-motion:reduce) {
+ .closed-view > .art,.opened-view > .art,.departure-background,.gust .closed-view > .art,.gust .opened-view > .art,.gust .departure-background { filter:none; }
+}
+
+/* One envelope throughout: the front and seal come from the closed artwork. */
+.opening-assembly { z-index: 3; visibility: hidden; }
+.sky-ornament-cleanup { z-index:2; opacity:0; }
+.opening-lining,.opening-back,.opening-flap,.original-front,.original-seal { position:absolute; inset:0; pointer-events:none; }
+.opening-lining { z-index:0; clip-path:polygon(25% 41.5%,66.8% 39.2%,53.3% 61%); background:linear-gradient(155deg,#e7b66e,#bd7c35 55%,#e3ad68); }
+.opening-back { z-index:0; clip-path:polygon(25% 41.5%,31% 27%,47% 10%,50% 8%,53% 9%,64% 26%,66.8% 39.2%); transform-origin:50% 40%; background:linear-gradient(145deg,#a96829,#eac282 49%,#b57a39); filter:drop-shadow(0 -1px 1px #9c681e); }
+.opening-assembly .floating-card { z-index:1; transform-origin:50% 50%; }
+.card-viewport { position:absolute; inset:0; z-index:1; pointer-events:none; }
+.original-front { z-index:2; clip-path:polygon(24.8% 41.4%,53.2% 61.4%,66.8% 39.1%,77% 78.2%,33% 88.2%); }
+.opening-flap { z-index:3; transform-origin:50% 40%; clip-path:polygon(24% 38%,68% 38%,68% 53%,57.6% 58%,49% 57%,24% 45%); }
+.original-seal { z-index:4; clip-path:ellipse(5.4% 9.4% at 53.2% 62.4%); }
+.original-seal .closed-monogram { z-index:2; }
+
+/* Use the alpha edge of the painted envelope instead of a polygon cut through
+   it.  The previous clip made the back look like a flat, angular gold patch. */
+.opening-back {
+  clip-path: none;
+  background:none;
+  filter:none;
+  /* The lip slopes upwards to the right in the original illustration.
+     Scale around that same hinge instead of an unrelated horizontal line. */
+  transform-origin: 50% 40%;
+  transform: rotate(-1.77deg);
+}
+.opening-back-image {
+  position:absolute;
+  inset:0;
+  transform-origin:50% 40%;
+  transform:rotate(1.77deg);
+  clip-path:polygon(0 0,100% 0,100% 37.3%,0 42.8%);
+}
+.opening-back-image .isolated-envelope {
+  /* Fit the two painted corners exactly to the original envelope opening. */
+  left:16.84%; top:3.8%; width:60.7%; height:85%;
+}
+.opening-lining {
+  /* Follow the sloped lip of the envelope closely: extending a rectangular
+     strip past it would expose an artificial gold bar above the envelope. */
+  clip-path: polygon(24.8% 41.5%,66.8% 39.3%,66.8% 42%,53.2% 62%,24.8% 43%);
+  background:radial-gradient(ellipse at 51% 45%,#edbd77 0%,#d49a50 62%,#b77935 100%);
+}
+/* Both painted corners sit on a slightly sloped hinge. Straighten that
+   hinge while the flap folds, then restore the artwork's original angle
+   inside it. This keeps the shrinking edge attached at both corners. */
+.opening-flap {
+  clip-path:none;
+  transform-origin:50% 40%;
+  transform:rotate(-1.77deg);
+}
+.opening-flap > .art {
+  transform-origin:50% 40%;
+  transform:rotate(1.77deg);
+  clip-path:polygon(24% 38%,68% 38%,68% 53%,57.6% 58%,49% 57%,24% 45%);
+}
+/* The restored backdrop is confined beneath the envelope: it removes the
+   closed flap from the source artwork without changing the beach or hotel. */
+.opening-clear {
+  z-index:-1;
+  clip-path:polygon(24.8% 41.4%,66.8% 39.1%,53.2% 61.4%);
+}
+
+/* The ornament and lettering remain independent of the painted invitation. */
+.sky-love-cleanup {
+  z-index:2;
+  clip-path:ellipse(3.05% 5.2% at 50% 5%);
+}
+.sky-love-ornament {
+  position:absolute; z-index:3; left:47.9%; top:1.3%; width:4.2%; height:7%;
+  object-fit:contain; pointer-events:none;
+}
+.card-motif {
+  position:absolute; left:25.8%; top:15.6%; width:45.5%; height:52%;
+  transform:rotate(-2.7deg); pointer-events:none;
+}
+.card-filigree { position:absolute; inset:0; width:100%; height:100%; }
+.card-shell-cleanup {
+  position:absolute; inset:0; overflow:hidden;
+  mask-image:radial-gradient(ellipse 5.3% 7.8% at 50% 13.1%,#000 66%,transparent 100%);
+}
+.card-shell-cleanup img { position:absolute; inset:0; width:100%; height:100%; transform:translateY(-17%); }
+.card-love-ornament {
+  position:absolute; left:46.2%; top:8%; width:7.6%; height:10%; object-fit:contain;
+}
+.card-lettering { top:28.5%; }
+.card-lettering p {
+  font:500 .78cqw/1.45 Georgia,serif; letter-spacing:.12em;
+  text-transform:uppercase; white-space:nowrap;
+}
+.card-lettering h2 {
+  font-size:3.65cqw; line-height:1.12; margin:.85cqw 0 0;
+  text-shadow:0 1px #fff4d7,0 2px 2px #aa6f3440;
+}
+.card-flourish {
+  position:absolute; top:6.7cqw; left:18%; width:64%; height:2.1cqw;
+  fill:none; stroke:#b57a2b; stroke-width:2; stroke-linecap:round; stroke-linejoin:round;
+}
+.card-flourish circle { fill:#bd873a; stroke:none; }
+.card-lettering time { top:9.45cqw; font-size:1.08cqw; }
+.heading p { font-size:1.15cqw; letter-spacing:.15em; }
+@media(max-aspect-ratio:4/5) {
+  .card-lettering p { font-size:.8cqw; letter-spacing:.09em; }
+  .card-lettering h2 { font-size:3.65cqw; }
+  .card-lettering time { font-size:1.08cqw; }
+  .mobile-heading p { font-size:9px; letter-spacing:.10em; }
+}

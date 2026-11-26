@@ -1,0 +1,66 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1648 928" preserveAspectRatio="none">
+  <defs>
+    <linearGradient id="wisp" x1="0" y1="0" x2="1" y2="0">
+      <stop stop-color="#fffdf4" stop-opacity="0"/>
+      <stop offset=".19" stop-color="#fffdf4" stop-opacity=".28"/>
+      <stop offset=".46" stop-color="#fffdf4" stop-opacity=".72"/>
+      <stop offset=".76" stop-color="#fffdf4" stop-opacity=".24"/>
+      <stop offset="1" stop-color="#fffdf4" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="mist" x="-12%" y="-40%" width="124%" height="180%">
+      <feTurbulence type="fractalNoise" baseFrequency=".004 .018" numOctaves="2" seed="8" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="23" xChannelSelector="R" yChannelSelector="G"/>
+      <feGaussianBlur stdDeviation="5"/>
+    </filter>
+    <filter id="threads" x="-12%" y="-40%" width="124%" height="180%">
+      <feTurbulence type="fractalNoise" baseFrequency=".005 .014" numOctaves="2" seed="3" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="18" xChannelSelector="R" yChannelSelector="G"/>
+      <feGaussianBlur stdDeviation="2.8"/>
+    </filter>
+    <linearGradient id="trailing-wisp" x1="0" y1="0" x2="1" y2="0">
+      <stop stop-color="#fffdf7" stop-opacity="0"/>
+      <stop offset=".18" stop-color="#fffdf7" stop-opacity=".78"/>
+      <stop offset=".58" stop-color="#fffdf7" stop-opacity=".9"/>
+      <stop offset="1" stop-color="#fffdf7" stop-opacity="0"/>
+    </linearGradient>
+    <filter id="trailing-soft" x="-20%" y="-70%" width="140%" height="240%">
+      <feGaussianBlur stdDeviation="4"/>
+    </filter>
+    <filter id="trailing-fine" x="-20%" y="-70%" width="140%" height="240%">
+      <feGaussianBlur stdDeviation="1"/>
+    </filter>
+  </defs>
+  <!-- Wispy, uneven currents: soft edges and varied curves avoid rigid speed lines. -->
+  <g fill="none" stroke="url(#wisp)" stroke-linecap="round">
+    <g filter="url(#mist)" opacity=".64">
+      <path stroke-width="30" d="M1690 283 C1440 288 1380 377 1180 373 S990 280 805 332 S540 469 330 421 S92 346 -65 385"/>
+      <path stroke-width="24" d="M1670 392 C1480 347 1375 370 1220 431 S1005 486 830 431 S565 404 405 467 S130 520 -55 477"/>
+      <path stroke-width="18" d="M1580 493 C1380 426 1245 455 1080 504 S810 542 645 485 S390 480 260 528"/>
+      <path stroke-width="15" d="M1500 234 C1290 265 1210 337 1070 332 S870 288 760 322"/>
+    </g>
+    <g filter="url(#threads)" opacity=".8">
+      <path stroke-width="7" d="M1690 286 C1465 284 1378 371 1187 373 S990 286 810 334 S546 466 336 420 S100 350 -55 385"/>
+      <path stroke-width="4" d="M1640 306 C1450 294 1380 361 1200 384 S1020 324 870 343 S603 455 445 439"/>
+      <path stroke-width="5" d="M1670 391 C1485 347 1375 373 1220 431 S1006 483 832 432 S570 402 405 467 S130 520 -55 477"/>
+      <path stroke-width="3" d="M1610 410 C1440 379 1355 400 1225 444 S1000 472 880 444 S665 418 550 457"/>
+      <path stroke-width="5" d="M1570 494 C1385 431 1247 452 1080 504 S815 539 645 486 S390 480 260 528"/>
+      <path stroke-width="3" d="M1370 511 C1200 478 1110 530 980 534 S800 510 720 495"/>
+      <path stroke-width="4" d="M1500 236 C1300 266 1210 336 1070 332 S870 289 760 322"/>
+    </g>
+  </g>
+  <!-- Shorter currents start behind the card and trail to its right. The
+       separate soft and fine strands retain detail against the pale sky. -->
+  <g fill="none" stroke="url(#trailing-wisp)" stroke-linecap="round">
+    <g filter="url(#trailing-soft)" opacity=".68">
+      <path stroke-width="20" d="M1010 332 C1155 307 1214 345 1312 326 S1500 275 1625 286"/>
+      <path stroke-width="16" d="M1025 390 C1148 360 1240 401 1340 383 S1500 342 1640 352"/>
+      <path stroke-width="15" d="M1020 447 C1145 423 1210 450 1320 439 S1475 405 1600 413"/>
+    </g>
+    <g filter="url(#trailing-fine)" opacity=".9">
+      <path stroke-width="5" d="M1010 332 C1155 307 1214 345 1312 326 S1500 275 1625 286"/>
+      <path stroke-width="3" d="M1050 344 C1165 324 1230 356 1325 340 S1500 301 1580 304"/>
+      <path stroke-width="4" d="M1025 390 C1148 360 1240 401 1340 383 S1500 342 1640 352"/>
+      <path stroke-width="3" d="M1020 447 C1145 423 1210 450 1320 439 S1475 405 1600 413"/>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,28 @@
+/* Keep the printing, decorative edge and paper on one deforming surface. */
+.paper-surface {
+  position: absolute;
+  inset: 0;
+  filter: url('#paper-flex');
+  pointer-events: none;
+}
+
+/* A restrained travelling highlight makes the changing curvature legible. */
+.paper-curl-light {
+  position: absolute;
+  left: 25.8%;
+  top: 15.6%;
+  width: 45.5%;
+  height: 52%;
+  transform: rotate(-2.7deg);
+  background: linear-gradient(110deg, transparent 22%, #fff9e6 48%, #8b5b2d55 60%, transparent 78%);
+  mix-blend-mode: soft-light;
+  mask-position: center;
+  mask-size: 100% 100%;
+  mask-repeat: no-repeat;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .paper-surface { filter: none; }
+  .paper-curl-light { display: none; }
+}

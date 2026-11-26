@@ -1,0 +1,61 @@
+/* A light breeze occasionally crosses the scene before the stronger gust.
+   Its separate wrapper lets it fade away smoothly as the card takes flight. */
+.ambient-wind {
+  position: absolute;
+  inset: 0;
+  z-index: 7;
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 1.1s ease;
+}
+.ambient-wind img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  animation: ambient-wind-pass 10s ease-in-out 1.2s infinite;
+  user-select: none;
+}
+.gust .ambient-wind { opacity: 0; }
+@keyframes ambient-wind-pass {
+  0%, 6% { opacity: 0; transform: translate3d(12%, 1%, 0); }
+  18% { opacity: .32; }
+  29% { opacity: .42; }
+  43% { opacity: .22; }
+  52%, 100% { opacity: 0; transform: translate3d(-12%, -1%, 0); }
+}
+
+/* A single passing gust; its artwork never alters the underlying photograph. */
+.wind-streak-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  user-select: none;
+  opacity: 0;
+}
+
+/* The wind and paper share the flight transform.  Keep the wisps behind the
+   paper without putting them behind the envelope or the entire scene. */
+.floating-card .card-flutter { z-index: 1; }
+
+.gust .wind-streak-overlay {
+  animation: wind-streak-pass 4.4s cubic-bezier(.22, .48, .42, 1) both;
+}
+
+@keyframes wind-streak-pass {
+  0% { opacity: 0; transform: translate3d(7%, 0, 0); }
+  10% { opacity: .6; }
+  27% { opacity: .95; }
+  52% { opacity: .88; }
+  78% { opacity: .52; }
+  100% { opacity: 0; transform: translate3d(-8%, -1%, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ambient-wind { display: none; }
+  .gust .wind-streak-overlay { animation: none; opacity: 0; }
+}

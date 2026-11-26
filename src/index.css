@@ -1,0 +1,12 @@
+@import 'tailwindcss';
+@font-face {
+  font-family: 'Great Vibes';
+  src: url('/assets/fonts/GreatVibes-Regular.ttf') format('truetype');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+* { box-sizing: border-box; }
+html, body, #root { margin: 0; width: 100%; min-height:100%; }
+body { background:#ead1b0; color:#80551d; overflow-x:hidden; }
+button { cursor:pointer; }
