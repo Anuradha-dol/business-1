@@ -1,260 +1,240 @@
 /* ═══════════════════════════════════════════════════════════════════════════
-   A JOURNEY TO FOREVER — Interactive Coastal Art Experience
-   No cards, no popups, no generic icons — living objects in beach scene
+   A JOURNEY TO FOREVER — Scroll-Driven Romantic Art Experience
+   Organic painterly art blended seamlessly into the coastal beach world
    ═══════════════════════════════════════════════════════════════════════════ */
 
-.journey-world {
-  position: relative;
+.journey-scroll {
   width: 100%;
   height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  padding: 8px 16px 64px;
+}
+.journey-scroll::-webkit-scrollbar { display: none; }
+
+/* Intro Section */
+.journey-intro {
+  min-height: 44svh;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  padding: 6px 12px 10px;
-  overflow: hidden;
-  user-select: none;
-}
-
-/* 3D Parallax Sunset Glow & Wind-Driven Silk Ribbon */
-.journey-parallax-sun {
-  position: absolute;
-  top: -15%;
-  left: 15%;
-  width: 70%;
-  height: 55%;
-  background: radial-gradient(ellipse at 50% 35%, rgba(255, 240, 195, 0.45), transparent 72%);
-  pointer-events: none;
-  transition: transform 0.25s ease-out;
-}
-
-.journey-silk-breeze {
-  position: absolute;
-  bottom: 12%;
-  left: -10%;
-  width: 120%;
-  height: 22%;
-  background: linear-gradient(95deg, transparent 10%, rgba(255, 247, 232, 0.32) 45%, rgba(255, 236, 195, 0.24) 70%, transparent 92%);
-  filter: blur(14px);
-  pointer-events: none;
-  animation: silk-drift 9s ease-in-out infinite alternate;
-}
-
-@keyframes silk-drift {
-  from { transform: translateX(-3%) skewY(-1.5deg); opacity: 0.55; }
-  to   { transform: translateX(3%) skewY(1.5deg); opacity: 0.85; }
-}
-
-/* Editorial Header */
-.journey-header {
-  position: relative;
-  z-index: 4;
+  justify-content: center;
   text-align: center;
+  padding: 24px 12px 12px;
+  animation: journey-fade 1.3s cubic-bezier(.16, 1, .3, 1) both;
 }
 
-.journey-subtitle {
-  margin: 0 0 8px;
-  font: 600 clamp(9.5px, 1.4vw, 12px)/1.2 Georgia, serif;
+.journey-intro__eyebrow {
+  margin: 0 0 6px;
+  font: 600 10.5px/1.2 Georgia, serif;
   letter-spacing: 0.24em;
   text-transform: uppercase;
-  color: #8f5c20;
+  color: #966222;
 }
 
-.journey-progress {
+.journey-intro__title {
+  margin: 0 0 10px;
+  font: 400 clamp(40px, 8.5vw, 72px)/1.08 'Great Vibes', cursive;
+  color: #8f5412;
+  text-shadow: 0 2px 12px rgba(255, 245, 224, 0.85);
+}
+
+.journey-intro__desc {
+  margin: 0 0 18px;
+  max-width: 340px;
+  font: 13px/1.6 Georgia, serif;
+  color: #7c5429;
+}
+
+.journey-intro__cue {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  border: 0;
+  background: transparent;
+  color: #8c5a1e;
+  font: 600 10px/1 Georgia, serif;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  animation: cue-float 2.4s ease-in-out infinite;
+}
+
+@keyframes cue-float {
+  0%, 100% { transform: translateY(0); opacity: 0.7; }
+  50%      { transform: translateY(6px); opacity: 1; }
+}
+
+/* Individual Chapter Scene */
+.journey-chapter {
+  min-height: 76svh;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  margin-bottom: 8px;
+  text-align: center;
+  padding: 28px 8px 36px;
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 1.35s cubic-bezier(.16, 1, .3, 1), transform 1.35s cubic-bezier(.16, 1, .3, 1);
 }
 
-.journey-dot {
-  width: 8px;
-  height: 8px;
-  padding: 0;
-  border-radius: 50%;
-  border: 1px solid rgba(175, 125, 50, 0.65);
-  background: rgba(255, 248, 232, 0.45);
-  transition: transform 0.35s, background 0.35s;
+.journey-chapter--visible {
+  opacity: 1;
+  transform: translateY(0);
 }
-.journey-dot.done   { background: rgba(195, 140, 55, 0.55); }
-.journey-dot.active { background: #b57e27; transform: scale(1.4); box-shadow: 0 0 10px rgba(215, 165, 65, 0.6); }
 
-.journey-chapter-title {
-  margin: 0;
-  font: 400 clamp(28px, 6vw, 42px)/1.15 'Great Vibes', cursive;
-  color: #8c5312;
+.journey-chapter__num {
+  margin: 0 0 4px;
+  font: 600 9.5px/1 Georgia, serif;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: #a16f2d;
+}
+
+.journey-chapter__title {
+  margin: 0 0 14px;
+  font: 400 clamp(32px, 6.5vw, 48px)/1.12 'Great Vibes', cursive;
+  color: #8f5412;
   text-shadow: 0 2px 10px rgba(255, 245, 224, 0.85);
 }
 
-/* Central Interactive Canvas */
-.journey-canvas {
+/* Interactive Floating Art Object (Blended directly onto beach) */
+.journey-object {
   position: relative;
-  z-index: 5;
-  flex: 1;
-  width: min(100%, 480px);
-  display: grid;
-  place-items: center;
-  transition: transform 0.25s ease-out;
-}
-
-.chapter-stage {
-  position: relative;
-  width: 100%;
-  height: min(310px, 46svh);
+  width: min(84vw, 340px);
   display: grid;
   place-items: center;
   cursor: pointer;
   outline: none;
+  transition: transform 0.35s ease-out;
 }
 
-/* Guiding Butterfly */
-.journey-guide {
+.journey-halo {
   position: absolute;
-  z-index: 20;
-  width: 42px;
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
-}
-
-/* Butterfly Wing Flutter */
-.butterfly-svg { width: 100%; height: auto; filter: drop-shadow(0 6px 10px rgba(120, 75, 20, 0.22)); }
-.butterfly-wing { transform-origin: 32px 29px; }
-.butterfly-wing--left  { animation: wing-beat-l 0.42s ease-in-out infinite alternate; }
-.butterfly-wing--right { animation: wing-beat-r 0.42s ease-in-out infinite alternate; }
-
-@keyframes wing-beat-l { from { transform: scaleX(1); } to { transform: scaleX(0.32); } }
-@keyframes wing-beat-r { from { transform: scaleX(1); } to { transform: scaleX(0.32); } }
-
-/* ── Chapter 1: First Encounter ──────────────────────────────────────────── */
-.ch1-b1 { position: absolute; left: 10%; top: 18%; width: 52px; z-index: 4; }
-.ch1-b2 { position: absolute; right: 10%; top: 20%; width: 52px; z-index: 4; }
-.ch1-flower { width: 155px; height: auto; filter: drop-shadow(0 12px 20px rgba(120, 75, 25, 0.22)); }
-.ch1-bloom-glow {
-  position: absolute;
-  width: 170px;
-  height: 170px;
+  inset: -12%;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 240, 185, 0.65), transparent 70%);
-  opacity: 0;
+  background: radial-gradient(circle, rgba(255, 242, 198, 0.7) 0%, rgba(255, 226, 150, 0.2) 48%, transparent 72%);
   pointer-events: none;
+  opacity: 0.45;
+  transition: opacity 0.8s;
 }
 
-/* ── Chapter 2: When Love Bloomed ────────────────────────────────────────── */
-.ch2-svg { width: 220px; height: auto; filter: drop-shadow(0 10px 18px rgba(120, 75, 25, 0.2)); }
-.ch2-burst-petal {
-  position: absolute;
-  width: 11px;
-  height: 7px;
-  border-radius: 70% 30% 65% 35%;
-  background: radial-gradient(circle at 30% 30%, #ffffff, #f2d9cd);
-  pointer-events: none;
-}
-
-/* ── Chapter 3: The Promise ──────────────────────────────────────────────── */
-.ch3-dome { position: relative; z-index: 4; width: 145px; height: auto; filter: drop-shadow(0 10px 22px rgba(110, 70, 20, 0.16)); }
-.ch3-flower { position: absolute; bottom: 42px; width: 100px; z-index: 2; }
-.ch3-ring { position: absolute; z-index: 3; opacity: 0; visibility: hidden; filter: drop-shadow(0 8px 16px rgba(130, 90, 30, 0.3)); }
-.ch3-pedestal {
-  position: absolute;
-  bottom: 24px;
-  width: 136px;
-  height: 16px;
+.journey-art-wrap {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
   border-radius: 50%;
-  background: radial-gradient(ellipse at 50% 35%, #f5e2c3, #b58747);
-  box-shadow: 0 8px 16px rgba(110, 70, 20, 0.25);
-  z-index: 1;
+  mask-image: radial-gradient(ellipse 68% 68% at 50% 50%, #000 48%, transparent 98%);
+  -webkit-mask-image: radial-gradient(ellipse 68% 68% at 50% 50%, #000 48%, transparent 98%);
 }
 
-/* ── Chapter 4: The Union ────────────────────────────────────────────────── */
-.ch4-box { position: relative; z-index: 2; width: 190px; height: auto; filter: drop-shadow(0 14px 24px rgba(110, 70, 20, 0.26)); }
-.ch4-lid { transform-origin: 105px 58px; }
-.ch4-dancers { position: absolute; top: 24px; z-index: 3; opacity: 0; visibility: hidden; filter: drop-shadow(0 8px 14px rgba(120, 75, 20, 0.22)); }
-.ch4-spark {
-  position: absolute;
-  top: 48%;
-  color: #e2b14c;
-  font-size: 16px;
+.journey-art {
+  display: block;
+  width: 100%;
+  height: auto;
+  mix-blend-mode: multiply;
+  filter: contrast(1.04) saturate(1.06);
   pointer-events: none;
-  z-index: 4;
 }
 
-/* ── Chapter 5: Forever Begins ───────────────────────────────────────────── */
-.ch5-rings { position: relative; z-index: 3; width: 210px; height: auto; filter: drop-shadow(0 10px 20px rgba(120, 75, 20, 0.26)); }
-.ch5-infinity-glow {
+.journey-glass-glint {
   position: absolute;
-  width: 220px;
-  height: 110px;
-  border-radius: 50%;
-  background: radial-gradient(ellipse, rgba(255, 232, 155, 0.65), transparent 70%);
+  inset: 0;
+  background: linear-gradient(115deg, transparent 30%, rgba(255, 255, 255, 0.65) 48%, transparent 66%);
   opacity: 0;
   pointer-events: none;
 }
-.ch5-finale-text {
+
+.journey-touch-hint {
+  margin-top: 8px;
+  font: 600 9.5px/1 Georgia, serif;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #9b6a2c;
+  opacity: 0.8;
+}
+
+.journey-chapter__caption {
+  margin: 12px auto 0;
+  max-width: 320px;
+  font: 13px/1.55 Georgia, serif;
+  color: #744e25;
+}
+
+/* Live Butterflies */
+.j-b1 { position: absolute; left: 8%; top: 18%; width: 46px; pointer-events: none; }
+.j-b2 { position: absolute; right: 8%; top: 16%; width: 46px; pointer-events: none; }
+
+.live-butterfly { width: 100%; height: auto; filter: drop-shadow(0 6px 10px rgba(120, 75, 20, 0.22)); }
+.live-butterfly__wing { transform-origin: 32px 29px; }
+.live-butterfly__wing--l { animation: jb-wing 0.42s ease-in-out infinite alternate; }
+.live-butterfly__wing--r { animation: jb-wing 0.42s ease-in-out infinite alternate; }
+@keyframes jb-wing { from { transform: scaleX(1); } to { transform: scaleX(0.32); } }
+
+/* Music notes */
+.j-notes {
   position: absolute;
-  bottom: 4px;
+  inset: 0;
+  pointer-events: none;
+  display: flex;
+  justify-content: center;
+  gap: 22px;
+  align-items: center;
+}
+.j-note { font-size: 18px; color: #c79034; opacity: 0; }
+
+/* Chapter 5 Finale */
+.journey-finale {
+  margin-top: 18px;
   text-align: center;
-  opacity: 0;
-  visibility: hidden;
+  animation: journey-fade 1.2s ease both;
 }
-.ch5-finale-text h2 {
+.journey-finale h3 {
   margin: 0;
-  font: 400 clamp(28px, 6vw, 40px)/1.1 'Great Vibes', cursive;
+  font: 400 clamp(30px, 6.5vw, 44px)/1.12 'Great Vibes', cursive;
   color: #8b5212;
-  text-shadow: 0 2px 10px rgba(255, 245, 224, 0.9);
 }
-.ch5-finale-text p {
-  margin: 4px 0 0;
+.journey-finale p {
+  margin: 4px 0 14px;
   font: 600 10.5px/1.2 Georgia, serif;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: #9e6b2b;
 }
-
-/* Footer Prompt */
-.journey-footer {
-  position: relative;
-  z-index: 6;
-  text-align: center;
-  min-height: 36px;
-}
-
-.journey-prompt {
-  margin: 0;
-  font: 600 10.5px/1.3 Georgia, serif;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: #8a581c;
-  animation: prompt-pulse 2.4s ease-in-out infinite;
-}
-
-@keyframes prompt-pulse {
-  0%, 100% { opacity: 0.65; }
-  50%      { opacity: 1; }
-}
-
-.journey-actions {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.journey-link {
+.journey-replay {
   display: inline-flex;
   align-items: center;
-  gap: 5px;
+  gap: 6px;
   border: 1px solid rgba(190, 145, 75, 0.45);
-  background: rgba(255, 248, 232, 0.72);
+  background: rgba(255, 248, 232, 0.78);
   border-radius: 99px;
-  padding: 7px 14px;
+  padding: 8px 16px;
   color: #85561d;
   font: 600 10px/1 Georgia, serif;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
+}
+
+/* Guiding Butterfly to Next Chapter */
+.journey-next-guide {
+  margin-top: 22px;
+  border: 0;
+  background: transparent;
+  width: 36px;
+  padding: 4px;
+  opacity: 0.85;
+  animation: cue-float 2.6s ease-in-out infinite;
+}
+
+@keyframes journey-fade {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .butterfly-wing--left, .butterfly-wing--right, .journey-silk-breeze, .journey-prompt { animation: none !important; }
+  .journey-chapter, .journey-intro { transition: none !important; animation: none !important; opacity: 1; transform: none; }
+  .live-butterfly__wing--l, .live-butterfly__wing--r, .journey-intro__cue, .journey-next-guide { animation: none !important; }
 }
