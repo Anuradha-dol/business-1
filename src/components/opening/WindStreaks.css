@@ -1,5 +1,4 @@
-/* A light breeze occasionally crosses the scene before the stronger gust.
-   Its separate wrapper lets it fade away smoothly as the card takes flight. */
+/* Natural multi-pass coastal breeze before the stronger gust on open. */
 .ambient-wind {
   position: absolute;
   inset: 0;
@@ -7,26 +6,85 @@
   pointer-events: none;
   opacity: 1;
   transition: opacity 1.1s ease;
+  overflow: hidden;
 }
-.ambient-wind img {
+
+.wind-pass {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
   opacity: 0;
-  animation: ambient-wind-pass 10s ease-in-out 1.2s infinite;
   user-select: none;
 }
-.gust .ambient-wind { opacity: 0; }
-@keyframes ambient-wind-pass {
-  0%, 6% { opacity: 0; transform: translate3d(12%, 1%, 0); }
-  18% { opacity: .32; }
-  29% { opacity: .42; }
-  43% { opacity: .22; }
-  52%, 100% { opacity: 0; transform: translate3d(-12%, -1%, 0); }
+
+.wind-pass--1 {
+  animation: ambient-wind-pass-1 7.8s ease-in-out 0.4s infinite;
 }
 
-/* A single passing gust; its artwork never alters the underlying photograph. */
+.wind-pass--2 {
+  top: 6%;
+  transform: scaleY(-0.85);
+  animation: ambient-wind-pass-2 9.4s ease-in-out 2.6s infinite;
+}
+
+.wind-pass--3 {
+  top: -4%;
+  animation: ambient-wind-pass-3 11.2s ease-in-out 5.1s infinite;
+}
+
+/* Soft drifting golden breeze motes */
+.wind-mote {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 240, 195, 0.9) 0%, rgba(225, 175, 90, 0) 72%);
+  opacity: 0;
+}
+
+.wind-mote--1 { top: 28%; left: 82%; animation: wind-mote-drift 8.5s ease-in-out 0.6s infinite; }
+.wind-mote--2 { top: 44%; left: 75%; width: 8px; height: 8px; animation: wind-mote-drift 10s ease-in-out 2.9s infinite; }
+.wind-mote--3 { top: 61%; left: 88%; animation: wind-mote-drift 9.2s ease-in-out 4.8s infinite; }
+.wind-mote--4 { top: 36%; left: 68%; width: 5px; height: 5px; animation: wind-mote-drift 7.6s ease-in-out 6.2s infinite; }
+
+.gust .ambient-wind {
+  opacity: 0;
+}
+
+@keyframes ambient-wind-pass-1 {
+  0%, 4% { opacity: 0; transform: translate3d(14%, 1.5%, 0); }
+  20% { opacity: 0.36; }
+  38% { opacity: 0.46; }
+  56% { opacity: 0.2; }
+  66%, 100% { opacity: 0; transform: translate3d(-15%, -1.5%, 0); }
+}
+
+@keyframes ambient-wind-pass-2 {
+  0%, 8% { opacity: 0; transform: translate3d(16%, -2%, 0) scaleY(-0.85); }
+  26% { opacity: 0.28; }
+  45% { opacity: 0.38; }
+  64% { opacity: 0.16; }
+  74%, 100% { opacity: 0; transform: translate3d(-14%, 1%, 0) scaleY(-0.85); }
+}
+
+@keyframes ambient-wind-pass-3 {
+  0%, 10% { opacity: 0; transform: translate3d(18%, 2%, 0); }
+  30% { opacity: 0.24; }
+  48% { opacity: 0.32; }
+  66% { opacity: 0.14; }
+  76%, 100% { opacity: 0; transform: translate3d(-16%, -2%, 0); }
+}
+
+@keyframes wind-mote-drift {
+  0% { opacity: 0; transform: translate3d(0, 0, 0) scale(0.7); }
+  22% { opacity: 0.7; }
+  55% { opacity: 0.55; transform: translate3d(-18vw, -18px, 0) scale(1.1); }
+  85% { opacity: 0.2; }
+  100% { opacity: 0; transform: translate3d(-34vw, -6px, 0) scale(0.6); }
+}
+
+/* Single passing gust when the card takes flight */
 .wind-streak-overlay {
   position: absolute;
   inset: 0;
@@ -38,20 +96,20 @@
   opacity: 0;
 }
 
-/* The wind and paper share the flight transform.  Keep the wisps behind the
-   paper without putting them behind the envelope or the entire scene. */
-.floating-card .card-flutter { z-index: 1; }
+.floating-card .card-flutter {
+  z-index: 1;
+}
 
 .gust .wind-streak-overlay {
-  animation: wind-streak-pass 4.4s cubic-bezier(.22, .48, .42, 1) both;
+  animation: wind-streak-pass 4.4s cubic-bezier(0.22, 0.48, 0.42, 1) both;
 }
 
 @keyframes wind-streak-pass {
   0% { opacity: 0; transform: translate3d(7%, 0, 0); }
-  10% { opacity: .6; }
-  27% { opacity: .95; }
-  52% { opacity: .88; }
-  78% { opacity: .52; }
+  10% { opacity: 0.6; }
+  27% { opacity: 0.95; }
+  52% { opacity: 0.88; }
+  78% { opacity: 0.52; }
   100% { opacity: 0; transform: translate3d(-8%, -1%, 0); }
 }
 

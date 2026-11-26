@@ -1,4 +1,12 @@
-.invitation-opening{width:100%;min-height:100svh;display:grid;place-items:center;overflow:hidden;background:#f1d5ad;color:#80531d;}
+.invitation-opening{position:relative;width:100%;min-height:100svh;display:grid;place-items:center;overflow:hidden;background:#f1d5ad;color:#80531d;}
+.opening-scene-content{opacity:0;transition:opacity .7s cubic-bezier(.22,.85,.35,1);}
+.invitation-opening--ready .opening-scene-content{opacity:1;}
+.opening-loader{position:fixed;inset:0;z-index:30;display:grid;place-items:center;align-content:center;gap:14px;background:radial-gradient(circle at 50% 45%,#faead4 0%,#efd2aa 100%);pointer-events:none;}
+.opening-loader__crest{font:400 44px/1 'Great Vibes',cursive;color:#98611f;text-shadow:0 2px 10px rgba(255,244,221,.8);animation:loader-breathe 1.6s ease-in-out infinite;}
+.opening-loader__bar{width:110px;height:2px;border-radius:2px;background:rgba(185,135,55,.22);overflow:hidden;}
+.opening-loader__bar span{display:block;width:45%;height:100%;background:linear-gradient(90deg,transparent,#b8832e,transparent);animation:loader-sweep 1.2s ease-in-out infinite;}
+@keyframes loader-breathe{0%,100%{opacity:.75;transform:scale(.98)}50%{opacity:1;transform:scale(1.03)}}
+@keyframes loader-sweep{from{transform:translateX(-100%)}to{transform:translateX(260%)}}
 .portrait-stage{position:relative;isolation:isolate;width:100%;height:100svh;overflow:hidden;background:#f1d5ad;container-type:inline-size;}
 .scene{position:absolute;z-index:1;left:50%;top:50%;width:min(100vw,177.586svh);aspect-ratio:1648/928;transform:translate(-50%,-50%);isolation:isolate;container-type:inline-size;}
 .art,.closed-view,.animated-open,.final-open,.card-clip,.card-motion{position:absolute;inset:0;width:100%;height:100%;}
@@ -59,14 +67,15 @@
 .mobile-heading{display:none;}
 @media(max-aspect-ratio:4/5){
  .heading{display:none;}
- .mobile-heading{display:block;position:absolute;z-index:2;top:9%;left:50%;transform:translateX(-50%);width:92%;text-align:center;color:#80531d;pointer-events:none;}
+ .mobile-heading{display:block;position:absolute;z-index:2;top:max(5.5%,env(safe-area-inset-top) + 14px);left:50%;transform:translateX(-50%);width:90%;text-align:center;color:#80531d;pointer-events:none;}
  .mobile-heading p{font:500 10px/1.5 Georgia,serif;letter-spacing:.17em;text-transform:uppercase;margin:0;}
- .mobile-heading h1{font:400 clamp(36px,10vw,55px)/1.12 'Great Vibes','Brush Script MT','Z003',Georgia,serif;margin:12px 0 14px;}
+ .mobile-heading h1{font:400 clamp(34px,9.6vw,52px)/1.1 'Great Vibes','Brush Script MT','Z003',Georgia,serif;margin:10px 0 10px;text-shadow:0 2px 10px rgba(255,245,226,.7);}
  .mobile-heading time{font:500 12px/1.2 Georgia,serif;text-transform:uppercase;letter-spacing:.20em;}
- .scene{top:51%;width:154%;mask-image:linear-gradient(to bottom,transparent 0%,black 4%,black 89%,transparent 100%);}
+ .scene{top:53%;width:126%;mask-image:linear-gradient(to bottom,transparent 0%,black 5%,black 92%,transparent 100%);}
  .portrait-stage::before{height:45%;background:linear-gradient(180deg,#faeee0 0%,#f7e5d2b0 60%,#f5d8b200 100%),var(--sky-art) center / cover;}
  .portrait-stage::after{height:44%;background:linear-gradient(0deg,#ead0ad 0%,#efd3ad80 65%,#efd3ad00 100%),var(--sand-art) center / cover;}
- .action-area{bottom:max(12%,env(safe-area-inset-bottom));}
+ .action-area{bottom:max(5.5%,env(safe-area-inset-bottom) + 18px);}
+ .open-action{padding:12px 24px;font-size:11px;letter-spacing:.18em;box-shadow:0 8px 26px rgba(105,66,14,.2),inset 0 1px 0 rgba(255,245,215,.9);}
 }
 
 /* Separate layers preserve the original artwork while the card leaves it. */
@@ -145,6 +154,14 @@
 /* One envelope throughout: the front and seal come from the closed artwork. */
 .opening-assembly { z-index: 3; visibility: hidden; }
 .sky-ornament-cleanup { z-index:2; opacity:0; }
+.envelope-inner-pocket {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  clip-path: polygon(24.6% 41%, 66.9% 38.9%, 76.8% 78%, 33.2% 88%);
+  background: radial-gradient(ellipse at 50% 42%, #ebc07d 0%, #c98f48 56%, #9f672c 100%);
+}
 .opening-lining,.opening-back,.opening-flap,.original-front,.original-seal { position:absolute; inset:0; pointer-events:none; }
 .opening-lining { z-index:0; clip-path:polygon(25% 41.5%,66.8% 39.2%,53.3% 61%); background:linear-gradient(155deg,#e7b66e,#bd7c35 55%,#e3ad68); }
 .opening-back { z-index:0; clip-path:polygon(25% 41.5%,31% 27%,47% 10%,50% 8%,53% 9%,64% 26%,66.8% 39.2%); transform-origin:50% 40%; background:linear-gradient(145deg,#a96829,#eac282 49%,#b57a39); filter:drop-shadow(0 -1px 1px #9c681e); }
