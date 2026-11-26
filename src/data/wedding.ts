@@ -1,4 +1,3 @@
-// The venue and time are yet to be confirmed.
 export const wedding = {
   bride: 'Himeshi',
   groom: 'Madhawa',
@@ -8,4 +7,10 @@ export const wedding = {
   month: 'January',
   year: '2027',
   monogram: 'H&M',
+  venue: {
+    name: 'Jetwing Lighthouse',
+    city: 'Galle, Sri Lanka',
+    address: 'Dadella, Galle 80000',
+    mapUrl: 'https://maps.google.com/?q=Jetwing+Lighthouse+Galle+Sri+Lanka',
+  },
 } as const;
