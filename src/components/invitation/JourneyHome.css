@@ -249,6 +249,12 @@
   text-transform: uppercase;
   color: #9e6b2b;
 }
+.journey-finale-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
 .journey-replay {
   display: inline-flex;
   align-items: center;

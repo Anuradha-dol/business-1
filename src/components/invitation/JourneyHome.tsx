@@ -359,11 +359,16 @@ export default function JourneyHome({ onReplayOpening, onTriggerPetalBurst }: Pr
               <div className={`journey-finale${isDone ? ' journey-finale--show' : ''}`}>
                 <h3>{wedding.bride} &amp; {wedding.groom}</h3>
                 <p>Forever Begins Here</p>
-                {onReplayOpening && (
-                  <button type="button" className="journey-replay" onClick={onReplayOpening}>
-                    <RotateCcw size={12} /> Replay Opening Envelope
+                <div className="journey-finale-actions">
+                  <button type="button" className="journey-replay" onClick={replayJourney}>
+                    <RotateCcw size={12} /> Replay Journey
                   </button>
-                )}
+                  {onReplayOpening && (
+                    <button type="button" className="journey-replay" onClick={onReplayOpening}>
+                      <RotateCcw size={12} /> Replay Opening Envelope
+                    </button>
+                  )}
+                </div>
               </div>
             )}
 
