@@ -327,6 +327,23 @@ export default function Invitation({ onReplay, music }: Props) {
   const [petalBurstKey, setPetalBurstKey] = useState(0);
   const { playing, needsGesture, toggle } = music;
 
+  /* Preload all journey & floral assets immediately so tab/scroll transitions are instant */
+  useEffect(() => {
+    const base = `${import.meta.env.BASE_URL}assets/images/cinematic/`;
+    [
+      `${base}main-background.webp`,
+      `${base}ambient/floral-corner.jpg`,
+      `${base}journey/ch1-encounter.jpg`,
+      `${base}journey/ch2-bloomed.jpg`,
+      `${base}journey/ch3-promise.jpg`,
+      `${base}journey/ch4-union.jpg`,
+      `${base}journey/ch5-forever.jpg`,
+    ].forEach(src => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, []);
+
   const [draft, setDraft] = useState<RsvpDraft>(() => {
     try { return { ...emptyDraft, ...JSON.parse(localStorage.getItem(draftKey) || '{}') }; } catch { return emptyDraft; }
   });
@@ -353,7 +370,7 @@ export default function Invitation({ onReplay, music }: Props) {
     <main className="wedding-home">
       <div
         className="wedding-home__background"
-        style={{ backgroundImage: `url("${import.meta.env.BASE_URL}assets/images/cinematic/main-background.png")` }}
+        style={{ backgroundImage: `url("${import.meta.env.BASE_URL}assets/images/cinematic/main-background.webp")` }}
         aria-hidden="true"
       />
 

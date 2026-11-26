@@ -48,6 +48,20 @@ export default function Envelope({ onComplete }: EnvelopeProps) {
       if (!cancelled) {
         clearTimeout(timeout);
         setReady(true);
+        // Warm-cache invitation assets in the background while user views the envelope
+        const cinBase = `${import.meta.env.BASE_URL}assets/images/cinematic/`;
+        [
+          `${cinBase}main-background.webp`,
+          `${cinBase}ambient/floral-corner.jpg`,
+          `${cinBase}journey/ch1-encounter.jpg`,
+          `${cinBase}journey/ch2-bloomed.jpg`,
+          `${cinBase}journey/ch3-promise.jpg`,
+          `${cinBase}journey/ch4-union.jpg`,
+          `${cinBase}journey/ch5-forever.jpg`,
+        ].forEach(src => {
+          const i = new Image();
+          i.src = src;
+        });
       }
     });
     return () => {

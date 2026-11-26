@@ -44,7 +44,7 @@
  .scene{z-index:1;}
 }
 @media(max-aspect-ratio:4/5){
- .portrait-stage{background:url("/assets/images/cinematic/main-background.png") center center / cover no-repeat;height:100svh;}
+ .portrait-stage{background:url("/assets/images/cinematic/main-background.webp") center center / cover no-repeat;height:100svh;}
  .portrait-stage::before,.portrait-stage::after{content:'';position:absolute;left:0;width:100%;z-index:0;pointer-events:none;}
  .portrait-stage::before{top:0;height:43%;background:linear-gradient(180deg,#faeee0 0%,#f7e5d2b0 70%,#f5d8b200 100%),var(--sky-art) center / cover;}
  .portrait-stage::after{bottom:0;height:40%;background:linear-gradient(0deg,#ead0ad 0%,#efd3ad80 65%,#efd3ad00 100%),var(--sand-art) center / cover;}
