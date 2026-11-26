@@ -1,10 +1,11 @@
 import {
-  useEffect, useRef, useState, useCallback, type FormEvent, type ReactNode
+  useEffect, useRef, useState, type FormEvent, type ReactNode
 } from 'react';
 import {
-  CalendarDays, ExternalLink, Heart, Mail, MapPin, Music2, Pause, Play, RotateCcw
+  CalendarDays, ExternalLink, Heart, Mail, MapPin, Music2, Pause, Play
 } from 'lucide-react';
 import { wedding } from '../../data/wedding';
+import JourneyHome from './JourneyHome';
 import './Invitation.css';
 
 type SectionId = 'home' | 'story' | 'day' | 'venue' | 'rsvp';
@@ -24,7 +25,6 @@ function LinkedHearts({ size = 42, className }: { size?: number; className?: str
   );
 }
 
-/* ── Watercolor Floral Corner Art ────────────────────────────────────────── */
 function FloralCornerArt() {
   return (
     <img
@@ -37,7 +37,6 @@ function FloralCornerArt() {
   );
 }
 
-/* ── Custom Gold Line-Art SVG Icons ──────────────────────────────────────── */
 function GoldIcon({ children }: { children: ReactNode }) {
   return (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9d6724" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
@@ -122,78 +121,6 @@ const VenueSunsetIcon = () => (
   </GoldIcon>
 );
 
-/* ── Carousel Gold Badges ────────────────────────────────────────────────── */
-function IconStory() {
-  return (
-    <svg width="40" height="40" viewBox="0 0 44 44" fill="none" aria-hidden="true">
-      <circle cx="22" cy="22" r="20" fill="url(#ig-s)" stroke="rgba(185,135,55,.45)" strokeWidth="1" />
-      <defs>
-        <radialGradient id="ig-s" cx="40%" cy="30%" r="70%">
-          <stop offset="0%" stopColor="#fff8e8" />
-          <stop offset="100%" stopColor="#f7e0b0" />
-        </radialGradient>
-      </defs>
-      <path d="M13 14h7a3 3 0 0 1 3 3v13a1 1 0 0 0-1-1h-9V14z" fill="rgba(185,135,55,.16)" stroke="#b88728" strokeWidth="1.3" strokeLinejoin="round" />
-      <path d="M31 14h-7a3 3 0 0 0-3 3v13a1 1 0 0 1 1-1h9V14z" fill="rgba(185,135,55,.1)" stroke="#b88728" strokeWidth="1.3" strokeLinejoin="round" />
-      <path d="M22 17v13" stroke="#c89830" strokeWidth="1" strokeDasharray="2 2" />
-    </svg>
-  );
-}
-
-function IconDay() {
-  return (
-    <svg width="40" height="40" viewBox="0 0 44 44" fill="none" aria-hidden="true">
-      <circle cx="22" cy="22" r="20" fill="url(#ig-d)" stroke="rgba(185,135,55,.45)" strokeWidth="1" />
-      <defs>
-        <radialGradient id="ig-d" cx="40%" cy="30%" r="70%">
-          <stop offset="0%" stopColor="#fff8e8" />
-          <stop offset="100%" stopColor="#f7e0b0" />
-        </radialGradient>
-      </defs>
-      <rect x="12" y="15" width="20" height="17" rx="3" fill="rgba(185,135,55,.12)" stroke="#b88728" strokeWidth="1.3" />
-      <line x1="12" y1="20" x2="32" y2="20" stroke="#b88728" strokeWidth="1.1" />
-      <line x1="17" y1="12" x2="17" y2="17" stroke="#c08020" strokeWidth="1.5" strokeLinecap="round" />
-      <line x1="27" y1="12" x2="27" y2="17" stroke="#c08020" strokeWidth="1.5" strokeLinecap="round" />
-      <text x="22" y="28.5" textAnchor="middle" fontFamily="Georgia,serif" fontSize="8.5" fill="#9d6724">15</text>
-    </svg>
-  );
-}
-
-function IconVenue() {
-  return (
-    <svg width="40" height="40" viewBox="0 0 44 44" fill="none" aria-hidden="true">
-      <circle cx="22" cy="22" r="20" fill="url(#ig-v)" stroke="rgba(185,135,55,.45)" strokeWidth="1" />
-      <defs>
-        <radialGradient id="ig-v" cx="40%" cy="30%" r="70%">
-          <stop offset="0%" stopColor="#fff8e8" />
-          <stop offset="100%" stopColor="#f7e0b0" />
-        </radialGradient>
-      </defs>
-      <path d="M22 10c-4.4 0-8 3.6-8 8 0 5.5 8 15 8 15s8-9.5 8-15c0-4.4-3.6-8-8-8z" fill="rgba(185,135,55,.2)" stroke="#b88728" strokeWidth="1.3" />
-      <circle cx="22" cy="18" r="2.8" fill="rgba(185,135,55,.45)" stroke="#b88728" strokeWidth="1" />
-      <path d="M13 31c3-2 6 2 9-1s6-1 9 1" stroke="#c08020" strokeWidth="1.1" strokeLinecap="round" fill="none" opacity=".6" />
-    </svg>
-  );
-}
-
-function IconRSVP() {
-  return (
-    <svg width="40" height="40" viewBox="0 0 44 44" fill="none" aria-hidden="true">
-      <circle cx="22" cy="22" r="20" fill="url(#ig-r)" stroke="rgba(185,135,55,.45)" strokeWidth="1" />
-      <defs>
-        <radialGradient id="ig-r" cx="40%" cy="30%" r="70%">
-          <stop offset="0%" stopColor="#fff8e8" />
-          <stop offset="100%" stopColor="#f7e0b0" />
-        </radialGradient>
-      </defs>
-      <rect x="10" y="15" width="24" height="16" rx="2.5" fill="rgba(185,135,55,.15)" stroke="#b88728" strokeWidth="1.3" />
-      <path d="M10 17l12 9 12-9" stroke="#b88728" strokeWidth="1.3" fill="none" strokeLinejoin="round" />
-      <circle cx="22" cy="23" r="3" fill="rgba(185,135,55,.45)" stroke="#c08020" strokeWidth="1" />
-    </svg>
-  );
-}
-
-/* ── Decorative SVG Ornaments ────────────────────────────────────────────── */
 function FloralDivider() {
   return (
     <svg className="floral-divider" viewBox="0 0 320 24" fill="none" aria-hidden="true" preserveAspectRatio="xMidYMid meet">
@@ -221,14 +148,14 @@ function GoldenParticles() {
     resize();
     window.addEventListener('resize', resize, { passive: true });
     type P = { x: number; y: number; vx: number; vy: number; size: number; alpha: number; life: number; maxLife: number; hue: number };
-    const pts: P[] = []; const MAX = 45;
+    const pts: P[] = []; const MAX = 42;
     const spawn = () => {
       if (pts.length >= MAX) return;
       pts.push({
         x: Math.random() * canvas.width, y: canvas.height + 10,
-        vx: (Math.random() - .5) * .55, vy: -(Math.random() * .8 + .35),
-        size: Math.random() * 2.5 + 1, alpha: 0, life: 0,
-        maxLife: 220 + Math.random() * 140, hue: Math.random() * 18 - 9,
+        vx: (Math.random() - .5) * .5, vy: -(Math.random() * .75 + .3),
+        size: Math.random() * 2.4 + 1, alpha: 0, life: 0,
+        maxLife: 240 + Math.random() * 140, hue: Math.random() * 18 - 9,
       });
     };
     let frame = 0;
@@ -236,14 +163,14 @@ function GoldenParticles() {
       rafRef.current = requestAnimationFrame(draw);
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       frame++;
-      if (frame % 6 === 0) spawn();
+      if (frame % 7 === 0) spawn();
       for (let i = pts.length - 1; i >= 0; i--) {
         const p = pts[i];
-        p.x += p.vx + Math.sin(p.life * .04) * .35; p.y += p.vy; p.life++;
+        p.x += p.vx + Math.sin(p.life * .035) * .32; p.y += p.vy; p.life++;
         const t = p.life / p.maxLife;
         p.alpha = t < .15 ? t / .15 : t > .75 ? (1 - t) / .25 : 1;
         if (p.life > p.maxLife) { pts.splice(i, 1); continue; }
-        ctx.save(); ctx.globalAlpha = p.alpha * .75;
+        ctx.save(); ctx.globalAlpha = p.alpha * .7;
         ctx.fillStyle = `hsl(${42 + p.hue},88%,64%)`;
         ctx.shadowColor = `hsl(${42 + p.hue},100%,75%)`; ctx.shadowBlur = 9;
         ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill(); ctx.restore();
@@ -255,9 +182,15 @@ function GoldenParticles() {
   return <canvas ref={canvasRef} className="global-particles" aria-hidden="true" />;
 }
 
-function PetalRain() {
+function PetalRain({ burstKey }: { burstKey: number }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rafRef = useRef<number>(0);
+  const burstRef = useRef(0);
+
+  useEffect(() => {
+    if (burstKey > 0) burstRef.current = 18;
+  }, [burstKey]);
+
   useEffect(() => {
     const canvas = canvasRef.current; if (!canvas) return;
     const ctx = canvas.getContext('2d'); if (!ctx) return;
@@ -265,16 +198,16 @@ function PetalRain() {
     resize();
     window.addEventListener('resize', resize, { passive: true });
     type P = { x: number; y: number; vx: number; vy: number; rot: number; vrot: number; w: number; h: number; alpha: number; life: number; maxLife: number; blush: boolean };
-    const petals: P[] = []; const MAX = 26;
+    const petals: P[] = []; const MAX = 38;
     const spawn = () => {
       if (petals.length >= MAX) return;
       const w = 7 + Math.random() * 8;
       petals.push({
         x: Math.random() * canvas.width, y: -20,
-        vx: (Math.random() - .5) * .8, vy: .65 + Math.random() * .55,
+        vx: (Math.random() - .5) * .8, vy: .6 + Math.random() * .55,
         rot: Math.random() * Math.PI * 2, vrot: (Math.random() - .5) * .035,
         w, h: w * .56, alpha: 0, life: 0, maxLife: 320 + Math.random() * 180,
-        blush: Math.random() > 0.4,
+        blush: Math.random() > 0.45,
       });
     };
     let frame = 0;
@@ -282,19 +215,24 @@ function PetalRain() {
       rafRef.current = requestAnimationFrame(draw);
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       frame++;
-      if (frame % 16 === 0) spawn();
+      if (burstRef.current > 0 && frame % 3 === 0) {
+        spawn();
+        burstRef.current--;
+      } else if (frame % 16 === 0) {
+        spawn();
+      }
       for (let i = petals.length - 1; i >= 0; i--) {
         const p = petals[i];
         p.x += p.vx + Math.sin(p.life * .025) * .55; p.y += p.vy; p.rot += p.vrot; p.life++;
         const t = p.life / p.maxLife;
         p.alpha = t < .1 ? t / .1 : t > .85 ? (1 - t) / .15 : 1;
         if (p.life > p.maxLife || p.y > canvas.height + 20) { petals.splice(i, 1); continue; }
-        ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot); ctx.globalAlpha = p.alpha * .7;
+        ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot); ctx.globalAlpha = p.alpha * .72;
         const g = ctx.createRadialGradient(0, 0, 0, 0, 0, p.w);
         if (p.blush) {
-          g.addColorStop(0, '#fff5f2'); g.addColorStop(.55, '#f5c2b8'); g.addColorStop(1, 'rgba(230,150,140,0)');
+          g.addColorStop(0, '#fff7f5'); g.addColorStop(.55, '#f5c7be'); g.addColorStop(1, 'rgba(230,150,140,0)');
         } else {
-          g.addColorStop(0, '#ffffff'); g.addColorStop(.6, '#f9e9d6'); g.addColorStop(1, 'rgba(240,210,175,0)');
+          g.addColorStop(0, '#ffffff'); g.addColorStop(.6, '#f9ebda'); g.addColorStop(1, 'rgba(240,210,175,0)');
         }
         ctx.fillStyle = g; ctx.beginPath(); ctx.ellipse(0, 0, p.w, p.h, 0, 0, Math.PI * 2); ctx.fill(); ctx.restore();
       }
@@ -337,7 +275,6 @@ function SeaShimmer() {
   return <canvas ref={canvasRef} className="cinematic-sea" aria-hidden="true" />;
 }
 
-/* ── Countdown ───────────────────────────────────────────────────────────── */
 function Countdown({ targetISO }: { targetISO: string }) {
   const target = new Date(targetISO).getTime();
   const get = () => {
@@ -363,7 +300,6 @@ function Countdown({ targetISO }: { targetISO: string }) {
   );
 }
 
-/* ── Staggered Timeline Item ─────────────────────────────────────────────── */
 function TimelineItem({ icon, title, detail, delay }: { icon: ReactNode; title: string; detail: string; delay: number }) {
   return (
     <div className="timeline-item" style={{ animationDelay: `${delay}ms` }}>
@@ -376,101 +312,6 @@ function TimelineItem({ icon, title, detail, delay }: { icon: ReactNode; title: 
   );
 }
 
-/* ── Horizontal Scene Carousel ───────────────────────────────────────────── */
-const CARDS = [
-  { id: 'story' as const, label: 'Our Story', Icon: IconStory, bg: '#fff8ed', accent: '#c89228', desc: 'How we met & our journey' },
-  { id: 'day'   as const, label: 'The Day',   Icon: IconDay,   bg: '#fff5e8', accent: '#b88220', desc: '15 January 2027 · Galle' },
-  { id: 'venue' as const, label: 'Venue',     Icon: IconVenue, bg: '#fff3e5', accent: '#aa741c', desc: 'Jetwing Lighthouse, Galle' },
-  { id: 'rsvp'  as const, label: 'RSVP',      Icon: IconRSVP,  bg: '#fff1e2', accent: '#9b6818', desc: 'Confirm your attendance' },
-];
-
-function SceneCarousel({ onNavigate }: { onNavigate: (p: SectionId) => void }) {
-  const trackRef = useRef<HTMLDivElement>(null);
-  const [active, setActive] = useState(0);
-  const startX = useRef(0);
-  const startScroll = useRef(0);
-  const dragging = useRef(false);
-  const moved = useRef(false);
-
-  const scrollTo = useCallback((idx: number) => {
-    const track = trackRef.current; if (!track) return;
-    const card = track.children[idx] as HTMLElement;
-    if (!card) return;
-    const offset = card.offsetLeft - (track.offsetWidth - card.offsetWidth) / 2;
-    track.scrollTo({ left: offset, behavior: 'smooth' });
-    setActive(idx);
-  }, []);
-
-  useEffect(() => {
-    const track = trackRef.current; if (!track) return;
-    const handler = () => {
-      const cards = Array.from(track.children) as HTMLElement[];
-      const center = track.scrollLeft + track.offsetWidth / 2;
-      let best = 0, bestDist = Infinity;
-      cards.forEach((c, i) => {
-        const d = Math.abs(c.offsetLeft + c.offsetWidth / 2 - center);
-        if (d < bestDist) { best = i; bestDist = d; }
-      });
-      setActive(best);
-    };
-    track.addEventListener('scroll', handler, { passive: true });
-    return () => track.removeEventListener('scroll', handler);
-  }, []);
-
-  const onMouseDown = (e: React.MouseEvent) => {
-    dragging.current = true; moved.current = false;
-    startX.current = e.clientX;
-    startScroll.current = trackRef.current?.scrollLeft ?? 0;
-  };
-  const onMouseMove = (e: React.MouseEvent) => {
-    if (!dragging.current || !trackRef.current) return;
-    if (Math.abs(e.clientX - startX.current) > 5) moved.current = true;
-    trackRef.current.scrollLeft = startScroll.current - (e.clientX - startX.current);
-  };
-  const onMouseUp = () => { dragging.current = false; };
-
-  return (
-    <div className="scene-carousel">
-      <div ref={trackRef} className="scene-carousel__track"
-        onMouseDown={onMouseDown} onMouseMove={onMouseMove}
-        onMouseUp={onMouseUp} onMouseLeave={onMouseUp}>
-        {CARDS.map((card, i) => (
-          <button
-            type="button"
-            key={card.id}
-            className={`scene-card${active === i ? ' scene-card--active' : ''}`}
-            style={{ '--card-accent': card.accent, '--card-bg': card.bg } as React.CSSProperties}
-            onClick={() => {
-              if (moved.current) return;
-              scrollTo(i);
-              onNavigate(card.id);
-            }}
-          >
-            <div className="scene-card__glow" aria-hidden="true" />
-            <div className="scene-card__icon"><card.Icon /></div>
-            <h3 className="scene-card__label">{card.label}</h3>
-            <p className="scene-card__desc">{card.desc}</p>
-            <span className="scene-card__cta">
-              Open
-              <svg width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-                <path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-            </span>
-          </button>
-        ))}
-      </div>
-      <div className="scene-carousel__dots" role="tablist" aria-label="Carousel navigation">
-        {CARDS.map((c, i) => (
-          <button key={c.id} type="button" role="tab" aria-selected={active === i} aria-label={c.label}
-            className={`carousel-dot${active === i ? ' carousel-dot--active' : ''}`}
-            onClick={() => scrollTo(i)} />
-        ))}
-      </div>
-    </div>
-  );
-}
-
-/* ── Constants ───────────────────────────────────────────────────────────── */
 const draftKey = 'wedding-rsvp-draft';
 const emptyDraft: RsvpDraft = { name: '', attendance: '', guests: '1', message: '' };
 const navItems: { id: SectionId; label: string; icon: typeof Heart }[] = [
@@ -481,11 +322,9 @@ const navItems: { id: SectionId; label: string; icon: typeof Heart }[] = [
   { id: 'rsvp',  label: 'RSVP',      icon: Mail },
 ];
 
-/* ══════════════════════════════════════════════════════════════════════════
-   MAIN 100SVH LUXURY APP EXPERIENCE
-   ══════════════════════════════════════════════════════════════════════════ */
 export default function Invitation({ onReplay, music }: Props) {
   const [active, setActive] = useState<SectionId>('home');
+  const [petalBurstKey, setPetalBurstKey] = useState(0);
   const { playing, needsGesture, toggle } = music;
 
   const [draft, setDraft] = useState<RsvpDraft>(() => {
@@ -505,6 +344,7 @@ export default function Invitation({ onReplay, music }: Props) {
       localStorage.setItem(draftKey, JSON.stringify(draft));
       setSaveStatus('saved');
       setConfirmed(true);
+      setPetalBurstKey(k => k + 1);
       setTimeout(() => setConfirmed(false), 4000);
     } catch { setSaveStatus('error'); }
   };
@@ -517,11 +357,10 @@ export default function Invitation({ onReplay, music }: Props) {
         aria-hidden="true"
       />
 
-      {/* Global Ambient Motion — Active on EVERY Tab */}
+      {/* Global Petals & Golden Particles on ALL Tabs */}
       <GoldenParticles />
-      <PetalRain />
+      <PetalRain burstKey={petalBurstKey} />
 
-      {/* Header */}
       <header className="wedding-home__header wedding-home__header--scrolled">
         <button className="wedding-home__monogram" onClick={() => setActive('home')} aria-label="Home">
           {wedding.monogram}<span>⌁ ❧ ⌁</span>
@@ -552,39 +391,19 @@ export default function Invitation({ onReplay, music }: Props) {
         {needsGesture && <span className="wedding-home__music-error" role="status">Tap Music to play the song.</span>}
       </header>
 
-      {/* Active Scene Stage */}
       <div className="wedding-stage">
 
+        {/* ── HOME: A JOURNEY TO FOREVER ─────────────────────────────────── */}
         {active === 'home' && (
-          <section key="home" className="stage-scene stage-scene--home" aria-labelledby="wedding-home-title">
-            <div className="wedding-hero">
-              <div className="wedding-hero__shell" aria-hidden="true">
-                <span /><LinkedHearts size={36} /><span />
-              </div>
-              <p className="wedding-hero__eyebrow"><span />The wedding of<span /></p>
-              <h1 id="wedding-home-title">
-                {wedding.bride} <span>&amp;</span> {wedding.groom}
-              </h1>
-              <FloralDivider />
-              <div className="wedding-hero__date">
-                <span aria-hidden="true">❧</span>
-                <time dateTime={wedding.dateISO}>
-                  <strong>{wedding.day}</strong>{wedding.month} {wedding.year}
-                </time>
-                <span aria-hidden="true">☙</span>
-              </div>
-
-              <SceneCarousel onNavigate={setActive} />
-
-              {onReplay && (
-                <button className="wedding-home__replay" onClick={onReplay}>
-                  <RotateCcw size={12} /> Replay opening invitation
-                </button>
-              )}
-            </div>
+          <section key="home" className="stage-scene" aria-label="A Journey to Forever">
+            <JourneyHome
+              onReplayOpening={onReplay}
+              onTriggerPetalBurst={() => setPetalBurstKey(k => k + 1)}
+            />
           </section>
         )}
 
+        {/* ── OUR STORY ──────────────────────────────────────────────────── */}
         {active === 'story' && (
           <section key="story" className="stage-scene" aria-labelledby="story-title">
             <div className="luxury-card luxury-card--story">
@@ -597,16 +416,17 @@ export default function Invitation({ onReplay, music }: Props) {
                 <p className="scene-intro">Together with our families, we invite you to celebrate our wedding.</p>
                 <FloralDivider />
                 <div className="story-timeline">
-                  <TimelineItem icon={<StoryWaveIcon />} title="Where We Met" detail="Two paths crossed, and everything felt right." delay={80} />
-                  <TimelineItem icon={<StorySparkIcon />} title="Growing Closer" detail="Years of shared laughter, family, and friendship." delay={170} />
-                  <TimelineItem icon={<StoryRingsIcon />} title="The Engagement" detail="A quiet promise to walk through life together." delay={260} />
-                  <TimelineItem icon={<StoryChapterIcon />} title="15 January 2027" detail="Beginning our next chapter in Galle with everyone we love." delay={350} />
+                  <TimelineItem icon={<StoryWaveIcon />} title="Where We Met" detail="Two paths crossed, and everything felt right." delay={160} />
+                  <TimelineItem icon={<StorySparkIcon />} title="Growing Closer" detail="Years of shared laughter, family, and friendship." delay={280} />
+                  <TimelineItem icon={<StoryRingsIcon />} title="The Engagement" detail="A quiet promise to walk through life together." delay={400} />
+                  <TimelineItem icon={<StoryChapterIcon />} title="15 January 2027" detail="Beginning our next chapter in Galle with everyone we love." delay={520} />
                 </div>
               </div>
             </div>
           </section>
         )}
 
+        {/* ── THE DAY ────────────────────────────────────────────────────── */}
         {active === 'day' && (
           <section key="day" className="stage-scene" aria-labelledby="day-title">
             <div className="luxury-card luxury-card--day">
@@ -625,9 +445,9 @@ export default function Invitation({ onReplay, music }: Props) {
                   <span className="day-date-display__month-year">{wedding.month} {wedding.year}</span>
                 </time>
                 <div className="day-timeline">
-                  <TimelineItem icon={<DaySunriseIcon />} title="Wedding Ceremony" detail="Time to be confirmed" delay={80} />
-                  <TimelineItem icon={<DayToastIcon />} title="Cocktail &amp; Reception" detail="Time to be confirmed" delay={170} />
-                  <TimelineItem icon={<DayMoonIcon />} title="Dinner &amp; Celebration" detail="Time to be confirmed" delay={260} />
+                  <TimelineItem icon={<DaySunriseIcon />} title="Wedding Ceremony" detail="Time to be confirmed" delay={160} />
+                  <TimelineItem icon={<DayToastIcon />} title="Cocktail &amp; Reception" detail="Time to be confirmed" delay={280} />
+                  <TimelineItem icon={<DayMoonIcon />} title="Dinner &amp; Celebration" detail="Time to be confirmed" delay={400} />
                 </div>
                 <p className="luxury-card__note">Exact timings will be shared closer to the wedding.</p>
               </div>
@@ -635,6 +455,7 @@ export default function Invitation({ onReplay, music }: Props) {
           </section>
         )}
 
+        {/* ── VENUE ──────────────────────────────────────────────────────── */}
         {active === 'venue' && (
           <section key="venue" className="stage-scene" aria-labelledby="venue-title">
             <div className="luxury-card luxury-card--venue">
@@ -697,6 +518,7 @@ export default function Invitation({ onReplay, music }: Props) {
           </section>
         )}
 
+        {/* ── RSVP ───────────────────────────────────────────────────────── */}
         {active === 'rsvp' && (
           <section key="rsvp" className="stage-scene" aria-labelledby="rsvp-title">
             <div className="luxury-card luxury-card--rsvp">
