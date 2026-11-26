@@ -1,6 +1,6 @@
 /* ═══════════════════════════════════════════════════════════════════════════
    WEDDING INVITATION — 100SVH LUXURY APP EXPERIENCE
-   Zero scroll-jump · Uniform floral stationery cards · Clickable Maps pin
+   Zero clipping · Global petals & golden particles · Cinematic tab motion
    ═══════════════════════════════════════════════════════════════════════════ */
 
 .wedding-home {
@@ -14,7 +14,7 @@
   background: #f6dfc5;
   overflow: hidden;
   font-family: Georgia, 'Times New Roman', serif;
-  animation: wedding-scene-in 1.2s cubic-bezier(.22,.85,.35,1) both;
+  animation: wedding-scene-in 1.1s cubic-bezier(.22,.85,.35,1) both;
 }
 
 .wedding-home__background {
@@ -25,35 +25,27 @@
   pointer-events: none;
 }
 
-/* ── Sparkles & Ornaments ────────────────────────────────────────────────── */
-.sparkle-sticker {
+/* Global Petals & Golden Particles across ALL tabs */
+.global-particles,
+.global-petals {
   position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
-  z-index: 1;
-  animation: sparkle-pulse 3.2s ease-in-out infinite;
+  z-index: 40;
 }
-@keyframes sparkle-pulse {
-  0%, 100% { opacity: .45; transform: scale(1) rotate(0deg); }
-  45%       { opacity: .95; transform: scale(1.22) rotate(16deg); }
-  75%       { opacity: .65; transform: scale(.92) rotate(-8deg); }
-}
+.global-particles { opacity: 0.78; }
+.global-petals    { opacity: 0.85; }
 
 .floral-divider {
   display: block;
   width: 100%;
-  max-width: 280px;
-  height: 22px;
-  margin: 6px auto 12px;
+  max-width: 260px;
+  height: 20px;
+  margin: 4px auto 10px;
   overflow: visible;
-}
-
-.wave-divider {
-  display: block;
-  width: 100%;
-  max-width: 320px;
-  height: 16px;
-  margin: 4px auto;
-  overflow: visible;
+  flex-shrink: 0;
 }
 
 /* ── Header ──────────────────────────────────────────────────────────────── */
@@ -66,11 +58,10 @@
   align-items: center;
   gap: 6px;
   padding: max(10px, env(safe-area-inset-top)) 5% 6px;
-  transition: background .4s, backdrop-filter .4s;
 }
 
 .wedding-home__header--scrolled {
-  background: rgba(252, 240, 222, 0.72);
+  background: rgba(252, 240, 222, 0.78);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid rgba(210, 165, 90, 0.25);
@@ -80,7 +71,7 @@
   border: 0;
   background: transparent;
   color: #98611f;
-  font: 400 30px/.8 'Great Vibes', cursive;
+  font: 400 28px/.8 'Great Vibes', cursive;
   width: max-content;
   padding: 2px 6px;
   transition: transform .3s, color .3s;
@@ -110,7 +101,7 @@
   flex: none;
   background: none;
   border: 0;
-  padding: 7px 2px 9px;
+  padding: 6px 2px 8px;
   color: #76502b;
   font: 600 10px/1 Georgia, serif;
   letter-spacing: .11em;
@@ -138,7 +129,7 @@
   border-radius: 30px;
   border: 1px solid #d6ae76;
   color: #995e15;
-  background: rgba(255, 244, 226, .86);
+  background: rgba(255, 244, 226, .88);
   box-shadow: 0 3px 12px rgba(130, 86, 28, .09);
   font: 600 10px/1 Georgia, serif;
   text-transform: uppercase;
@@ -149,7 +140,7 @@
 .wedding-home__music-error {
   position: absolute;
   right: 5%;
-  top: 56px;
+  top: 54px;
   background: #fff7eb;
   padding: 8px 10px;
   border-radius: 8px;
@@ -159,40 +150,47 @@
 
 .wedding-home button:focus-visible,
 .wedding-home input:focus-visible,
-.wedding-home textarea:focus-visible,
 .wedding-home a:focus-visible { outline: 2px solid #94601d; outline-offset: 3px; }
 
 /* ══════════════════════════════════════════════════════════════════════════
-   100SVH SCENE STAGE
+   STAGE — Fits cleanly above bottom safe-area & badges
    ══════════════════════════════════════════════════════════════════════════ */
 .wedding-stage {
   position: relative;
   z-index: 2;
   flex: 1;
   min-height: 0;
-  display: grid;
-  place-items: center;
-  padding: 8px 14px max(16px, env(safe-area-inset-bottom) + 12px);
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 14px max(54px, env(safe-area-inset-bottom) + 48px);
 }
 
 .stage-scene {
   width: 100%;
+  max-width: 100%;
   height: 100%;
-  display: grid;
-  place-items: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: relative;
-  animation: scene-enter .55s cubic-bezier(.22,.85,.35,1) both;
 }
 
-@keyframes scene-enter {
-  from { opacity: 0; transform: translateY(16px) scale(.985); }
-  to   { opacity: 1; transform: translateY(0) scale(1); }
+.stage-scene--home {
+  animation: scene-home-in .7s cubic-bezier(.22,.85,.35,1) both;
 }
 
-/* ── Hero ────────────────────────────────────────────────────────────────── */
+@keyframes scene-home-in {
+  from { opacity: 0; transform: scale(.97); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+/* ── Hero (Zero horizontal overflow!) ────────────────────────────────────── */
 .wedding-hero {
   position: relative;
-  width: min(100%, 820px);
+  width: 100%;
+  max-width: 820px;
   text-align: center;
   isolation: isolate;
 }
@@ -260,21 +258,26 @@
 .wedding-home__replay {
   display: inline-flex; gap: 6px; align-items: center; border: 0;
   margin-top: 8px;
-  background: rgba(255, 246, 230, 0.72); border-radius: 20px;
+  background: rgba(255, 246, 230, 0.78); border-radius: 20px;
   color: #8b602b; padding: 7px 14px; font: 10.5px Georgia, serif;
   letter-spacing: .06em; transition: background .25s;
 }
-.wedding-home__replay:hover { background: rgba(255, 248, 236, 0.95); }
+.wedding-home__replay:hover { background: rgba(255, 248, 236, 0.96); }
 
 /* ══════════════════════════════════════════════════════════════════════════
-   SCENE CAROUSEL
+   SCENE CAROUSEL — Contained inside 100% width
    ══════════════════════════════════════════════════════════════════════════ */
-.scene-carousel { margin: 0 -14px; padding-bottom: 2px; }
+.scene-carousel {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  padding-bottom: 2px;
+}
 .scene-carousel__track {
   display: flex;
   gap: 12px;
-  padding: 8px 24px;
-  overflow-x: scroll;
+  padding: 8px 18vw;
+  overflow-x: auto;
   scroll-snap-type: x mandatory;
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
@@ -287,9 +290,9 @@
 
 .scene-card {
   position: relative;
-  flex: 0 0 calc(68vw - 20px);
-  max-width: 240px;
-  min-height: 170px;
+  flex: 0 0 60vw;
+  max-width: 220px;
+  min-height: 164px;
   scroll-snap-align: center;
   display: flex;
   flex-direction: column;
@@ -301,8 +304,8 @@
   border-radius: 24px;
   background: var(--card-bg, #fff8ed);
   box-shadow:
-    0 8px 26px rgba(130,80,20,.13),
-    inset 0 0 26px rgba(255,248,230,.6),
+    0 8px 24px rgba(130,80,20,.13),
+    inset 0 0 24px rgba(255,248,230,.6),
     inset 0 1px 0 rgba(255,235,160,.65);
   transition: transform .35s cubic-bezier(.22,.85,.35,1), box-shadow .35s, opacity .35s;
   overflow: hidden;
@@ -311,17 +314,17 @@
 .scene-card:hover, .scene-card--active {
   transform: translateY(-4px) scale(1.02);
   box-shadow:
-    0 14px 34px rgba(130,80,20,.2),
+    0 14px 32px rgba(130,80,20,.2),
     0 0 0 1px rgba(210,165,80,.45),
-    inset 0 0 30px rgba(255,250,235,.85);
+    inset 0 0 28px rgba(255,250,235,.85);
 }
-.scene-card:not(.scene-card--active) { opacity: .84; }
+.scene-card:not(.scene-card--active) { opacity: .82; }
 .scene-card__glow {
   position: absolute; inset: 0; border-radius: 24px; pointer-events: none;
   background: radial-gradient(ellipse 60% 40% at 50% 10%, rgba(255,235,160,.35), transparent 70%);
 }
 .scene-card__icon {
-  width: 46px; height: 46px; border-radius: 50%;
+  width: 44px; height: 44px; border-radius: 50%;
   background: linear-gradient(135deg, rgba(255,247,220,.95), rgba(252,228,165,.8));
   border: 1px solid rgba(210,165,80,.35);
   display: grid; place-items: center;
@@ -331,7 +334,7 @@
 .scene-card__desc { margin: 0; color: #9a7040; font: 10.5px/1.35 Georgia, serif; letter-spacing: .03em; }
 .scene-card__cta {
   display: inline-flex; align-items: center; gap: 4px; margin-top: 2px;
-  padding: 6px 14px; border-radius: 20px; border: 1px solid rgba(185,135,55,.45);
+  padding: 5px 13px; border-radius: 20px; border: 1px solid rgba(185,135,55,.45);
   background: linear-gradient(135deg, rgba(220,175,80,.18), rgba(200,150,55,.12));
   color: var(--card-accent, #c09030);
   font: 600 9px/1 Georgia, serif; letter-spacing: .12em; text-transform: uppercase;
@@ -344,59 +347,82 @@
 .carousel-dot--active { background: rgba(185,135,55,.8); transform: scale(1.28); }
 
 /* ══════════════════════════════════════════════════════════════════════════
-   UNIFORM LUXURY STATIONERY CARD (Story, Day, Venue, RSVP — exact same frame)
+   UNIFORM LUXURY STATIONERY CARD — Zero Top/Bottom Clipping + Dramatic Entrance
    ══════════════════════════════════════════════════════════════════════════ */
 .luxury-card {
   position: relative;
-  width: min(100%, 560px);
-  height: min(640px, calc(100svh - 168px));
+  width: min(100%, 540px);
+  max-height: calc(100svh - 170px);
   display: flex;
   flex-direction: column;
-  border: 1px solid rgba(210, 165, 90, 0.55);
-  border-radius: 30px;
+  border: 1px solid rgba(210, 165, 90, 0.58);
+  border-radius: 28px;
   background: #fef7ec;
   box-shadow:
-    0 24px 64px rgba(130, 80, 20, 0.18),
+    0 24px 60px rgba(130, 80, 20, 0.2),
     0 4px 18px rgba(130, 80, 20, 0.08),
-    inset 0 0 56px rgba(255, 249, 235, 0.65),
+    inset 0 0 48px rgba(255, 249, 235, 0.65),
     inset 0 1px 0 rgba(255, 232, 165, 0.85);
   overflow: hidden;
   isolation: isolate;
+  animation: luxury-card-enter .65s cubic-bezier(.18,.88,.32,1) both;
+}
+
+@keyframes luxury-card-enter {
+  0%   { opacity: 0; transform: perspective(900px) translateY(28px) rotateX(6deg) scale(.94); }
+  100% { opacity: 1; transform: perspective(900px) translateY(0) rotateX(0deg) scale(1); }
+}
+
+/* Gold shimmer sweep across card on tab open */
+.card-sheen {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+  background: linear-gradient(112deg, transparent 25%, rgba(255, 240, 185, 0.45) 48%, transparent 72%);
+  transform: translateX(-110%);
+  animation: card-sheen-sweep 1.2s .15s cubic-bezier(.22,.85,.35,1) both;
+}
+@keyframes card-sheen-sweep {
+  from { transform: translateX(-110%); }
+  to   { transform: translateX(115%); }
 }
 
 .card-floral-art {
   position: absolute;
   top: 0;
   left: 0;
-  width: clamp(175px, 42%, 250px);
+  width: clamp(145px, 36%, 210px);
   height: auto;
   pointer-events: none;
   z-index: 1;
   mix-blend-mode: multiply;
-  opacity: 0.9;
+  opacity: 0.88;
   mask-image: radial-gradient(ellipse 90% 90% at 15% 15%, #000 58%, transparent 100%);
   -webkit-mask-image: radial-gradient(ellipse 90% 90% at 15% 15%, #000 58%, transparent 100%);
 }
 
+/* IMPORTANT: flex-start so overflow-y: auto NEVER clips top title */
 .luxury-card__inner {
   position: relative;
   z-index: 2;
   flex: 1;
+  min-height: 0;
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: rgba(190, 135, 55, .3) transparent;
-  padding: 34px 22px 28px;
+  padding: 20px 20px 22px;
   text-align: center;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
 }
 .luxury-card__inner::-webkit-scrollbar { width: 4px; }
 .luxury-card__inner::-webkit-scrollbar-thumb { background: rgba(190, 135, 55, .3); border-radius: 4px; }
 
-.luxury-card__hearts { display: block; margin: 0 auto 6px; flex-shrink: 0; }
+.luxury-card__hearts { display: block; margin: 0 auto 4px; flex-shrink: 0; }
 .luxury-card__eyebrow {
-  margin: 0 0 3px;
+  margin: 0 0 2px;
   font: 600 9.5px/1 Georgia, serif;
   text-transform: uppercase;
   letter-spacing: .2em;
@@ -405,17 +431,17 @@
 .luxury-card__title {
   margin: 0;
   color: #995e14;
-  font: 400 clamp(36px, 6.5vw, 48px)/1.15 'Great Vibes', cursive;
+  font: 400 clamp(32px, 6vw, 44px)/1.12 'Great Vibes', cursive;
 }
 .luxury-card__note {
-  margin: 14px 0 0;
-  font: 11.5px/1.5 Georgia, serif;
+  margin: 10px 0 0;
+  font: 11px/1.45 Georgia, serif;
   color: #8f6b3e;
 }
 
 /* ── Story & Day Timelines ───────────────────────────────────────────────── */
 .scene-intro {
-  font: 400 19px/1.4 'Great Vibes', cursive;
+  font: 400 18px/1.35 'Great Vibes', cursive;
   color: #9d6724;
   margin: 2px 0 4px;
 }
@@ -423,26 +449,31 @@
 .story-timeline,
 .day-timeline {
   display: grid;
-  gap: 11px;
-  margin: 10px 0 4px;
+  gap: 8px;
+  margin: 6px 0 2px;
   text-align: left;
 }
 
 .timeline-item {
   display: flex;
   align-items: center;
-  gap: 13px;
-  padding: 10px 13px;
-  border-radius: 16px;
-  background: rgba(255, 250, 240, 0.72);
+  gap: 11px;
+  padding: 8px 12px;
+  border-radius: 14px;
+  background: rgba(255, 250, 240, 0.78);
   border: 1px solid rgba(215, 178, 120, 0.35);
-  animation: fade-up .5s both;
+  animation: item-stagger .5s cubic-bezier(.22,.85,.35,1) both;
+}
+
+@keyframes item-stagger {
+  from { opacity: 0; transform: translateX(-14px); }
+  to   { opacity: 1; transform: translateX(0); }
 }
 
 .timeline-icon {
   flex-shrink: 0;
-  width: 38px;
-  height: 38px;
+  width: 34px;
+  height: 34px;
   display: grid;
   place-items: center;
   border-radius: 50%;
@@ -455,60 +486,59 @@
 .timeline-content strong {
   display: block;
   color: #8a5915;
-  font: 600 13px/1.3 Georgia, serif;
-  letter-spacing: .03em;
-  margin-bottom: 2px;
+  font: 600 12.5px/1.25 Georgia, serif;
+  margin-bottom: 1px;
 }
 .timeline-content span {
   display: block;
   color: #936b3c;
-  font: 12px/1.4 Georgia, serif;
+  font: 11.5px/1.35 Georgia, serif;
 }
 
 /* ── Countdown & Day Date ────────────────────────────────────────────────── */
-.day-countdown { margin: 4px 0 8px; }
+.day-countdown { margin: 2px 0 6px; }
 .countdown {
   display: inline-flex;
-  gap: 5px;
-  padding: 10px 14px;
+  gap: 4px;
+  padding: 8px 12px;
   border: 1px solid rgba(210,165,80,.42);
-  border-radius: 18px;
+  border-radius: 16px;
   background: linear-gradient(135deg, rgba(255,247,228,.95), rgba(252,235,195,.88));
-  box-shadow: 0 6px 20px rgba(130,80,20,.09);
+  box-shadow: 0 5px 16px rgba(130,80,20,.08);
 }
 .countdown__unit {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 3px;
-  min-width: 50px;
-  padding: 5px 6px;
-  border-radius: 10px;
+  gap: 2px;
+  min-width: 46px;
+  padding: 4px 5px;
+  border-radius: 8px;
   background: rgba(255,245,215,.65);
 }
-.countdown__num { font: 400 28px/1 'Great Vibes', cursive; color: #9d6724; }
-.countdown__label { font: 600 8px/1 Georgia, serif; text-transform: uppercase; letter-spacing: .12em; color: #9a7040; }
+.countdown__num { font: 400 25px/1 'Great Vibes', cursive; color: #9d6724; }
+.countdown__label { font: 600 7.5px/1 Georgia, serif; text-transform: uppercase; letter-spacing: .12em; color: #9a7040; }
 
 .day-date-display {
   display: flex;
   align-items: baseline;
   justify-content: center;
   gap: 10px;
-  margin: 6px 0 4px;
+  margin: 4px 0 4px;
   color: #9d6724;
 }
-.day-date-display__day { font: 400 50px/.9 'Great Vibes', cursive; }
+.day-date-display__day { font: 400 42px/.9 'Great Vibes', cursive; }
 .day-date-display__month-year {
-  font: 600 11.5px/1.4 Georgia, serif;
+  font: 600 11px/1.4 Georgia, serif;
   text-transform: uppercase;
   letter-spacing: .16em;
 }
 
-/* ── Venue (Clickable Pin + Map Button) ──────────────────────────────────── */
+/* ── Venue ───────────────────────────────────────────────────────────────── */
 .luxury-card--venue .cinematic-sea {
   position: absolute;
   bottom: 0; left: 0; right: 0;
-  height: 44%;
+  height: 40%;
   opacity: .55;
   z-index: 1;
   pointer-events: none;
@@ -519,41 +549,38 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 64px;
-  height: 64px;
+  width: 58px;
+  height: 58px;
   border-radius: 50%;
   background: linear-gradient(135deg, rgba(255,243,218,.98), rgba(252,228,170,.88));
   border: 1.5px solid rgba(195,140,55,.65);
-  margin: 4px auto 6px;
+  margin: 2px auto 6px;
   color: #9d641c;
   box-shadow: 0 6px 20px rgba(130,80,20,.16);
   text-decoration: none;
   cursor: pointer;
-  transition: transform .25s, box-shadow .25s;
+  transition: transform .25s;
 }
-.venue-icon-wrap:hover {
-  transform: scale(1.08);
-  box-shadow: 0 10px 26px rgba(130,80,20,.24);
-}
+.venue-icon-wrap:hover { transform: scale(1.08); }
 .venue-ping {
   position: absolute; inset: -4px; border-radius: 50%;
   border: 1.5px solid rgba(185,130,50,.45);
   animation: ping 2.4s ease-in-out infinite;
 }
-.venue-ping--2 { inset: -11px; animation-delay: .8s; opacity: .5; }
+.venue-ping--2 { inset: -10px; animation-delay: .8s; opacity: .5; }
 
 .venue-tap-hint {
   display: block;
-  margin-bottom: 10px;
-  font: 600 9.5px/1 Georgia, serif;
+  margin-bottom: 8px;
+  font: 600 9px/1 Georgia, serif;
   letter-spacing: .12em;
   text-transform: uppercase;
   color: #a67632;
 }
 
-.venue-subtitle { margin: 0 0 3px; color: #8a5915; font: 400 30px/1.15 'Great Vibes', cursive; }
-.venue-address { margin: 0 0 8px; color: #9a6d33; font: 600 10.5px/1.3 Georgia, serif; text-transform: uppercase; letter-spacing: .16em; }
-.venue-desc { color: #76502e; font: 13.5px/1.6 Georgia, serif; margin: 0 auto 14px; max-width: 390px; }
+.venue-subtitle { margin: 0 0 2px; color: #8a5915; font: 400 28px/1.15 'Great Vibes', cursive; }
+.venue-address { margin: 0 0 6px; color: #9a6d33; font: 600 10px/1.3 Georgia, serif; text-transform: uppercase; letter-spacing: .16em; }
+.venue-desc { color: #76502e; font: 13px/1.55 Georgia, serif; margin: 0 auto 12px; max-width: 380px; }
 
 .venue-highlights {
   display: grid;
@@ -564,85 +591,75 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 6px;
-  padding: 11px 6px;
-  border-radius: 16px;
+  gap: 5px;
+  padding: 9px 6px;
+  border-radius: 14px;
   border: 1px solid rgba(210,165,80,.38);
-  background: rgba(255,248,232,.8);
+  background: rgba(255,248,232,.82);
 }
-.venue-highlight span {
-  font: 600 10px/1.2 Georgia, serif;
-  text-transform: uppercase;
-  letter-spacing: .06em;
-  color: #8a5915;
-}
+.venue-highlight span { font: 600 9.5px/1.2 Georgia, serif; text-transform: uppercase; letter-spacing: .05em; color: #8a5915; }
 
 .venue-map-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 7px;
-  margin: 16px auto 0;
-  padding: 11px 20px;
+  margin: 14px auto 0;
+  padding: 10px 18px;
   border-radius: 99px;
   border: 1px solid rgba(185, 135, 55, 0.58);
   background: linear-gradient(135deg, rgba(255, 248, 230, 0.96), rgba(248, 226, 178, 0.88));
   color: #8a5815;
-  font: 600 10.5px/1 Georgia, serif;
+  font: 600 10px/1 Georgia, serif;
   letter-spacing: .1em;
   text-transform: uppercase;
   text-decoration: none;
   box-shadow: 0 4px 14px rgba(130, 80, 20, 0.12);
-  transition: transform .25s, box-shadow .25s;
 }
-.venue-map-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(130, 80, 20, 0.18); }
 
-/* ── Luxury RSVP Form ────────────────────────────────────────────────────── */
-.luxury-card--rsvp .cinematic-particles { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
-
+/* ── Luxury RSVP Form (Compact, zero clipping) ───────────────────────────── */
 .rsvp-confirmation {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 14px;
-  margin-bottom: 12px;
+  gap: 10px;
+  padding: 10px 12px;
+  margin-bottom: 10px;
   border: 1px solid rgba(185,135,55,.45);
-  border-radius: 16px;
+  border-radius: 14px;
   background: linear-gradient(135deg, rgba(255,247,224,.98), rgba(252,235,190,.88));
   text-align: left;
   animation: confirmation-pop .45s cubic-bezier(.22,.85,.35,1) both;
 }
 .wax-seal {
   flex-shrink: 0;
-  width: 42px; height: 42px;
+  width: 38px; height: 38px;
   border-radius: 50%;
   display: grid; place-items: center;
   background: radial-gradient(circle at 35% 30%, #dfae56 0%, #b57e27 65%, #8a5b15 100%);
-  box-shadow: 0 4px 12px rgba(130, 80, 20, 0.28), inset 0 1px 2px rgba(255, 240, 195, 0.7);
+  box-shadow: 0 4px 10px rgba(130, 80, 20, 0.25);
   color: #fff8e7;
-  font: 400 16px/1 'Great Vibes', cursive;
+  font: 400 15px/1 'Great Vibes', cursive;
 }
-.rsvp-confirmation__body strong { display: block; color: #8a5815; font: 600 12.5px/1.3 Georgia, serif; margin-bottom: 2px; }
-.rsvp-confirmation__body span { color: #936b3c; font: 12px/1.35 Georgia, serif; }
+.rsvp-confirmation__body strong { display: block; color: #8a5815; font: 600 12px/1.25 Georgia, serif; }
+.rsvp-confirmation__body span { color: #936b3c; font: 11.5px/1.3 Georgia, serif; }
 
-.luxury-rsvp { display: grid; gap: 12px; text-align: left; }
-.luxury-rsvp__note { font: 11.5px/1.4 Georgia, serif; color: #9a7040; text-align: center; margin: 0; }
-.luxury-rsvp__field { display: grid; gap: 6px; }
+.luxury-rsvp { display: grid; gap: 10px; text-align: left; }
+.luxury-rsvp__note { font: 11px/1.35 Georgia, serif; color: #9a7040; text-align: center; margin: 0; }
+.luxury-rsvp__field { display: grid; gap: 5px; }
 .luxury-rsvp__field--inline {
   display: flex; align-items: center; justify-content: space-between; gap: 12px;
-  padding: 9px 14px; border-radius: 12px;
-  background: rgba(255, 250, 240, 0.75);
+  padding: 7px 12px; border-radius: 12px;
+  background: rgba(255, 250, 240, 0.78);
   border: 1px solid rgba(215, 180, 130, 0.45);
 }
 .luxury-rsvp__field--inline .luxury-rsvp__label { margin: 0; }
-.luxury-rsvp__label { font: 600 10px/1 Georgia, serif; text-transform: uppercase; letter-spacing: .14em; color: #8a5815; }
+.luxury-rsvp__label { font: 600 9.5px/1 Georgia, serif; text-transform: uppercase; letter-spacing: .13em; color: #8a5815; }
 .luxury-rsvp__label span { font-weight: 400; opacity: .7; text-transform: none; letter-spacing: .04em; }
 
 .luxury-rsvp__input {
-  width: 100%; min-width: 0; padding: 11px 14px;
-  border: 1px solid rgba(215,180,130,.75); border-radius: 12px;
-  background: rgba(255,252,245,.95); color: #694723; font: 14px/1.4 Georgia, serif;
-  transition: border-color .25s, box-shadow .25s; resize: none;
+  width: 100%; min-width: 0; padding: 10px 13px;
+  border: 1px solid rgba(215,180,130,.75); border-radius: 11px;
+  background: rgba(255,252,245,.95); color: #694723; font: 13.5px/1.35 Georgia, serif;
 }
 .luxury-rsvp__input:focus {
   outline: none; border-color: rgba(185,130,55,.85);
@@ -652,10 +669,10 @@
 
 .rsvp-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
 .rsvp-toggle__btn {
-  display: flex; align-items: center; justify-content: center; gap: 6px;
-  padding: 11px 8px; border: 1px solid rgba(215,180,130,.6); border-radius: 12px;
+  display: flex; align-items: center; justify-content: center; gap: 5px;
+  padding: 10px 6px; border: 1px solid rgba(215,180,130,.6); border-radius: 11px;
   background: rgba(255,250,240,.86); color: #8a6030;
-  font: 600 10px/1.2 Georgia, serif; text-transform: uppercase; letter-spacing: .05em;
+  font: 600 9.5px/1.2 Georgia, serif; text-transform: uppercase; letter-spacing: .04em;
   transition: all .25s;
 }
 .rsvp-toggle__btn--on { background: linear-gradient(135deg, #d4aa55, #b48224); border-color: #b48224; color: #fff9ee; }
@@ -667,131 +684,48 @@
   background: rgba(255,252,245,.95); overflow: hidden;
 }
 .guest-stepper__btn {
-  width: 34px; height: 34px; border: 0; background: transparent;
-  color: #8a5815; font: 600 17px/1 Georgia, serif; display: grid; place-items: center;
+  width: 32px; height: 32px; border: 0; background: transparent;
+  color: #8a5815; font: 600 16px/1 Georgia, serif; display: grid; place-items: center;
 }
-.guest-stepper__btn:hover { background: rgba(220,175,80,.2); }
 .guest-stepper__val {
-  min-width: 34px; text-align: center; font: 600 14px/1 Georgia, serif; color: #8a5815;
+  min-width: 32px; text-align: center; font: 600 13.5px/1 Georgia, serif; color: #8a5815;
   border-left: 1px solid rgba(215,180,130,.35); border-right: 1px solid rgba(215,180,130,.35);
-  padding: 8px 6px;
+  padding: 7px 6px;
 }
 
 .luxury-rsvp__submit {
-  padding: 13px 16px; border: 1px solid rgba(185,130,50,.7); border-radius: 14px;
+  padding: 12px 16px; border: 1px solid rgba(185,130,50,.7); border-radius: 13px;
   background: linear-gradient(135deg, #c8963e, #9f6f20); color: #fff9ee;
-  font: 600 11.5px/1 Georgia, serif; letter-spacing: .12em; text-transform: uppercase;
-  box-shadow: 0 5px 16px rgba(130,80,20,.22); transition: transform .25s;
+  font: 600 11px/1 Georgia, serif; letter-spacing: .12em; text-transform: uppercase;
+  box-shadow: 0 5px 16px rgba(130,80,20,.22);
 }
-.luxury-rsvp__submit:hover { transform: translateY(-2px); }
 .luxury-rsvp__submit--saved { background: linear-gradient(135deg, #b8862a, #8d5e18); }
-.luxury-rsvp__error { font: 12px/1.4 Georgia, serif; color: #9b4020; margin: 0; text-align: center; }
+.luxury-rsvp__error { font: 11.5px/1.35 Georgia, serif; color: #9b4020; margin: 0; text-align: center; }
 
-/* ── Bottom Scene Pager Pill ─────────────────────────────────────────────── */
-.scene-pager {
-  position: relative;
-  z-index: 25;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  padding: 6px 16px max(12px, env(safe-area-inset-bottom) + 8px);
-}
-.scene-pager__btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  padding: 7px 14px;
-  border-radius: 99px;
-  border: 1px solid rgba(205, 160, 88, 0.55);
-  background: rgba(255, 247, 232, 0.88);
-  backdrop-filter: blur(8px);
-  color: #8a5815;
-  font: 600 10px/1 Georgia, serif;
-  text-transform: uppercase;
-  letter-spacing: .1em;
-}
-.scene-pager__dots { display: flex; gap: 6px; align-items: center; }
-.scene-pager__dots span {
-  width: 6px; height: 6px; border-radius: 50%;
-  background: rgba(165, 118, 45, 0.28);
-  transition: transform .25s, background .25s;
-}
-.scene-pager__dots span.active {
-  background: #b57e27;
-  transform: scale(1.35);
-}
-
-/* ══════════════════════════════════════════════════════════════════════════
-   AMBIENT EFFECTS
-   ══════════════════════════════════════════════════════════════════════════ */
-.cinematic-particles,
-.cinematic-petals {
-  position: absolute; inset: 0; width: 100%; height: 100%;
-  pointer-events: none; opacity: 0; transition: opacity .9s; z-index: 1;
-}
-.cinematic-particles--active,
-.cinematic-petals--active { opacity: 1; }
-
-.cinematic-palm {
-  position: fixed; top: 0; width: 150px; height: 260px;
-  pointer-events: none; z-index: 0; opacity: .2;
-}
-.cinematic-palm--left  { left: 0;  transform-origin: 0 0;    animation: palm-sway-l 7s ease-in-out infinite alternate; }
-.cinematic-palm--right { right: 0; transform-origin: 100% 0; animation: palm-sway-r 8.5s ease-in-out infinite alternate; }
-.cinematic-palm svg { width: 100%; height: 100%; }
-
-.cinematic-cloth {
-  position: fixed; bottom: 0; left: 0; right: 0; height: 54px;
-  pointer-events: none; z-index: 0; opacity: .15; overflow: hidden;
-}
-.cinematic-cloth svg { position: absolute; bottom: 0; width: 100%; height: 100%; }
-.cloth-wave-path { animation: cloth-wave 6s ease-in-out infinite alternate; }
-
-/* ══════════════════════════════════════════════════════════════════════════
-   KEYFRAMES
-   ══════════════════════════════════════════════════════════════════════════ */
+/* ── Keyframes ───────────────────────────────────────────────────────────── */
 @keyframes wedding-scene-in { from { opacity: 0; } to { opacity: 1; } }
-@keyframes fade-up { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
 @keyframes underline-appear { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 @keyframes confirmation-pop { from { opacity: 0; transform: scale(.94) translateY(-6px); } to { opacity: 1; transform: none; } }
-@keyframes palm-sway-l { from { transform: rotate(-1.5deg); } to { transform: rotate(2deg); } }
-@keyframes palm-sway-r { from { transform: rotate(1.2deg); } to { transform: rotate(-1.8deg); } }
-@keyframes cloth-wave {
-  from { d: path('M0,18 C40,6 80,30 120,18 S200,6 240,18 S320,30 360,18 S400,6 400,18 L400,50 L0,50 Z'); }
-  to   { d: path('M0,26 C40,14 80,22 120,26 S200,14 240,26 S320,22 360,26 S400,14 400,26 L400,50 L0,50 Z'); }
-}
 @keyframes ping { 0% { transform: scale(1); opacity: .7; } 70% { transform: scale(1.4); opacity: 0; } 100% { transform: scale(1.4); opacity: 0; } }
 
-/* ══════════════════════════════════════════════════════════════════════════
-   RESPONSIVE
-   ══════════════════════════════════════════════════════════════════════════ */
+/* ── Responsive ──────────────────────────────────────────────────────────── */
 @media (min-width: 700px) {
-  .wedding-home__header {
-    grid-template-columns: 1fr auto 1fr;
-    padding: 16px 5% 10px;
-  }
+  .wedding-home__header { grid-template-columns: 1fr auto 1fr; padding: 14px 5% 8px; }
   .wedding-home__nav { grid-row: auto; grid-column: auto; justify-content: center; }
   .wedding-home__music { justify-self: end; }
-  .luxury-card { height: min(650px, calc(100svh - 150px)); }
-  .luxury-card__inner { padding: 42px 44px 36px; }
-  .scene-carousel__track { justify-content: center; padding: 12px 4%; }
-  .scene-card { flex: 0 0 185px; max-width: 185px; min-height: 205px; }
-  .cinematic-palm { opacity: .28; width: 200px; height: 340px; }
+  .wedding-stage { padding: 14px 24px 36px; }
+  .luxury-card { max-height: calc(100svh - 140px); }
+  .luxury-card__inner { padding: 34px 42px 32px; justify-content: center; }
+  .scene-carousel__track { justify-content: center; padding: 10px 4%; }
+  .scene-card { flex: 0 0 180px; max-width: 180px; min-height: 195px; }
 }
 
 @media (max-width: 499px) {
-  .wedding-hero h1 { font-size: clamp(36px, 10vw, 50px); white-space: normal; }
+  .wedding-hero h1 { font-size: clamp(34px, 9.8vw, 48px); white-space: normal; }
   .wedding-home__music span { display: none; }
-  .countdown__unit { min-width: 44px; }
-  .countdown__num { font-size: 24px; }
-  .rsvp-toggle { grid-template-columns: 1fr 1fr; }
-  .rsvp-toggle__btn { font-size: 9px; padding: 10px 6px; }
-  .cinematic-palm { opacity: .12; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .wedding-home, .stage-scene, .timeline-item, .rsvp-confirmation, .sparkle-sticker { animation: none !important; transition: none !important; }
-  .cinematic-palm, .cinematic-cloth, .cloth-wave-path, .venue-ping { animation: none !important; }
+  .wedding-home, .stage-scene, .luxury-card, .card-sheen, .timeline-item, .rsvp-confirmation { animation: none !important; transition: none !important; }
+  .venue-ping { animation: none !important; }
 }

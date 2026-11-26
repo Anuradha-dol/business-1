@@ -2,7 +2,7 @@ import {
   useEffect, useRef, useState, useCallback, type FormEvent, type ReactNode
 } from 'react';
 import {
-  CalendarDays, ChevronLeft, ChevronRight, ExternalLink, Heart, Mail, MapPin, Music2, Pause, Play, RotateCcw
+  CalendarDays, ExternalLink, Heart, Mail, MapPin, Music2, Pause, Play, RotateCcw
 } from 'lucide-react';
 import { wedding } from '../../data/wedding';
 import './Invitation.css';
@@ -40,7 +40,7 @@ function FloralCornerArt() {
 /* ── Custom Gold Line-Art SVG Icons ──────────────────────────────────────── */
 function GoldIcon({ children }: { children: ReactNode }) {
   return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9d6724" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#9d6724" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
       {children}
     </svg>
   );
@@ -125,7 +125,7 @@ const VenueSunsetIcon = () => (
 /* ── Carousel Gold Badges ────────────────────────────────────────────────── */
 function IconStory() {
   return (
-    <svg width="42" height="42" viewBox="0 0 44 44" fill="none" aria-hidden="true">
+    <svg width="40" height="40" viewBox="0 0 44 44" fill="none" aria-hidden="true">
       <circle cx="22" cy="22" r="20" fill="url(#ig-s)" stroke="rgba(185,135,55,.45)" strokeWidth="1" />
       <defs>
         <radialGradient id="ig-s" cx="40%" cy="30%" r="70%">
@@ -142,7 +142,7 @@ function IconStory() {
 
 function IconDay() {
   return (
-    <svg width="42" height="42" viewBox="0 0 44 44" fill="none" aria-hidden="true">
+    <svg width="40" height="40" viewBox="0 0 44 44" fill="none" aria-hidden="true">
       <circle cx="22" cy="22" r="20" fill="url(#ig-d)" stroke="rgba(185,135,55,.45)" strokeWidth="1" />
       <defs>
         <radialGradient id="ig-d" cx="40%" cy="30%" r="70%">
@@ -161,7 +161,7 @@ function IconDay() {
 
 function IconVenue() {
   return (
-    <svg width="42" height="42" viewBox="0 0 44 44" fill="none" aria-hidden="true">
+    <svg width="40" height="40" viewBox="0 0 44 44" fill="none" aria-hidden="true">
       <circle cx="22" cy="22" r="20" fill="url(#ig-v)" stroke="rgba(185,135,55,.45)" strokeWidth="1" />
       <defs>
         <radialGradient id="ig-v" cx="40%" cy="30%" r="70%">
@@ -178,7 +178,7 @@ function IconVenue() {
 
 function IconRSVP() {
   return (
-    <svg width="42" height="42" viewBox="0 0 44 44" fill="none" aria-hidden="true">
+    <svg width="40" height="40" viewBox="0 0 44 44" fill="none" aria-hidden="true">
       <circle cx="22" cy="22" r="20" fill="url(#ig-r)" stroke="rgba(185,135,55,.45)" strokeWidth="1" />
       <defs>
         <radialGradient id="ig-r" cx="40%" cy="30%" r="70%">
@@ -194,59 +194,41 @@ function IconRSVP() {
 }
 
 /* ── Decorative SVG Ornaments ────────────────────────────────────────────── */
-function FloralDivider({ flip = false }: { flip?: boolean }) {
+function FloralDivider() {
   return (
-    <svg className={`floral-divider${flip ? ' floral-divider--flip' : ''}`} viewBox="0 0 320 28" fill="none" aria-hidden="true" preserveAspectRatio="xMidYMid meet">
-      <path d="M160 14 C160 10 155 7 151 10 C148 13 151 17 160 22 C169 17 172 13 169 10 C165 7 160 10 160 14Z" fill="rgba(185,135,55,.55)" />
-      <path d="M158 14 C140 14 120 8 100 12 C80 16 60 10 40 13 C20 16 10 13 2 14" stroke="rgba(185,135,55,.45)" strokeWidth="1.2" fill="none" strokeLinecap="round" />
-      <path d="M162 14 C180 14 200 8 220 12 C240 16 260 10 280 13 C300 16 310 13 318 14" stroke="rgba(185,135,55,.45)" strokeWidth="1.2" fill="none" strokeLinecap="round" />
+    <svg className="floral-divider" viewBox="0 0 320 24" fill="none" aria-hidden="true" preserveAspectRatio="xMidYMid meet">
+      <path d="M160 12 C160 8 155 5 151 8 C148 11 151 15 160 20 C169 15 172 11 169 8 C165 5 160 8 160 12Z" fill="rgba(185,135,55,.55)" />
+      <path d="M158 12 C140 12 120 7 100 10 C80 14 60 8 40 11 C20 14 10 11 2 12" stroke="rgba(185,135,55,.45)" strokeWidth="1.2" fill="none" strokeLinecap="round" />
+      <path d="M162 12 C180 12 200 7 220 10 C240 14 260 8 280 11 C300 14 310 11 318 12" stroke="rgba(185,135,55,.45)" strokeWidth="1.2" fill="none" strokeLinecap="round" />
       {[70, 110, 140].map((x, i) => (
-        <ellipse key={i} cx={x} cy={12 + (i % 2 === 0 ? -3 : 3)} rx="5" ry="2.5" fill="rgba(185,135,55,.3)" transform={`rotate(${-20 + i * 15} ${x} 12)`} />
+        <ellipse key={i} cx={x} cy={10 + (i % 2 === 0 ? -2.5 : 2.5)} rx="4.5" ry="2.2" fill="rgba(185,135,55,.3)" transform={`rotate(${-20 + i * 15} ${x} 10)`} />
       ))}
       {[180, 210, 250].map((x, i) => (
-        <ellipse key={i} cx={x} cy={12 + (i % 2 === 0 ? 3 : -3)} rx="5" ry="2.5" fill="rgba(185,135,55,.3)" transform={`rotate(${20 - i * 15} ${x} 12)`} />
+        <ellipse key={i} cx={x} cy={10 + (i % 2 === 0 ? 2.5 : -2.5)} rx="4.5" ry="2.2" fill="rgba(185,135,55,.3)" transform={`rotate(${20 - i * 15} ${x} 10)`} />
       ))}
     </svg>
   );
 }
 
-function WaveDivider() {
-  return (
-    <svg className="wave-divider" viewBox="0 0 400 18" preserveAspectRatio="none" aria-hidden="true">
-      <path d="M0,9 C40,0 80,18 120,9 C160,0 200,18 240,9 C280,0 320,18 360,9 C380,4 390,7 400,9" stroke="rgba(185,135,55,.3)" strokeWidth="1.4" fill="none" strokeLinecap="round" />
-      <path d="M0,13 C50,4 100,20 150,13 C200,6 250,20 300,13 C350,6 380,16 400,13" stroke="rgba(185,135,55,.16)" strokeWidth="1" fill="none" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function Sparkle({ x, y, size = 14, delay = 0 }: { x: string; y: string; size?: number; delay?: number }) {
-  return (
-    <svg className="sparkle-sticker" style={{ left: x, top: y, width: size, height: size, animationDelay: `${delay}s` }} viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M12 2v4M12 18v4M2 12h4M18 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M5.6 18.4l2.8-2.8M15.6 8.4l2.8-2.8" stroke="rgba(185,135,55,.65)" strokeWidth="1.5" strokeLinecap="round" />
-      <circle cx="12" cy="12" r="2.2" fill="rgba(185,135,55,.55)" />
-    </svg>
-  );
-}
-
-/* ── Canvas Effects ──────────────────────────────────────────────────────── */
-function GoldenParticles({ active }: { active: boolean }) {
+/* ── Global Ambient Canvas Effects (Active Across ALL Tabs) ──────────────── */
+function GoldenParticles() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rafRef = useRef<number>(0);
   useEffect(() => {
     const canvas = canvasRef.current; if (!canvas) return;
     const ctx = canvas.getContext('2d'); if (!ctx) return;
-    const resize = () => { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; };
+    const resize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
     resize();
-    const ro = new ResizeObserver(resize); ro.observe(canvas);
+    window.addEventListener('resize', resize, { passive: true });
     type P = { x: number; y: number; vx: number; vy: number; size: number; alpha: number; life: number; maxLife: number; hue: number };
-    const pts: P[] = []; const MAX = 48;
+    const pts: P[] = []; const MAX = 45;
     const spawn = () => {
       if (pts.length >= MAX) return;
       pts.push({
         x: Math.random() * canvas.width, y: canvas.height + 10,
-        vx: (Math.random() - .5) * .6, vy: -(Math.random() * .85 + .35),
+        vx: (Math.random() - .5) * .55, vy: -(Math.random() * .8 + .35),
         size: Math.random() * 2.5 + 1, alpha: 0, life: 0,
-        maxLife: 200 + Math.random() * 150, hue: Math.random() * 20 - 10,
+        maxLife: 220 + Math.random() * 140, hue: Math.random() * 18 - 9,
       });
     };
     let frame = 0;
@@ -261,37 +243,38 @@ function GoldenParticles({ active }: { active: boolean }) {
         const t = p.life / p.maxLife;
         p.alpha = t < .15 ? t / .15 : t > .75 ? (1 - t) / .25 : 1;
         if (p.life > p.maxLife) { pts.splice(i, 1); continue; }
-        ctx.save(); ctx.globalAlpha = p.alpha * .7;
-        ctx.fillStyle = `hsl(${42 + p.hue},85%,62%)`;
-        ctx.shadowColor = `hsl(${42 + p.hue},100%,72%)`; ctx.shadowBlur = 8;
+        ctx.save(); ctx.globalAlpha = p.alpha * .75;
+        ctx.fillStyle = `hsl(${42 + p.hue},88%,64%)`;
+        ctx.shadowColor = `hsl(${42 + p.hue},100%,75%)`; ctx.shadowBlur = 9;
         ctx.beginPath(); ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2); ctx.fill(); ctx.restore();
       }
     };
     draw();
-    return () => { cancelAnimationFrame(rafRef.current); ro.disconnect(); };
+    return () => { cancelAnimationFrame(rafRef.current); window.removeEventListener('resize', resize); };
   }, []);
-  return <canvas ref={canvasRef} className={`cinematic-particles${active ? ' cinematic-particles--active' : ''}`} aria-hidden="true" />;
+  return <canvas ref={canvasRef} className="global-particles" aria-hidden="true" />;
 }
 
-function PetalRain({ active }: { active: boolean }) {
+function PetalRain() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rafRef = useRef<number>(0);
   useEffect(() => {
     const canvas = canvasRef.current; if (!canvas) return;
     const ctx = canvas.getContext('2d'); if (!ctx) return;
-    const resize = () => { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; };
+    const resize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
     resize();
-    const ro = new ResizeObserver(resize); ro.observe(canvas);
-    type P = { x: number; y: number; vx: number; vy: number; rot: number; vrot: number; w: number; h: number; alpha: number; life: number; maxLife: number };
-    const petals: P[] = []; const MAX = 20;
+    window.addEventListener('resize', resize, { passive: true });
+    type P = { x: number; y: number; vx: number; vy: number; rot: number; vrot: number; w: number; h: number; alpha: number; life: number; maxLife: number; blush: boolean };
+    const petals: P[] = []; const MAX = 26;
     const spawn = () => {
       if (petals.length >= MAX) return;
-      const w = 8 + Math.random() * 9;
+      const w = 7 + Math.random() * 8;
       petals.push({
         x: Math.random() * canvas.width, y: -20,
-        vx: (Math.random() - .5) * .85, vy: .55 + Math.random() * .5,
+        vx: (Math.random() - .5) * .8, vy: .65 + Math.random() * .55,
         rot: Math.random() * Math.PI * 2, vrot: (Math.random() - .5) * .035,
-        w, h: w * .55, alpha: 0, life: 0, maxLife: 300 + Math.random() * 180,
+        w, h: w * .56, alpha: 0, life: 0, maxLife: 320 + Math.random() * 180,
+        blush: Math.random() > 0.4,
       });
     };
     let frame = 0;
@@ -299,23 +282,27 @@ function PetalRain({ active }: { active: boolean }) {
       rafRef.current = requestAnimationFrame(draw);
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       frame++;
-      if (frame % 22 === 0) spawn();
+      if (frame % 16 === 0) spawn();
       for (let i = petals.length - 1; i >= 0; i--) {
         const p = petals[i];
-        p.x += p.vx + Math.sin(p.life * .025) * .5; p.y += p.vy; p.rot += p.vrot; p.life++;
+        p.x += p.vx + Math.sin(p.life * .025) * .55; p.y += p.vy; p.rot += p.vrot; p.life++;
         const t = p.life / p.maxLife;
         p.alpha = t < .1 ? t / .1 : t > .85 ? (1 - t) / .15 : 1;
         if (p.life > p.maxLife || p.y > canvas.height + 20) { petals.splice(i, 1); continue; }
-        ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot); ctx.globalAlpha = p.alpha * .52;
+        ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot); ctx.globalAlpha = p.alpha * .7;
         const g = ctx.createRadialGradient(0, 0, 0, 0, 0, p.w);
-        g.addColorStop(0, '#fdf0e8'); g.addColorStop(.5, '#f7cfc1'); g.addColorStop(1, 'rgba(220,120,100,0)');
+        if (p.blush) {
+          g.addColorStop(0, '#fff5f2'); g.addColorStop(.55, '#f5c2b8'); g.addColorStop(1, 'rgba(230,150,140,0)');
+        } else {
+          g.addColorStop(0, '#ffffff'); g.addColorStop(.6, '#f9e9d6'); g.addColorStop(1, 'rgba(240,210,175,0)');
+        }
         ctx.fillStyle = g; ctx.beginPath(); ctx.ellipse(0, 0, p.w, p.h, 0, 0, Math.PI * 2); ctx.fill(); ctx.restore();
       }
     };
     draw();
-    return () => { cancelAnimationFrame(rafRef.current); ro.disconnect(); };
+    return () => { cancelAnimationFrame(rafRef.current); window.removeEventListener('resize', resize); };
   }, []);
-  return <canvas ref={canvasRef} className={`cinematic-petals${active ? ' cinematic-petals--active' : ''}`} aria-hidden="true" />;
+  return <canvas ref={canvasRef} className="global-petals" aria-hidden="true" />;
 }
 
 function SeaShimmer() {
@@ -333,61 +320,21 @@ function SeaShimmer() {
       t += .012; ctx.clearRect(0, 0, canvas.width, canvas.height);
       const { width: w, height: h } = canvas;
       for (let layer = 0; layer < 3; layer++) {
-        const amp = 5 - layer * 1.4; const freq = .011 + layer * .007; const speed = t * (.9 + layer * .3);
-        const yBase = h * (.48 + layer * .16);
+        const amp = 4 - layer * 1.1; const freq = .012 + layer * .006; const speed = t * (.9 + layer * .3);
+        const yBase = h * (.5 + layer * .16);
         ctx.beginPath(); ctx.moveTo(0, yBase);
         for (let x = 0; x <= w; x += 4) {
           const y = yBase + Math.sin(x * freq + speed) * amp + Math.cos(x * .008 + speed * .6) * amp * .5;
           ctx.lineTo(x, y);
         }
         ctx.lineTo(w, h); ctx.lineTo(0, h); ctx.closePath();
-        ctx.fillStyle = `rgba(170,130,70,${.06 - layer * .014})`; ctx.fill();
-      }
-      for (let g = 0; g < 10; g++) {
-        const gx = (w * (g / 9)) + Math.sin(t * 1.1 + g) * 24;
-        const gy = h * .58 + Math.cos(t * .9 + g * 1.5) * 12;
-        const sz = 2.2 + Math.sin(t * 2 + g) * 1.3;
-        const a2 = Math.max(0, Math.sin(t * 1.8 + g * .7)) * .38;
-        ctx.beginPath(); ctx.arc(gx, gy, sz, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255,215,120,${a2})`; ctx.fill();
+        ctx.fillStyle = `rgba(170,130,70,${.055 - layer * .014})`; ctx.fill();
       }
     };
     draw();
     return () => { cancelAnimationFrame(rafRef.current); ro.disconnect(); };
   }, []);
   return <canvas ref={canvasRef} className="cinematic-sea" aria-hidden="true" />;
-}
-
-/* ── Ambient Palm & Cloth ────────────────────────────────────────────────── */
-function PalmSway({ side }: { side: 'left' | 'right' }) {
-  return (
-    <div className={`cinematic-palm cinematic-palm--${side}`} aria-hidden="true">
-      <svg viewBox="0 0 110 240" fill="none">
-        <path d={side === 'left' ? 'M55 240 C52 200 50 160 53 120 C55 95 57 70 51 38' : 'M55 240 C58 200 60 160 57 120 C55 95 53 70 59 38'} stroke="#8B6914" strokeWidth="5" strokeLinecap="round" fill="none" opacity=".55" />
-        {[...Array(7)].map((_, i) => {
-          const a = (i / 6) * 190 - 65; const r = (a * Math.PI) / 180;
-          const ex = 51 + Math.cos(r) * 48, ey = 38 + Math.sin(r) * 38;
-          return <path key={i} d={`M51 38 Q${51 + Math.cos(r) * 24} ${38 + Math.sin(r) * 18} ${ex} ${ey}`} stroke="#4a6e10" strokeWidth="2.2" strokeLinecap="round" fill="none" opacity=".45" />;
-        })}
-      </svg>
-    </div>
-  );
-}
-
-function ClothWave() {
-  return (
-    <div className="cinematic-cloth" aria-hidden="true">
-      <svg viewBox="0 0 400 50" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
-        <defs>
-          <linearGradient id="cg" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#f9e4c8" stopOpacity=".85" />
-            <stop offset="100%" stopColor="#f0d0a0" stopOpacity=".2" />
-          </linearGradient>
-        </defs>
-        <path className="cloth-wave-path" d="M0,18 C40,6 80,30 120,18 S200,6 240,18 S320,30 360,18 S400,6 400,18 L400,50 L0,50 Z" fill="url(#cg)" />
-      </svg>
-    </div>
-  );
 }
 
 /* ── Countdown ───────────────────────────────────────────────────────────── */
@@ -419,7 +366,7 @@ function Countdown({ targetISO }: { targetISO: string }) {
 /* ── Staggered Timeline Item ─────────────────────────────────────────────── */
 function TimelineItem({ icon, title, detail, delay }: { icon: ReactNode; title: string; detail: string; delay: number }) {
   return (
-    <div className="timeline-item timeline-item--visible" style={{ animationDelay: `${delay}ms` }}>
+    <div className="timeline-item" style={{ animationDelay: `${delay}ms` }}>
       <div className="timeline-icon">{icon}</div>
       <div className="timeline-content">
         <strong>{title}</strong>
@@ -505,7 +452,7 @@ function SceneCarousel({ onNavigate }: { onNavigate: (p: SectionId) => void }) {
             <p className="scene-card__desc">{card.desc}</p>
             <span className="scene-card__cta">
               Open
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+              <svg width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden="true">
                 <path d="M2 6h8M7 3l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
             </span>
@@ -526,7 +473,6 @@ function SceneCarousel({ onNavigate }: { onNavigate: (p: SectionId) => void }) {
 /* ── Constants ───────────────────────────────────────────────────────────── */
 const draftKey = 'wedding-rsvp-draft';
 const emptyDraft: RsvpDraft = { name: '', attendance: '', guests: '1', message: '' };
-const order: SectionId[] = ['home', 'story', 'day', 'venue', 'rsvp'];
 const navItems: { id: SectionId; label: string; icon: typeof Heart }[] = [
   { id: 'home',  label: 'Home',      icon: Heart },
   { id: 'story', label: 'Our Story', icon: Heart },
@@ -536,7 +482,7 @@ const navItems: { id: SectionId; label: string; icon: typeof Heart }[] = [
 ];
 
 /* ══════════════════════════════════════════════════════════════════════════
-   MAIN 100SVH LUXURY SCENE SWITCHER (App-like experience, zero scroll jump)
+   MAIN 100SVH LUXURY APP EXPERIENCE
    ══════════════════════════════════════════════════════════════════════════ */
 export default function Invitation({ onReplay, music }: Props) {
   const [active, setActive] = useState<SectionId>('home');
@@ -563,10 +509,6 @@ export default function Invitation({ onReplay, music }: Props) {
     } catch { setSaveStatus('error'); }
   };
 
-  const idx = order.indexOf(active);
-  const goPrev = () => setActive(order[(idx - 1 + order.length) % order.length]);
-  const goNext = () => setActive(order[(idx + 1) % order.length]);
-
   return (
     <main className="wedding-home">
       <div
@@ -575,13 +517,9 @@ export default function Invitation({ onReplay, music }: Props) {
         aria-hidden="true"
       />
 
-      <PalmSway side="left" />
-      <PalmSway side="right" />
-      <ClothWave />
-      <Sparkle x="4%"  y="22%" size={11} delay={0} />
-      <Sparkle x="93%" y="18%" size={9}  delay={.6} />
-      <Sparkle x="7%"  y="68%" size={8}  delay={1.1} />
-      <Sparkle x="91%" y="72%" size={10} delay={.3} />
+      {/* Global Ambient Motion — Active on EVERY Tab */}
+      <GoldenParticles />
+      <PetalRain />
 
       {/* Header */}
       <header className="wedding-home__header wedding-home__header--scrolled">
@@ -614,15 +552,14 @@ export default function Invitation({ onReplay, music }: Props) {
         {needsGesture && <span className="wedding-home__music-error" role="status">Tap Music to play the song.</span>}
       </header>
 
-      {/* Active Scene Stage — fits 100% inside viewport with smooth transition */}
+      {/* Active Scene Stage */}
       <div className="wedding-stage">
 
         {active === 'home' && (
           <section key="home" className="stage-scene stage-scene--home" aria-labelledby="wedding-home-title">
-            <GoldenParticles active={true} />
             <div className="wedding-hero">
               <div className="wedding-hero__shell" aria-hidden="true">
-                <span /><LinkedHearts size={38} /><span />
+                <span /><LinkedHearts size={36} /><span />
               </div>
               <p className="wedding-hero__eyebrow"><span />The wedding of<span /></p>
               <h1 id="wedding-home-title">
@@ -652,18 +589,18 @@ export default function Invitation({ onReplay, music }: Props) {
           <section key="story" className="stage-scene" aria-labelledby="story-title">
             <div className="luxury-card luxury-card--story">
               <FloralCornerArt />
-              <PetalRain active={true} />
+              <div className="card-sheen" aria-hidden="true" />
               <div className="luxury-card__inner">
-                <LinkedHearts size={26} className="luxury-card__hearts" />
+                <LinkedHearts size={24} className="luxury-card__hearts" />
                 <p className="luxury-card__eyebrow">Himeshi &amp; Madhawa</p>
                 <h2 id="story-title" className="luxury-card__title">Our Story</h2>
                 <p className="scene-intro">Together with our families, we invite you to celebrate our wedding.</p>
                 <FloralDivider />
                 <div className="story-timeline">
-                  <TimelineItem icon={<StoryWaveIcon />} title="Where We Met" detail="Two paths crossed, and everything felt right." delay={60} />
-                  <TimelineItem icon={<StorySparkIcon />} title="Growing Closer" detail="Years of shared laughter, family, and friendship." delay={140} />
-                  <TimelineItem icon={<StoryRingsIcon />} title="The Engagement" detail="A quiet promise to walk through life together." delay={220} />
-                  <TimelineItem icon={<StoryChapterIcon />} title="15 January 2027" detail="Beginning our next chapter in Galle with everyone we love." delay={300} />
+                  <TimelineItem icon={<StoryWaveIcon />} title="Where We Met" detail="Two paths crossed, and everything felt right." delay={80} />
+                  <TimelineItem icon={<StorySparkIcon />} title="Growing Closer" detail="Years of shared laughter, family, and friendship." delay={170} />
+                  <TimelineItem icon={<StoryRingsIcon />} title="The Engagement" detail="A quiet promise to walk through life together." delay={260} />
+                  <TimelineItem icon={<StoryChapterIcon />} title="15 January 2027" detail="Beginning our next chapter in Galle with everyone we love." delay={350} />
                 </div>
               </div>
             </div>
@@ -674,25 +611,25 @@ export default function Invitation({ onReplay, music }: Props) {
           <section key="day" className="stage-scene" aria-labelledby="day-title">
             <div className="luxury-card luxury-card--day">
               <FloralCornerArt />
+              <div className="card-sheen" aria-hidden="true" />
               <div className="luxury-card__inner">
-                <LinkedHearts size={26} className="luxury-card__hearts" />
+                <LinkedHearts size={24} className="luxury-card__hearts" />
                 <p className="luxury-card__eyebrow">Save the Date</p>
                 <h2 id="day-title" className="luxury-card__title">The Day</h2>
                 <FloralDivider />
                 <div className="day-countdown">
                   <Countdown targetISO={wedding.dateISO} />
                 </div>
-                <WaveDivider />
                 <time className="day-date-display" dateTime={wedding.dateISO}>
                   <span className="day-date-display__day">{wedding.day}</span>
                   <span className="day-date-display__month-year">{wedding.month} {wedding.year}</span>
                 </time>
                 <div className="day-timeline">
-                  <TimelineItem icon={<DaySunriseIcon />} title="Wedding Ceremony" detail="Time to be confirmed" delay={60} />
-                  <TimelineItem icon={<DayToastIcon />} title="Cocktail &amp; Reception" detail="Time to be confirmed" delay={150} />
-                  <TimelineItem icon={<DayMoonIcon />} title="Dinner &amp; Celebration" detail="Time to be confirmed" delay={240} />
+                  <TimelineItem icon={<DaySunriseIcon />} title="Wedding Ceremony" detail="Time to be confirmed" delay={80} />
+                  <TimelineItem icon={<DayToastIcon />} title="Cocktail &amp; Reception" detail="Time to be confirmed" delay={170} />
+                  <TimelineItem icon={<DayMoonIcon />} title="Dinner &amp; Celebration" detail="Time to be confirmed" delay={260} />
                 </div>
-                <p className="luxury-card__note">Exact timings and dress code will be shared closer to the wedding.</p>
+                <p className="luxury-card__note">Exact timings will be shared closer to the wedding.</p>
               </div>
             </div>
           </section>
@@ -702,14 +639,14 @@ export default function Invitation({ onReplay, music }: Props) {
           <section key="venue" className="stage-scene" aria-labelledby="venue-title">
             <div className="luxury-card luxury-card--venue">
               <FloralCornerArt />
+              <div className="card-sheen" aria-hidden="true" />
               <SeaShimmer />
               <div className="luxury-card__inner">
-                <LinkedHearts size={26} className="luxury-card__hearts" />
+                <LinkedHearts size={24} className="luxury-card__hearts" />
                 <p className="luxury-card__eyebrow">Galle, Sri Lanka</p>
                 <h2 id="venue-title" className="luxury-card__title">Venue</h2>
                 <FloralDivider />
 
-                {/* Clickable Location Pin — opens Google Maps directly */}
                 <a
                   className="venue-icon-wrap"
                   href={wedding.venue.mapUrl}
@@ -718,7 +655,7 @@ export default function Invitation({ onReplay, music }: Props) {
                   aria-label="Track Jetwing Lighthouse location on Google Maps"
                   title="Tap to open in Google Maps"
                 >
-                  <MapPin size={30} strokeWidth={1.4} />
+                  <MapPin size={28} strokeWidth={1.4} />
                   <span className="venue-ping" aria-hidden="true" />
                   <span className="venue-ping venue-ping--2" aria-hidden="true" />
                 </a>
@@ -764,9 +701,9 @@ export default function Invitation({ onReplay, music }: Props) {
           <section key="rsvp" className="stage-scene" aria-labelledby="rsvp-title">
             <div className="luxury-card luxury-card--rsvp">
               <FloralCornerArt />
-              <GoldenParticles active={saveStatus === 'saved'} />
+              <div className="card-sheen" aria-hidden="true" />
               <div className="luxury-card__inner">
-                <LinkedHearts size={26} className="luxury-card__hearts" />
+                <LinkedHearts size={24} className="luxury-card__hearts" />
                 <p className="luxury-card__eyebrow">Kindly Reply</p>
                 <h2 id="rsvp-title" className="luxury-card__title">RSVP</h2>
                 <FloralDivider />
@@ -788,7 +725,7 @@ export default function Invitation({ onReplay, music }: Props) {
                 )}
 
                 <form className="luxury-rsvp" onSubmit={saveRsvp}>
-                  <p className="luxury-rsvp__note">Please let us know if you will be able to join us. Saved locally on your device.</p>
+                  <p className="luxury-rsvp__note">Please let us know if you will be able to join us. Saved on this device.</p>
 
                   <div className="luxury-rsvp__field">
                     <label className="luxury-rsvp__label" htmlFor="rsvp-name">Full Name</label>
@@ -811,7 +748,7 @@ export default function Invitation({ onReplay, music }: Props) {
                         className={`rsvp-toggle__btn${draft.attendance === 'accept' ? ' rsvp-toggle__btn--on' : ''}`}
                         onClick={() => changeDraft('attendance', 'accept')}
                       >
-                        <Heart size={14} strokeWidth={1.8} />
+                        <Heart size={13} strokeWidth={1.8} />
                         <span>Joyfully Accepts</span>
                       </button>
                       <button
@@ -845,10 +782,9 @@ export default function Invitation({ onReplay, music }: Props) {
 
                   <div className="luxury-rsvp__field">
                     <label className="luxury-rsvp__label" htmlFor="rsvp-msg">Message <span>(optional)</span></label>
-                    <textarea
+                    <input
                       id="rsvp-msg"
                       className="luxury-rsvp__input"
-                      rows={2}
                       value={draft.message}
                       onChange={e => changeDraft('message', e.target.value)}
                       placeholder="Write a note or dietary preference…"
@@ -871,25 +807,6 @@ export default function Invitation({ onReplay, music }: Props) {
         )}
 
       </div>
-
-      {/* Subtle App-like Bottom Stepper Bar (for non-home scenes) */}
-      {active !== 'home' && (
-        <div className="scene-pager">
-          <button type="button" className="scene-pager__btn" onClick={goPrev} aria-label="Previous section">
-            <ChevronLeft size={16} />
-            <span>Prev</span>
-          </button>
-          <span className="scene-pager__dots" aria-hidden="true">
-            {order.map(id => (
-              <span key={id} className={active === id ? 'active' : ''} />
-            ))}
-          </span>
-          <button type="button" className="scene-pager__btn" onClick={goNext} aria-label="Next section">
-            <span>Next</span>
-            <ChevronRight size={16} />
-          </button>
-        </div>
-      )}
     </main>
   );
 }
