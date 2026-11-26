@@ -1,5 +1,5 @@
 /* ═══════════════════════════════════════════════════════════════════════════
-   A JOURNEY TO FOREVER — 100svh Seamless Merging Romantic Stage (No Scroll)
+   A JOURNEY TO FOREVER — 100svh Cinematic SVG Chapter Stage
    ═══════════════════════════════════════════════════════════════════════════ */
 
 .journey-stage {
@@ -10,19 +10,19 @@
   flex-direction: column;
   align-items: center;
   justify-content: space-between;
-  padding: 4px 16px 12px;
+  padding: 4px 16px 10px;
   overflow: hidden;
   user-select: none;
 }
 
-/* Wind-driven silk & ocean sunset reflection */
+/* Ambient silk & ocean sunset reflection */
 .journey-silk-layer {
-  position: fixed;
+  position: absolute;
   bottom: 8%;
   left: -12%;
   width: 124%;
   height: 18%;
-  background: linear-gradient(96deg, transparent 10%, rgba(255, 247, 232, 0.28) 45%, rgba(255, 234, 190, 0.22) 72%, transparent 92%);
+  background: linear-gradient(96deg, transparent 10%, rgba(255,247,232,0.26) 45%, rgba(255,234,190,0.2) 72%, transparent 92%);
   filter: blur(16px);
   pointer-events: none;
   z-index: 0;
@@ -30,12 +30,12 @@
 }
 
 .journey-ocean-glint {
-  position: fixed;
+  position: absolute;
   top: 48%;
   left: 0;
   right: 0;
   height: 22%;
-  background: radial-gradient(ellipse 55% 40% at 22% 50%, rgba(255, 230, 160, 0.25), transparent 72%);
+  background: radial-gradient(ellipse 55% 40% at 22% 50%, rgba(255,230,160,0.22), transparent 72%);
   pointer-events: none;
   z-index: 0;
   animation: ocean-glint 6.5s ease-in-out infinite alternate;
@@ -43,7 +43,7 @@
 
 @keyframes silk-breeze {
   from { transform: translateX(-3%) skewY(-1.5deg); opacity: 0.5; }
-  to   { transform: translateX(3%) skewY(1.5deg); opacity: 0.82; }
+  to   { transform: translateX(3%) skewY(1.5deg);  opacity: 0.82; }
 }
 @keyframes ocean-glint {
   from { opacity: 0.35; transform: scaleX(0.96); }
@@ -56,10 +56,11 @@
   z-index: 4;
   text-align: center;
   flex-shrink: 0;
+  padding-top: 2px;
 }
 
 .journey-eyebrow {
-  margin: 0 0 6px;
+  margin: 0 0 5px;
   font: 600 10px/1.2 Georgia, serif;
   letter-spacing: 0.24em;
   text-transform: uppercase;
@@ -78,12 +79,13 @@
   height: 8px;
   padding: 0;
   border-radius: 50%;
-  border: 1px solid rgba(175, 125, 50, 0.65);
-  background: rgba(255, 248, 232, 0.45);
+  border: 1px solid rgba(175,125,50,0.65);
+  background: rgba(255,248,232,0.45);
+  cursor: pointer;
   transition: transform 0.35s, background 0.35s;
 }
-.journey-dot.done   { background: rgba(195, 140, 55, 0.55); }
-.journey-dot.active { background: #b57e27; transform: scale(1.4); box-shadow: 0 0 10px rgba(215, 165, 65, 0.6); }
+.journey-dot.done   { background: rgba(195,140,55,0.55); }
+.journey-dot.active { background: #b57e27; transform: scale(1.4); box-shadow: 0 0 10px rgba(215,165,65,0.6); }
 
 /* Central Stage Body */
 .journey-stage-body {
@@ -97,87 +99,78 @@
   justify-content: center;
   text-align: center;
   min-height: 0;
+  gap: 2px;
 }
 
 .journey-chapter__num {
-  margin: 0 0 2px;
-  font: 600 9.5px/1 Georgia, serif;
+  margin: 0;
+  font: 600 9px/1 Georgia, serif;
   letter-spacing: 0.24em;
   text-transform: uppercase;
   color: #a16f2d;
 }
 
 .journey-chapter__title {
-  margin: 0 0 10px;
-  font: 400 clamp(30px, 6.4vw, 48px)/1.12 'Great Vibes', cursive;
+  margin: 0 0 6px;
+  font: 400 clamp(26px, 6vw, 44px)/1.12 'Great Vibes', cursive;
   color: #8f5412;
-  text-shadow: 0 2px 10px rgba(255, 245, 224, 0.85);
+  text-shadow: 0 2px 10px rgba(255,245,224,0.85);
 }
 
-/* Pure Painterly Art Object */
+/* Interactive Art Object */
 .journey-object {
   position: relative;
-  width: min(74vw, 310px, 38svh);
+  width: min(76vw, 300px, 36svh);
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   cursor: pointer;
   outline: none;
-  transition: transform 0.3s ease-out;
+  -webkit-tap-highlight-color: transparent;
 }
+
+.journey-object:active { transform: scale(0.97); }
 
 .journey-halo {
   position: absolute;
-  inset: -14%;
+  inset: -16%;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 242, 198, 0.78) 0%, rgba(255, 226, 150, 0.24) 48%, transparent 72%);
+  background: radial-gradient(circle, rgba(255,242,198,0.72) 0%, rgba(255,226,150,0.22) 48%, transparent 72%);
   pointer-events: none;
-  opacity: 0.45;
-  transition: opacity 0.8s;
+  opacity: 0.5;
+  animation: halo-pulse 4s ease-in-out infinite alternate;
+}
+@keyframes halo-pulse {
+  from { opacity: 0.4; transform: scale(0.96); }
+  to   { opacity: 0.72; transform: scale(1.06); }
 }
 
+/* SVG Art Container — circular with golden border */
 .journey-art-wrap {
   position: relative;
   width: 100%;
   aspect-ratio: 1 / 1;
-  overflow: hidden;
   border-radius: 50%;
-  mask-image: radial-gradient(ellipse 68% 68% at 50% 50%, #000 48%, transparent 98%);
-  -webkit-mask-image: radial-gradient(ellipse 68% 68% at 50% 50%, #000 48%, transparent 98%);
+  overflow: visible; /* allow overlays to show outside */
+  background: radial-gradient(circle at 50% 48%, rgba(255,246,225,0.9) 0%, rgba(248,235,205,0.95) 55%, rgba(235,215,175,0.9) 100%);
+  box-shadow:
+    0 0 0 2px rgba(195,152,65,0.4),
+    0 0 0 5px rgba(255,248,228,0.6),
+    0 0 0 7px rgba(195,152,65,0.2),
+    0 8px 32px rgba(140,90,20,0.22);
 }
 
-.journey-art {
+/* The SVG fills the circular container */
+.chapter-svg {
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: cover;
-  filter: contrast(1.03) saturate(1.05);
-  pointer-events: none;
-}
-
-.journey-light-sweep {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(112deg, transparent 28%, rgba(255, 248, 220, 0.65) 48%, transparent 68%);
-  opacity: 0;
-  pointer-events: none;
-}
-
-.journey-glint-star {
-  position: absolute;
-  top: 38%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: #fff6cf;
-  font-size: 22px;
-  text-shadow: 0 0 12px rgba(255, 235, 165, 0.95);
-  opacity: 0;
-  pointer-events: none;
+  border-radius: 50%;
+  overflow: hidden;
 }
 
 .journey-touch-hint {
-  margin-top: 6px;
+  margin-top: 8px;
   font: 600 9.5px/1 Georgia, serif;
   letter-spacing: 0.16em;
   text-transform: uppercase;
@@ -186,28 +179,30 @@
 }
 
 .journey-chapter__caption {
-  margin: 8px auto 0;
-  max-width: 310px;
-  font: 12.5px/1.5 Georgia, serif;
+  margin: 4px auto 0;
+  max-width: 300px;
+  font: 12px/1.5 Georgia, serif;
   color: #744e25;
+  opacity: 0.9;
 }
 
 /* Finale */
 .journey-finale {
-  margin-top: 10px;
+  margin-top: 6px;
   text-align: center;
   opacity: 0;
   visibility: hidden;
+  transition: opacity 0.6s, visibility 0.6s;
 }
 .journey-finale--show { opacity: 1; visibility: visible; }
 .journey-finale h2 {
   margin: 0;
-  font: 400 clamp(26px, 6vw, 38px)/1.12 'Great Vibes', cursive;
+  font: 400 clamp(22px, 5.5vw, 34px)/1.12 'Great Vibes', cursive;
   color: #8b5212;
 }
 .journey-finale p {
-  margin: 2px 0 10px;
-  font: 600 10px/1.2 Georgia, serif;
+  margin: 2px 0 8px;
+  font: 600 9.5px/1.2 Georgia, serif;
   letter-spacing: 0.22em;
   text-transform: uppercase;
   color: #9e6b2b;
@@ -222,16 +217,17 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  border: 1px solid rgba(190, 145, 75, 0.45);
-  background: rgba(255, 248, 232, 0.82);
+  border: 1px solid rgba(190,145,75,0.45);
+  background: rgba(255,248,232,0.82);
   border-radius: 99px;
   padding: 7px 14px;
   color: #85561d;
   font: 600 9.5px/1 Georgia, serif;
   letter-spacing: 0.08em;
   text-transform: uppercase;
+  cursor: pointer;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .journey-silk-layer, .journey-ocean-glint { animation: none !important; }
+  .journey-silk-layer, .journey-ocean-glint, .journey-halo { animation: none !important; }
 }
