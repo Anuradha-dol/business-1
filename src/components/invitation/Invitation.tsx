@@ -249,7 +249,13 @@ function SeaShimmer() {
   useEffect(() => {
     const canvas = canvasRef.current; if (!canvas) return;
     const ctx = canvas.getContext('2d'); if (!ctx) return;
-    const resize = () => { canvas.width = canvas.offsetWidth; canvas.height = canvas.offsetHeight; };
+    const resize = () => {
+      requestAnimationFrame(() => {
+        if (!canvas) return;
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+      });
+    };
     resize();
     const ro = new ResizeObserver(resize); ro.observe(canvas);
     let t = 0;
