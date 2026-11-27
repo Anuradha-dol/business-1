@@ -124,6 +124,7 @@ export default function Envelope({ onComplete, onArtworkReady }: EnvelopeProps) 
 
   const { contextSafe } = useGSAP(() => {
     gsap.set('.opening-back', { scaleY: 0 });
+    gsap.set('.sky-birds', { autoAlpha: 0 });
     gsap.set('.opening-lining', { opacity: 0 });
     gsap.set('.card-viewport', { autoAlpha: 0 });
     gsap.set('.floating-card', { xPercent: -2.1, yPercent: 29, scale: 0.94 });
@@ -158,7 +159,9 @@ export default function Envelope({ onComplete, onArtworkReady }: EnvelopeProps) 
       .to('.opening-back', { scaleY: 1, duration: 1.25, ease: 'sine.inOut' }, 0.95)
       .to('.opening-flap', { autoAlpha: 0, duration: 0.3, ease: 'sine.inOut' }, 1.15)
       .to('.card-viewport', { autoAlpha: 1, duration: 0.5, ease: 'sine.inOut' }, 1.85)
+      .to('.sky-birds', { autoAlpha: 1, duration: 0.6, ease: 'sine.inOut' }, 2.05)
       .to('.floating-card', { yPercent: -15, scale: 0.8, rotation: -0.8, duration: 2.8, ease: 'sine.inOut' }, 2.15)
+      .to('.sky-birds', { autoAlpha: 0, duration: 0.4, ease: 'sine.inOut' }, 4.7)
       .to('.card-viewport', { clipPath: 'polygon(0% 0%,100% 0%,100% 100%,100% 100%,100% 100%,0% 100%,0% 100%,0% 100%)', duration: 0.55, ease: 'sine.inOut' }, 4.45)
       .set('.card-viewport', { zIndex: 5 }, 5.0)
       .add(() => root.current?.classList.add('gust'), 4.85)
@@ -230,7 +233,7 @@ export default function Envelope({ onComplete, onArtworkReady }: EnvelopeProps) 
   );
 
   return (
-    <main className={`invitation-opening${ready ? ' invitation-opening--ready' : ''}${state === 'opening' ? ' invitation-opening--opening' : ''}`} ref={root} aria-busy={state === 'opening' || !ready || preparingOpen}>
+    <main className={`invitation-opening${ready ? ' invitation-opening--ready' : ''}`} ref={root} aria-busy={state === 'opening' || !ready || preparingOpen}>
         <div className={`opening-loader${ready ? ' opening-loader--hidden' : ''}`} aria-hidden={ready} inert={ready}>
           <p className="opening-loader__eyebrow">A celebration of love</p>
           <div className="opening-loader__crest">{wedding.monogram}</div>

@@ -591,11 +591,9 @@
   width: min(20vw, 250px);
   height: min(12svh, 130px);
   pointer-events: none;
-  opacity: .82;
-  transition: opacity 650ms ease;
+  opacity: 0;
+  visibility: hidden;
 }
-.invitation-opening:not(.invitation-opening--ready) .sky-birds,
-.invitation-opening--opening .sky-birds { opacity: 0; }
 .sky-bird {
   position: absolute;
   width: 48%;
