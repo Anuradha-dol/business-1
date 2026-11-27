@@ -586,10 +586,10 @@
 .sky-birds {
   position: absolute;
   z-index: 3;
-  top: 33%;
-  left: -4%;
+  top: 15%;
+  left: -3%;
   width: min(16vw, 225px);
-  aspect-ratio: 720 / 560;
+  aspect-ratio: 720 / 600;
   pointer-events: none;
   opacity: 0;
   visibility: hidden;
@@ -611,8 +611,8 @@
 }
 @media (max-aspect-ratio: 4/5) {
   .sky-birds {
-    top: 27%;
-    left: -8%;
+    top: 12%;
+    left: -6%;
     width: min(36vw, 200px);
   }
 }
