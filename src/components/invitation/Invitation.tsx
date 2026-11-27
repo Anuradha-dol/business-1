@@ -591,7 +591,7 @@ export default function Invitation({ onReplay, music }: Props) {
                   href={wedding.venue.mapUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  aria-label="Track Jetwing Lighthouse location on Google Maps"
+                  aria-label="Find The Cinnamon Room at Jetwing Lighthouse on Google Maps"
                   title="Tap to open in Google Maps"
                 >
                   <MapPin size={26} strokeWidth={1.4} />

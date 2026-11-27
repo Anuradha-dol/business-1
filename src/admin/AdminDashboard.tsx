@@ -187,6 +187,13 @@ function GuestRow({ g, onEdit, onRefresh }: { g: GuestWithRsvp; onEdit: (g: Gues
       <td>{g.rsvp ? g.rsvp.confirmed_guests : '—'}</td>
       <td><span className={`adm-badge ${badgeClass}`}>{rsvpStatus}</span></td>
       <td>
+        {g.rsvp?.message ? (
+          <div className="adm-message-cell" title={g.rsvp.message}>{g.rsvp.message}</div>
+        ) : (
+          <span className="adm-message-empty">—</span>
+        )}
+      </td>
+      <td>
         <div className="adm-link-cell">
           <span className="adm-link-text" title={link}>{g.token.slice(0,8)}…</span>
           <button className="adm-icon-btn" title="Copy link" onClick={() => copy(link)}>⎘</button>
@@ -243,7 +250,7 @@ export default function AdminDashboard() {
 
   const filtered = guests.filter(g => {
     const q = search.toLowerCase();
-    const matchSearch = !q || g.name.toLowerCase().includes(q) || (g.partner_name ?? '').toLowerCase().includes(q);
+    const matchSearch = !q || g.name.toLowerCase().includes(q) || (g.partner_name ?? '').toLowerCase().includes(q) || (g.rsvp?.message ?? '').toLowerCase().includes(q);
     const matchFilter = filter === 'all' || (filter === 'accepted' && g.rsvp?.status === 'accepted') || (filter === 'declined' && g.rsvp?.status === 'declined') || (filter === 'pending' && !g.rsvp);
     return matchSearch && matchFilter;
   });
@@ -289,6 +296,7 @@ export default function AdminDashboard() {
           <option value="declined">Declined</option>
           <option value="pending">Pending</option>
         </select>
+        <button className="adm-btn adm-btn--ghost" onClick={() => void load()} disabled={loading} aria-label="Refresh guest responses">Refresh</button>
         <button className="adm-btn adm-btn--ghost" onClick={exportCsv}>⬇ Export CSV</button>
         <button className="adm-btn adm-btn--primary" onClick={() => setCreate(true)}>+ New Invitation</button>
       </div>
@@ -301,12 +309,12 @@ export default function AdminDashboard() {
           <table className="adm-table">
             <thead>
               <tr>
-                <th>Name</th><th>Type</th><th>Max</th><th>Confirmed</th><th>RSVP</th><th>Link</th><th>Actions</th>
+                <th>Name</th><th>Type</th><th>Max</th><th>Confirmed</th><th>RSVP</th><th>Guest Message</th><th>Link</th><th>Actions</th>
               </tr>
             </thead>
             <tbody>
               {filtered.length === 0 ? (
-                <tr><td colSpan={7} className="adm-empty">No guests found.</td></tr>
+                <tr><td colSpan={8} className="adm-empty">No guests found.</td></tr>
               ) : (
                 filtered.map(g => (
                   <GuestRow key={g.id} g={g} onEdit={setEditing} onRefresh={load} />

@@ -582,3 +582,82 @@
   user-select: none;
 }
 
+/* Two small swallows drift across the clear sky above the invitation. */
+.sky-birds {
+  position: absolute;
+  z-index: 3;
+  top: 35%;
+  left: 55%;
+  width: min(20vw, 250px);
+  height: min(12svh, 130px);
+  pointer-events: none;
+  opacity: .82;
+  transition: opacity 650ms ease;
+}
+.invitation-opening:not(.invitation-opening--ready) .sky-birds,
+.invitation-opening--opening .sky-birds { opacity: 0; }
+.sky-bird {
+  position: absolute;
+  width: 48%;
+  height: 100%;
+  overflow: visible;
+  filter: drop-shadow(0 2px 3px rgba(96, 61, 39, .2));
+}
+.sky-bird--one {
+  left: 0;
+  top: 14%;
+  animation: sky-bird-soar-one 5.8s ease-in-out infinite alternate;
+}
+.sky-bird--two {
+  right: 0;
+  top: -2%;
+  width: 42%;
+  animation: sky-bird-soar-two 6.4s ease-in-out .35s infinite alternate;
+}
+.sky-bird__wing { fill: #9a704e; transform-box: view-box; }
+.sky-bird__wing--left {
+  transform-origin: 75px 53px;
+  animation: sky-bird-flap-left .52s ease-in-out infinite alternate;
+}
+.sky-bird__wing--right {
+  transform-origin: 84px 53px;
+  animation: sky-bird-flap-right .52s ease-in-out infinite alternate;
+}
+.sky-bird__body,.sky-bird__beak { fill: #745139; }
+.sky-bird__tail {
+  fill: none;
+  stroke: #745139;
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+@keyframes sky-bird-flap-left {
+  from { transform: rotate(-8deg) scaleY(1); }
+  to { transform: rotate(8deg) scaleY(.72); }
+}
+@keyframes sky-bird-flap-right {
+  from { transform: rotate(8deg) scaleY(1); }
+  to { transform: rotate(-8deg) scaleY(.72); }
+}
+@keyframes sky-bird-soar-one {
+  from { transform: translate3d(-3px, 2px, 0) rotate(-2deg); }
+  to { transform: translate3d(5px, -7px, 0) rotate(2deg); }
+}
+@keyframes sky-bird-soar-two {
+  from { transform: translate3d(4px, 1px, 0) rotate(2deg); }
+  to { transform: translate3d(-5px, -5px, 0) rotate(-2deg); }
+}
+@media (max-aspect-ratio: 4/5) {
+  .sky-birds {
+    top: 30%;
+    left: 53%;
+    width: min(40vw, 270px);
+    height: min(9svh, 110px);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sky-bird--one,.sky-bird--two,.sky-bird__wing--left,.sky-bird__wing--right {
+    animation: none;
+  }
+}
+
