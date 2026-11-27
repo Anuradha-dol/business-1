@@ -1,0 +1,24 @@
+﻿.union-artwork {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+  filter: drop-shadow(0 14px 14px rgba(86, 65, 39, .13));
+}
+.union-artwork__lid {
+  transform-origin: 250px 306px;
+  transform: scaleY(.05);
+}
+.union-artwork__couple-rise { opacity: 0; transform: translateY(54px) scale(.86); transform-origin: 250px 380px; }
+.union-artwork__couple { transform-origin: 250px 372px; }
+.union-artwork.is-completed .union-artwork__lid { animation: union-lid-open 2.1s ease-in-out forwards; }
+.union-artwork.is-completed .union-artwork__couple-rise { animation: union-couple-rise 2.5s 1s ease-out forwards; }
+.union-artwork.is-completed .union-artwork__couple { animation: union-couple-dance 2.2s 2.4s ease-in-out 2 alternate forwards; }
+.union-artwork.is-reduced * { animation-duration: .01ms !important; animation-delay: 0ms !important; animation-iteration-count: 1 !important; }
+@media (prefers-reduced-motion: reduce) {
+  .union-artwork * { animation-duration: .01ms !important; animation-delay: 0ms !important; animation-iteration-count: 1 !important; }
+}
+@keyframes union-lid-open { to { transform: scaleY(1); } }
+@keyframes union-couple-rise { to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes union-couple-dance { from { transform: rotate(-3deg); } to { transform: rotate(3deg); } }

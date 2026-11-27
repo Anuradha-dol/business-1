@@ -1,0 +1,19 @@
+.photo-band {
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+.photo-band--left { transform: translateX(-60px) rotate(-10deg); }
+.photo-band--right { transform: translateX(60px) rotate(10deg); }
+.is-active .photo-band--left { animation: photo-band-left 3.4s ease-out forwards; }
+.is-active .photo-band--right { animation: photo-band-right 3.4s ease-out forwards; }
+
+.photo-band-sparkle {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: photo-band-sparkle 2.4s ease-in-out infinite alternate;
+}
+
+@keyframes photo-band-left { to { transform: translateX(55px) rotate(0); } }
+@keyframes photo-band-right { to { transform: translateX(-55px) rotate(0); } }
+@keyframes photo-band-sparkle { from { opacity: .25; } to { opacity: 1; } }

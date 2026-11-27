@@ -1,0 +1,80 @@
+﻿.scene-artwork {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  pointer-events: none;
+  filter: drop-shadow(0 14px 14px rgba(86, 65, 39, .13));
+}
+.scene-artwork g, .scene-artwork path, .scene-artwork ellipse {
+  transform-box: fill-box;
+}
+.art-wing { transform-origin: center; }
+.art-wing--left { transform-origin: right center; animation: art-wing-left .42s ease-in-out infinite alternate; }
+.art-wing--right { transform-origin: left center; animation: art-wing-right .42s ease-in-out .08s infinite alternate; }
+.art-butterfly--left { animation: art-fly-left 3.5s ease-in-out infinite alternate; }
+.art-butterfly--right { animation: art-fly-right 4s ease-in-out -.8s infinite alternate; }
+.is-completed .art-butterfly--left { animation: art-land-left 3.4s cubic-bezier(.3,.05,.2,1) forwards; }
+.is-completed .art-butterfly--right { animation: art-land-right 3.4s cubic-bezier(.3,.05,.2,1) forwards; }
+.art-bloom { transform-origin: center bottom; animation: art-flower-sway 5.5s ease-in-out infinite alternate; }
+.art-bloom-head { transform-origin: center; }
+.is-completed .art-bloom-head { animation: art-flower-open 3.6s ease-out forwards; }
+.art-calla { transform-origin: center bottom; animation: art-flower-sway 6s ease-in-out infinite alternate; }
+.art-calla--right { animation-delay: -2s; }
+.art-calla-open { transform-origin: center bottom; transform: scaleX(.38) rotate(-8deg); }
+.art-calla-spadix { opacity: .2; }
+.is-completed .art-calla--left { animation: art-calla-together-left 3.8s ease-in-out forwards; }
+.is-completed .art-calla--right { animation: art-calla-together-right 3.8s ease-in-out forwards; }
+.is-completed .art-calla-open { animation: art-calla-open 3.3s cubic-bezier(.25,.1,.25,1) forwards; }
+.is-completed .art-calla-spadix { animation: art-appear 2s 1s forwards; }
+.art-stem-bond { stroke-dasharray: 130; stroke-dashoffset: 130; }
+.is-completed .art-stem-bond { animation: art-stem-draw 3.2s ease-in-out forwards; }
+.art-glass-dome { transform-origin: center bottom; }
+.is-completed .art-glass-dome { animation: art-dome-lift 3.8s cubic-bezier(.45,0,.25,1) forwards; }
+.art-engagement-ring { opacity: 0; transform: translateY(48px) scale(.65); transform-origin: center; }
+.is-completed .art-engagement-ring { animation: art-ring-rise 3s .7s ease-out forwards; }
+.art-diamond-spark { transform-origin: center; animation: art-sparkle 1.8s ease-in-out infinite alternate; }
+.art-box-lid { transform-origin: center bottom; }
+.art-dance-platform { opacity: 0; transform: translateY(48px) scale(.8); transform-origin: center bottom; }
+.is-completed .art-box-lid { animation: art-lid-open 2.1s ease-in-out forwards; }
+.is-completed .art-dance-platform { animation: art-platform-rise 2.5s 1s ease-out forwards; }
+.is-completed .art-dancer--groom { transform-origin: center bottom; animation: art-groom-dance 2.2s 2.4s ease-in-out 2 alternate forwards; }
+.is-completed .art-dancer--bride { transform-origin: center bottom; animation: art-bride-dance 2.2s 2.4s ease-in-out 2 alternate forwards; }
+.art-wedding-ring--left { transform: translateX(-55px) rotate(-12deg); transform-origin: center; }
+.art-wedding-ring--right { transform: translateX(55px) rotate(12deg); transform-origin: center; }
+.is-active .art-wedding-ring--left { animation: art-ring-left 3.4s ease-out forwards; }
+.is-active .art-wedding-ring--right { animation: art-ring-right 3.4s ease-out forwards; }
+.is-reduced *, .is-reduced .art-butterfly, .is-reduced .art-wing { animation-duration: .01ms !important; animation-delay: 0ms !important; animation-iteration-count: 1 !important; }
+@media (prefers-reduced-motion: reduce) {
+  .scene-artwork *, .scene-artwork .art-butterfly, .scene-artwork .art-wing { animation-duration: .01ms !important; animation-delay: 0ms !important; animation-iteration-count: 1 !important; }
+}
+@keyframes art-wing-left { from { transform: perspective(100px) rotateY(4deg); } to { transform: perspective(100px) rotateY(70deg); } }
+@keyframes art-wing-right { from { transform: perspective(100px) rotateY(-4deg); } to { transform: perspective(100px) rotateY(-70deg); } }
+@keyframes art-fly-left { from { transform: translate(-20px, 4px) rotate(-12deg); } to { transform: translate(12px, -15px) rotate(8deg); } }
+@keyframes art-fly-right { from { transform: translate(22px, -4px) rotate(12deg); } to { transform: translate(-12px, -19px) rotate(-8deg); } }
+@keyframes art-land-left { 0% { transform: translate(-20px, 4px) rotate(-12deg); } 35% { transform: translate(45px, -15px) rotate(14deg); } 70% { transform: translate(100px, 95px) rotate(-6deg); } 100% { transform: translate(105px, 112px) rotate(6deg) scale(.8); } }
+@keyframes art-land-right { 0% { transform: translate(22px, -4px) rotate(12deg); } 35% { transform: translate(-43px, -18px) rotate(-14deg); } 70% { transform: translate(-100px, 100px) rotate(6deg); } 100% { transform: translate(-105px, 120px) rotate(-6deg) scale(.8); } }
+@keyframes art-flower-sway { from { transform: rotate(-2deg); } to { transform: rotate(2deg); } }
+@keyframes art-flower-open { from { transform: scale(.82) rotate(-6deg); } to { transform: scale(1.13) rotate(5deg); } }
+@keyframes art-calla-together-left { from { transform: rotate(-2deg); } to { transform: rotate(8deg) translateX(8px); } }
+@keyframes art-calla-together-right { from { transform: rotate(2deg); } to { transform: rotate(-8deg) translateX(8px); } }
+@keyframes art-calla-open { from { transform: scaleX(.38) rotate(-8deg); } to { transform: scaleX(1) rotate(0); } }
+@keyframes art-appear { to { opacity: 1; } }
+@keyframes art-stem-draw { to { stroke-dashoffset: 0; } }
+@keyframes art-dome-lift { 0% { transform: translateY(0); opacity: 1; } 75% { opacity: .8; } 100% { transform: translateY(-180px); opacity: 0; } }
+@keyframes art-ring-rise { 0% { opacity: 0; transform: translateY(48px) scale(.65) rotate(-12deg); } 45% { opacity: 1; } 100% { opacity: 1; transform: translateY(-32px) scale(1) rotate(8deg); } }
+@keyframes art-sparkle { from { opacity: .35; transform: scale(.7) rotate(-10deg); } to { opacity: 1; transform: scale(1.2) rotate(10deg); } }
+@keyframes art-lid-open { to { transform: perspective(400px) rotateX(55deg) translateY(-25px); } }
+@keyframes art-platform-rise { 0% { opacity: 0; transform: translateY(48px) scale(.8); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes art-groom-dance { from { transform: rotate(-4deg) translateX(-2px); } to { transform: rotate(4deg) translateX(3px); } }
+@keyframes art-bride-dance { from { transform: rotate(4deg) translateX(2px); } to { transform: rotate(-4deg) translateX(-3px); } }
+@keyframes art-ring-left { to { transform: translateX(0) rotate(0); } }
+@keyframes art-ring-right { to { transform: translateX(0) rotate(0); } }
+
+
+/* The promise bloom rests on the plinth without a stem passing through it. */
+.art-bloom--compact > path { display: none; }
+
+.art-encounter-rose { transform-origin: center bottom; }
+.is-completed .art-encounter-rose { animation: art-rose-arrive 3.6s ease-out forwards; }
+@keyframes art-rose-arrive { from { transform: scale(1); } to { transform: scale(1.04); } }

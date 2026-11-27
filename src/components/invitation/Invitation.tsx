@@ -5,7 +5,7 @@ import {
   CalendarDays, ExternalLink, Heart, Mail, MapPin, Music2, Pause, Play
 } from 'lucide-react';
 import { wedding } from '../../data/wedding';
-import JourneyHome from './JourneyHome';
+import CinematicJourney from './cinematic/CinematicJourney';
 import './Invitation.css';
 
 type SectionId = 'home' | 'story' | 'day' | 'venue' | 'rsvp';
@@ -142,6 +142,7 @@ function GoldenParticles() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const rafRef = useRef<number>(0);
   useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const canvas = canvasRef.current; if (!canvas) return;
     const ctx = canvas.getContext('2d'); if (!ctx) return;
     const resize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
@@ -192,6 +193,7 @@ function PetalRain({ burstKey }: { burstKey: number }) {
   }, [burstKey]);
 
   useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
     const canvas = canvasRef.current; if (!canvas) return;
     const ctx = canvas.getContext('2d'); if (!ctx) return;
     const resize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
@@ -339,11 +341,18 @@ export default function Invitation({ onReplay, music }: Props) {
     [
       `${base}main-background.webp`,
       `${base}ambient/floral-corner.jpg`,
-      `${base}journey/ch1-encounter.jpg`,
-      `${base}journey/ch2-bloomed.jpg`,
-      `${base}journey/ch3-promise.jpg`,
-      `${base}journey/ch4-union.jpg`,
-      `${base}journey/ch5-forever.jpg`,
+      `${base}journey/beach-plate.webp`,
+      `${base}journey/encounter-rose.webp`,
+      `${base}journey/butterfly.webp`,
+      `${base}journey/calla-left.webp`,
+      `${base}journey/calla-right.webp`,
+      `${base}journey/union-box-v2.webp`,
+      `${base}journey/union-couple-v2.webp`,
+      `${base}journey/silk.webp`,
+      `${base}journey/promise-cloche-v2.webp`,
+      `${base}journey/promise-ring-v2.webp`,
+      `${base}journey/promise-rose-v2.webp`,
+      `${base}journey/wedding-band.webp`,
     ].forEach(src => {
       const img = new Image();
       img.src = src;
@@ -376,7 +385,7 @@ export default function Invitation({ onReplay, music }: Props) {
     <main className="wedding-home">
       <div
         className="wedding-home__background"
-        style={{ backgroundImage: `url("${import.meta.env.BASE_URL}assets/images/cinematic/main-background.webp")` }}
+        style={{ backgroundImage: `url("${import.meta.env.BASE_URL}assets/images/cinematic/${active === 'home' ? 'journey/beach-plate.webp' : 'main-background.webp'}")` }}
         aria-hidden="true"
       />
 
@@ -419,10 +428,7 @@ export default function Invitation({ onReplay, music }: Props) {
         {/* ── HOME: A JOURNEY TO FOREVER ─────────────────────────────────── */}
         {active === 'home' && (
           <section key="home" className="stage-scene" aria-label="A Journey to Forever">
-            <JourneyHome
-              onReplayOpening={onReplay}
-              onTriggerPetalBurst={() => setPetalBurstKey(k => k + 1)}
-            />
+            <CinematicJourney onReplayOpening={onReplay} />
           </section>
         )}
 

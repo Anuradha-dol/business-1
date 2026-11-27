@@ -1,0 +1,30 @@
+.photo-calla {
+  transform-box: fill-box;
+  transform-origin: center bottom;
+  animation: art-flower-sway 6s ease-in-out infinite alternate;
+}
+
+.photo-calla--right { animation-delay: -2s; }
+
+.photo-calla-flower {
+  transform-box: fill-box;
+  transform-origin: center bottom;
+  transform: scaleX(.82);
+}
+
+.is-completed .photo-calla--left {
+  animation: art-calla-together-left 3.8s ease-in-out forwards;
+}
+
+.is-completed .photo-calla--right {
+  animation: art-calla-together-right 3.8s ease-in-out forwards;
+}
+
+.is-completed .photo-calla-flower {
+  animation: photo-calla-unfold 3.4s cubic-bezier(.25,.1,.25,1) forwards;
+}
+
+@keyframes photo-calla-unfold {
+  from { transform: scaleX(.82); }
+  to { transform: scaleX(1); }
+}
