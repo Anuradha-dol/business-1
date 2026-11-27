@@ -125,7 +125,7 @@ export default function Envelope({ onComplete, onArtworkReady }: EnvelopeProps) 
 
   const { contextSafe } = useGSAP(() => {
     gsap.set('.opening-back', { scaleY: 0 });
-    gsap.set('.sky-birds', { autoAlpha: 0, xPercent: 0, yPercent: 0, scale: 1, rotation: -3 });
+    gsap.set('.sky-birds', { autoAlpha: 0, x: 0, y: 0, scale: 1, rotation: -4 });
     gsap.set('.opening-lining', { opacity: 0 });
     gsap.set('.card-viewport', { autoAlpha: 0 });
     gsap.set('.floating-card', { xPercent: -2.1, yPercent: 29, scale: 0.94 });
@@ -160,10 +160,10 @@ export default function Envelope({ onComplete, onArtworkReady }: EnvelopeProps) 
       .to('.opening-back', { scaleY: 1, duration: 1.25, ease: 'sine.inOut' }, 0.95)
       .to('.opening-flap', { autoAlpha: 0, duration: 0.3, ease: 'sine.inOut' }, 1.15)
       .to('.card-viewport', { autoAlpha: 1, duration: 0.5, ease: 'sine.inOut' }, 1.85)
-      .to('.sky-birds', { autoAlpha: 0.96, duration: 0.7, ease: 'sine.out' }, 1.95)
-      .to('.sky-birds', { xPercent: 95, yPercent: -105, scale: 0.24, rotation: 4, duration: 3.4, ease: 'sine.inOut' }, 1.95)
+      .to('.sky-birds', { autoAlpha: 0.96, duration: 0.75, ease: 'sine.out' }, 1.9)
+      .to('.sky-birds', { x: '64vw', y: '-18svh', scale: 0.2, rotation: 3, duration: 3.7, ease: 'sine.inOut' }, 1.9)
       .to('.floating-card', { yPercent: -15, scale: 0.8, rotation: -0.8, duration: 2.8, ease: 'sine.inOut' }, 2.15)
-      .to('.sky-birds', { autoAlpha: 0, duration: 1.15, ease: 'sine.in' }, 4.2)
+      .to('.sky-birds', { autoAlpha: 0, duration: 1.2, ease: 'sine.in' }, 4.4)
       .to('.card-viewport', { clipPath: 'polygon(0% 0%,100% 0%,100% 100%,100% 100%,100% 100%,0% 100%,0% 100%,0% 100%)', duration: 0.55, ease: 'sine.inOut' }, 4.45)
       .set('.card-viewport', { zIndex: 5 }, 5.0)
       .add(() => root.current?.classList.add('gust'), 4.85)

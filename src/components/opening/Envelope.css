@@ -582,14 +582,14 @@
   user-select: none;
 }
 
-/* Two graceful white doves fly affectionately into the distant sunset sky. */
+/* Two graceful white doves enter from the left sky corner and soar into the distance. */
 .sky-birds {
   position: absolute;
   z-index: 3;
-  top: 28%;
-  left: 50%;
-  width: min(17vw, 240px);
-  aspect-ratio: 720 / 505;
+  top: 33%;
+  left: -4%;
+  width: min(16vw, 225px);
+  aspect-ratio: 720 / 560;
   pointer-events: none;
   opacity: 0;
   visibility: hidden;
@@ -602,18 +602,18 @@
   height: 100%;
   object-fit: contain;
   user-select: none;
-  filter: drop-shadow(0 6px 14px rgba(120, 72, 34, .18));
-  animation: sky-birds-glide 1.35s ease-in-out infinite alternate;
+  filter: drop-shadow(0 6px 14px rgba(120, 72, 34, .16));
+  animation: sky-birds-glide 1.6s ease-in-out infinite alternate;
 }
 @keyframes sky-birds-glide {
-  from { transform: translate3d(0, 3px, 0) scaleY(.95) rotate(-1.4deg); }
-  to { transform: translate3d(0, -4px, 0) scaleY(1.03) rotate(1.4deg); }
+  from { transform: translate3d(0, 3px, 0) rotate(-1deg); }
+  to { transform: translate3d(0, -4px, 0) rotate(1deg); }
 }
 @media (max-aspect-ratio: 4/5) {
   .sky-birds {
-    top: 25%;
-    left: 48%;
-    width: min(38vw, 220px);
+    top: 27%;
+    left: -8%;
+    width: min(36vw, 200px);
   }
 }
 @media (prefers-reduced-motion: reduce) {
