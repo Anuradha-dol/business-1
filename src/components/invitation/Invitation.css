@@ -717,10 +717,6 @@
   opacity: .35;
   cursor: not-allowed;
 }
-.guest-stepper--locked {
-  background: rgba(244, 232, 210, .75);
-  border-color: rgba(185, 145, 90, .45);
-}
 .guest-stepper__val {
   min-width: 32px; text-align: center; font: 600 13.5px/1 Georgia, serif; color: #8a5815;
   border-left: 1px solid rgba(215,180,130,.35); border-right: 1px solid rgba(215,180,130,.35);
