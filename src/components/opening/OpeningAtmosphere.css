@@ -19,30 +19,15 @@
   animation:opening-palm-breeze 8.6s ease-in-out infinite;
 }
 .opening-atmosphere__palm img { width:444.45%; max-width:none; height:auto; top:0; left:0; }
-.opening-atmosphere__fabric {
-  left:-17%; bottom:7%; width:134%;
-  opacity:.55;
-  transform-origin:32% 60%;
-  animation:opening-fabric-breeze 9.8s ease-in-out infinite;
-}
 @keyframes opening-palm-breeze {
   0%,100% { transform:rotate(-.35deg) skewX(0deg); }
   32% { transform:rotate(1.15deg) skewX(.45deg); }
   65% { transform:rotate(.15deg) skewX(-.2deg); }
 }
-@keyframes opening-fabric-breeze {
-  0%,100% { transform:translate3d(0,0,0) rotate(-.45deg) scaleY(.97); }
-  45% { transform:translate3d(1.1%,-3%,0) rotate(.45deg) scaleY(1.04); }
-  72% { transform:translate3d(.4%,-1%,0) rotate(.1deg) scaleY(1.01); }
-}
 @media(max-aspect-ratio:4/5) {
   /* The old pseudo-element painted a second stationary palm underneath. */
   .invitation-opening .portrait-stage::before { display:none; }
   .opening-atmosphere__palm { width:min(73vw,360px); }
-  .opening-atmosphere__fabric { width:110%; left:-5%; bottom:19%; opacity:.63; }
-}
-@media(max-aspect-ratio:4/5) and (max-height:600px) {
-  .opening-atmosphere__fabric { width:96%; left:2%; bottom:15%; opacity:.6; }
 }
 /* A small copy of the real water is feathered strictly to the sea, not the sand. */
 .opening-water {
@@ -58,16 +43,10 @@
   50% { transform:translate3d(.2%,.18%,0); }
 }
 @media(prefers-reduced-motion:reduce) {
-  .opening-atmosphere__palm,.opening-atmosphere__fabric,.opening-water { animation:none; }
+  .opening-atmosphere__palm,.opening-water { animation:none; }
 }
 @media(min-aspect-ratio:4/5) {
   /* The landscape composition already includes the full foreground fabric
      and palms; avoid layering a second large copy over the envelope. */
   .opening-atmosphere { display:none; }
-}
-@media(max-aspect-ratio:4/5) and (max-height:600px) {
-  .opening-atmosphere__fabric {
-    mask-image:linear-gradient(to bottom,#000 55%,transparent 95%);
-    -webkit-mask-image:linear-gradient(to bottom,#000 55%,transparent 95%);
-  }
 }

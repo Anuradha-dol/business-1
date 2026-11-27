@@ -7,6 +7,8 @@ import './WindStreaks.css';
 import './PaperFlight.css';
 import OpeningAtmosphere, { OpeningWater } from './OpeningAtmosphere';
 import { wedding } from '../../data/wedding';
+import { useInvitation } from '../../contexts/InvitationContext';
+import { formatGreeting } from '../../lib/supabase';
 
 gsap.registerPlugin(useGSAP);
 const base = `${import.meta.env.BASE_URL}assets/images/cinematic/layers/`;
@@ -15,23 +17,26 @@ const names = `${wedding.bride} & ${wedding.groom}`;
 const date = wedding.dateLabel;
 
 const CLOSED_ASSETS = [
-  `${import.meta.env.BASE_URL}assets/images/cinematic/main-background.webp`,
+  `${import.meta.env.BASE_URL}assets/images/cinematic/ambient/closed-fixed-optimized.webp`,
   `${import.meta.env.BASE_URL}assets/images/cinematic/journey/beach-plate.webp`,
-  `${import.meta.env.BASE_URL}assets/images/cinematic/journey/silk.webp`,
-  `${ambientBase}closed-fixed-optimized.webp`,
+  `${import.meta.env.BASE_URL}assets/images/cinematic/main-background.webp`,
+];
+
+const BACKGROUND_CLOSED_ASSETS = [
   `${ambientBase}sky-ornament-cleanup.webp`,
   `${base}sky.webp`,
   `${base}sand.webp`,
 ];
 
 const OPENING_ASSETS = [
-  `${ambientBase}envelope-isolated.webp`,
+  `${ambientBase}envelope-isolated-e71f21f1b289.webp`,
   `${ambientBase}flap-clean.webp`,
-  `${ambientBase}scalloped-card.webp`,
+  `${ambientBase}scalloped-card-883012c28e99.webp`,
   `${ambientBase}opening-clear-optimized.webp`,
 ];
 
 const FIRST_CHAPTER_ASSETS = [
+  `${import.meta.env.BASE_URL}assets/images/cinematic/journey/silk.webp`,
   `${import.meta.env.BASE_URL}assets/images/cinematic/journey/encounter-rose.webp`,
   `${import.meta.env.BASE_URL}assets/images/cinematic/journey/butterfly.webp`,
 ];
@@ -65,7 +70,7 @@ export default function Envelope({ onComplete, onArtworkReady }: EnvelopeProps) 
   const [ready, setReady] = useState(false);
   const [openingImagesRequested, setOpeningImagesRequested] = useState(false);
   const [preparingOpen, setPreparingOpen] = useState(false);
-  const [pendingOpen, setPendingOpen] = useState(false);
+  const { guest, error: guestError } = useInvitation();
 
   const preloadFirstChapter = useCallback(() => {
     if (!firstChapterLoad.current) {
@@ -97,34 +102,18 @@ export default function Envelope({ onComplete, onArtworkReady }: EnvelopeProps) 
       resolveClosedScene();
     };
     // Do not leave a guest waiting indefinitely on a stalled connection.
-    const timeout = setTimeout(showClosedScene, 2500);
+    const timeout = setTimeout(showClosedScene, 8000);
     Promise.all(CLOSED_ASSETS.map(preloadImage)).then(() => {
       clearTimeout(timeout);
       showClosedScene();
       if (cancelled) return;
       onArtworkReady?.();
-      // Let the visible artwork finish before warming the opening and Home.
-      void preloadOpening().then(async () => {
-        if (cancelled) return;
-        // Give the first Home scene priority over later chapters on a cold visit.
-        await preloadFirstChapter();
-        if (cancelled) return;
-        // While the guest views the envelope, prepare only the artwork used by
-        // the following chapters and cards, not the unused full-scene images.
-        const cinBase = `${import.meta.env.BASE_URL}assets/images/cinematic/`;
-        [
-          `${cinBase}ambient/floral-corner.jpg`,
-          `${cinBase}journey/calla-left.webp`,
-          `${cinBase}journey/calla-right.webp`,
-          `${cinBase}journey/promise-cloche-v2.webp`,
-          `${cinBase}journey/promise-ring-v2.webp`,
-          `${cinBase}journey/promise-rose-v2.webp`,
-          `${cinBase}journey/union-box-v2.webp`,
-          `${cinBase}journey/union-box-closed.webp`,
-          `${cinBase}journey/union-couple-v2.webp`,
-          `${cinBase}journey/wedding-band-ivory.webp`,
-        ].forEach(src => { void preloadImage(src); });
-      });
+      BACKGROUND_CLOSED_ASSETS.forEach(src => { void preloadImage(src); });
+      // On slow connections, wait briefly after the closed scene paints before
+      // warming only the opening-flap layers; defer Home chapters until open().
+      setTimeout(() => {
+        if (!cancelled) void preloadOpening();
+      }, 350);
     });
     return () => {
       cancelled = true;
@@ -217,11 +206,9 @@ export default function Envelope({ onComplete, onArtworkReady }: EnvelopeProps) 
     if (busy.current || state !== 'closed') return;
     busy.current = true;
     if (!ready) {
-      setPendingOpen(true);
       setPreparingOpen(true);
       void closedSceneReady.current.then(() => {
         if (!mounted.current) return;
-        setPendingOpen(false);
         beginOpening();
       });
       return;
@@ -230,7 +217,8 @@ export default function Envelope({ onComplete, onArtworkReady }: EnvelopeProps) 
   };
 
   const lettering = (
-    <div className="card-lettering">
+    <div className={`card-lettering${guest ? ' card-lettering--personalized' : ''}`}>
+      {guest && <p className="card-greeting">{formatGreeting(guest)}</p>}
       <p>With joyful hearts, together with our families</p>
       <h2>{names}</h2>
       <svg className="card-flourish" viewBox="0 0 460 42" aria-hidden="true">
@@ -243,15 +231,12 @@ export default function Envelope({ onComplete, onArtworkReady }: EnvelopeProps) 
 
   return (
     <main className={`invitation-opening${ready ? ' invitation-opening--ready' : ''}`} ref={root} aria-busy={state === 'opening' || !ready || preparingOpen}>
-      {!ready && (
-        <div className="opening-loader">
+        <div className={`opening-loader${ready ? ' opening-loader--hidden' : ''}`} aria-hidden={ready} inert={ready}>
+          <p className="opening-loader__eyebrow">A celebration of love</p>
           <div className="opening-loader__crest">{wedding.monogram}</div>
+          <p className="opening-loader__status" role="status">Preparing your invitation</p>
           <div className="opening-loader__bar" aria-hidden="true"><span /></div>
-          <button className="open-action opening-loader__action" onClick={open} type="button" disabled={pendingOpen}>
-            {pendingOpen ? 'Opening…' : 'Tap to Open'} <span aria-hidden="true">&#10023;</span>
-          </button>
         </div>
-      )}
 
       <svg className="wind-filters" aria-hidden="true" focusable="false">
         <defs>
@@ -298,11 +283,11 @@ export default function Envelope({ onComplete, onArtworkReady }: EnvelopeProps) 
               {/* Solid warm-gold inner pocket backing prevents the sea from bleeding through */}
               <div className="envelope-inner-pocket" aria-hidden="true" />
               <div className="opening-lining">
-                <img className="isolated-envelope" src={openingImagesRequested ? `${ambientBase}envelope-isolated.webp` : undefined} alt="" />
+                <img className="isolated-envelope" src={openingImagesRequested ? `${ambientBase}envelope-isolated-e71f21f1b289.webp` : undefined} alt="" />
               </div>
               <div className="opening-back">
                 <div className="opening-back-image">
-                  <img className="isolated-envelope" src={openingImagesRequested ? `${ambientBase}envelope-isolated.webp` : undefined} alt="" />
+                  <img className="isolated-envelope" src={openingImagesRequested ? `${ambientBase}envelope-isolated-e71f21f1b289.webp` : undefined} alt="" />
                 </div>
               </div>
               <div className="card-viewport">
@@ -310,14 +295,14 @@ export default function Envelope({ onComplete, onArtworkReady }: EnvelopeProps) 
                   <img className="wind-streak-overlay" src={`${ambientBase}wind-streaks.svg`} alt="" draggable={false} />
                   <div className="card-flutter" style={{ position: 'absolute', inset: 0 }}>
                     <div className="paper-surface">
-                      <img className="complete-card" src={openingImagesRequested ? `${ambientBase}scalloped-card.webp` : undefined} alt="" draggable={false} />
+                      <img className="complete-card" src={openingImagesRequested ? `${ambientBase}scalloped-card-883012c28e99.webp` : undefined} alt="" draggable={false} />
                       <div className="card-motif" aria-hidden="true">
                         <img className="card-filigree" src={`${ambientBase}card-filigree.svg`} alt="" />
-                        <div className="card-shell-cleanup"><img src={openingImagesRequested ? `${ambientBase}scalloped-card.webp` : undefined} alt="" /></div>
+                        <div className="card-shell-cleanup"><img src={openingImagesRequested ? `${ambientBase}scalloped-card-883012c28e99.webp` : undefined} alt="" /></div>
                         <img className="card-love-ornament" src={`${ambientBase}linked-hearts.svg`} alt="" />
                       </div>
                       {lettering}
-                      <span className="paper-curl-light" style={{ maskImage: openingImagesRequested ? `url("${ambientBase}scalloped-card.webp")` : 'none' }} aria-hidden="true" />
+                      <span className="paper-curl-light" style={{ maskImage: openingImagesRequested ? `url("${ambientBase}scalloped-card-883012c28e99.webp")` : 'none' }} aria-hidden="true" />
                     </div>
                   </div>
                 </div>
@@ -358,7 +343,38 @@ export default function Envelope({ onComplete, onArtworkReady }: EnvelopeProps) 
             <time dateTime={wedding.dateISO}>{date}</time>
           </header>
 
+          <div className="sand-decor" aria-hidden="true">
+            <svg className="sand-decor__petals" viewBox="0 0 390 120" fill="none" preserveAspectRatio="xMidYMax slice">
+              <defs>
+                <radialGradient id="sp1" cx="40%" cy="35%" r="65%">
+                  <stop offset="0%" stopColor="#fffdf9" stopOpacity="0.92" />
+                  <stop offset="65%" stopColor="#f5e7d3" stopOpacity="0.82" />
+                  <stop offset="100%" stopColor="#d8b589" stopOpacity="0.35" />
+                </radialGradient>
+                <filter id="petal-sand-shadow" x="-20%" y="-20%" width="140%" height="160%">
+                  <feDropShadow dx="0" dy="2" stdDeviation="2.2" floodColor="#7c4e1c" floodOpacity="0.22" />
+                </filter>
+              </defs>
+              {/* Scattered natural white petals resting still on the warm sand */}
+              <g filter="url(#petal-sand-shadow)">
+                <path d="M44 76c6-6 16-5 20 1-5 7-15 8-20-1z" fill="url(#sp1)" transform="rotate(-14 54 76)" />
+                <path d="M68 92c5-4 13-3 15 2-4 5-11 5-15-2z" fill="url(#sp1)" transform="rotate(18 75 92)" />
+                <path d="M98 64c4-4 11-3 13 2-4 4-9 4-13-2z" fill="url(#sp1)" transform="rotate(-26 104 64)" opacity="0.85" />
+                <path d="M292 68c5-4 13-3 15 2-4 5-11 5-15-2z" fill="url(#sp1)" transform="rotate(24 299 68)" opacity="0.88" />
+                <path d="M324 84c7-6 17-4 20 2-5 7-14 7-20-2z" fill="url(#sp1)" transform="rotate(-16 334 84)" />
+                <path d="M348 64c4-3 10-2 12 2-3 4-8 4-12-2z" fill="url(#sp1)" transform="rotate(12 354 64)" opacity="0.8" />
+              </g>
+            </svg>
+          </div>
+
           <div className="action-area">
+            {state === 'closed' && guestError && (
+              <p className="invite-status-note" role="status">
+                {guestError === 'inactive'
+                  ? 'This personal invitation link is no longer active.'
+                  : 'We could not find this personal invitation link.'}
+              </p>
+            )}
             {state === 'closed' && (
               <button className="open-action" onClick={open} type="button">
                 {preparingOpen ? 'Opening…' : 'Tap to Open'} <span aria-hidden="true">&#10023;</span>

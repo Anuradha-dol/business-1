@@ -375,7 +375,9 @@
   flex-direction: column;
   border: 1px solid rgba(210, 165, 90, 0.58);
   border-radius: 110px 110px 28px 28px;
-  background: linear-gradient(180deg, rgba(255, 250, 242, 0.96) 0%, rgba(254, 246, 233, 0.95) 100%);
+  background: linear-gradient(180deg, rgba(255, 251, 244, 0.90) 0%, rgba(253, 245, 232, 0.88) 100%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   box-shadow:
     0 24px 60px rgba(130, 80, 20, 0.18),
     0 4px 18px rgba(130, 80, 20, 0.08),
@@ -560,6 +562,7 @@
 .luxury-card--venue .cinematic-sea {
   position: absolute;
   bottom: 0; left: 0; right: 0;
+  width: 100%;
   height: 40%;
   opacity: .35;
   z-index: 1;
@@ -587,13 +590,6 @@
   transition: transform .25s;
 }
 .venue-icon-wrap:hover { transform: scale(1.08); }
-.venue-ping {
-  position: absolute; inset: -4px; border-radius: 50%;
-  border: 1.5px solid rgba(185,130,50,.45);
-  animation: ping 2.4s ease-in-out infinite;
-}
-.venue-ping--2 { inset: -10px; animation-delay: .8s; opacity: .5; }
-
 .venue-tap-hint {
   display: block;
   margin-bottom: 8px;
@@ -689,7 +685,7 @@
 .luxury-rsvp__input {
   width: 100%; min-width: 0; padding: 10px 13px;
   border: 1px solid rgba(215,180,130,.75); border-radius: 11px;
-  background: rgba(255,252,245,.95); color: #694723; font: 13.5px/1.35 Georgia, serif;
+  background: rgba(255,252,246,.84); color: #694723; font: 13.5px/1.35 Georgia, serif; box-shadow: inset 0 1px 0 rgba(255,255,255,.8), 0 2px 8px rgba(130,80,20,.04); transition: border-color .25s, box-shadow .25s, background .25s;
 }
 .luxury-rsvp__input:focus {
   outline: none; border-color: rgba(185,130,55,.85);
@@ -724,7 +720,7 @@
 }
 
 .luxury-rsvp__submit {
-  padding: 12px 16px; border: 1px solid rgba(185,130,50,.7); border-radius: 13px;
+  padding: 13px 18px; border: 1px solid rgba(185,130,50,.68); border-radius: 99px;
   background: linear-gradient(135deg, #c8963e, #9f6f20); color: #fff9ee;
   font: 600 11px/1 Georgia, serif; letter-spacing: .12em; text-transform: uppercase;
   box-shadow: 0 5px 16px rgba(130,80,20,.22);
@@ -736,7 +732,6 @@
 @keyframes wedding-scene-in { from { opacity: 0; } to { opacity: 1; } }
 @keyframes underline-appear { from { transform: scaleX(0); } to { transform: scaleX(1); } }
 @keyframes confirmation-pop { from { opacity: 0; transform: scale(.94) translateY(-6px); } to { opacity: 1; transform: none; } }
-@keyframes ping { 0% { transform: scale(1); opacity: .7; } 70% { transform: scale(1.4); opacity: 0; } 100% { transform: scale(1.4); opacity: 0; } }
 
 /* ── Responsive ──────────────────────────────────────────────────────────── */
 @media (min-width: 700px) {
@@ -759,28 +754,45 @@
 
 @media (prefers-reduced-motion: reduce) {
   .wedding-home, .stage-scene, .luxury-card, .card-sheen, .timeline-item, .rsvp-confirmation { animation: none !important; transition: none !important; }
-  .venue-ping { animation: none !important; }
 }
 
-/* Continuous invitation: keep the Home stage the same viewport-sized canvas,
-   while the following cards participate in the natural document scroll. */
+
+/* ═══════════════════════════════════════════════════════════════════
+   LOCKED 100SVH VIEWPORT + INTERNAL SMOOTH SCROLL CONTAINER
+   Keeps mobile browser URL bar & header completely steady while scrolling
+   ═══════════════════════════════════════════════════════════════════ */
 .wedding-home {
-  height: auto;
+  height: 100svh;
   min-height: 100svh;
-  overflow: clip;
+  overflow: hidden;
 }
-.wedding-home__header { position: sticky; top: 0; }
+.wedding-home__header {
+  position: relative;
+  flex-shrink: 0;
+  z-index: 30;
+}
 .wedding-stage {
   --invitation-header-height: 80px;
   display: block;
-  flex: none;
+  flex: 1;
+  min-height: 0;
   padding: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+  scroll-behavior: smooth;
 }
 .stage-scene {
+  position: relative;
+  width: 100%;
   height: auto;
   min-height: calc(100svh - var(--invitation-header-height));
+  display: flex;
+  align-items: center;
+  justify-content: center;
   padding: 24px 14px max(32px, env(safe-area-inset-bottom));
-  scroll-margin-top: var(--invitation-header-height);
+  scroll-margin-top: 0;
 }
 .stage-scene--home {
   height: calc(100svh - var(--invitation-header-height));
@@ -789,9 +801,6 @@
   overflow: clip;
   animation: none;
 }
-/* The Home world is fixed behind the invitation. Keep that same composited
-   backdrop on screen across sections: fading it at the active-tab boundary
-   swaps its lighting and water for a second copy of the beach mid-scroll. */
 .stage-scene:not(.stage-scene--home) .luxury-card { max-height: none; }
 .stage-scene:not(.stage-scene--home) .luxury-card__inner { overflow: visible; }
 @media (min-width: 700px) {
