@@ -13,7 +13,7 @@ import { formatGreeting } from '../../lib/supabase';
 gsap.registerPlugin(useGSAP);
 const base = `${import.meta.env.BASE_URL}assets/images/cinematic/layers/`;
 const ambientBase = `${import.meta.env.BASE_URL}assets/images/cinematic/ambient/`;
-const BIRDS_ASSET = `${ambientBase}sky-birds-flight-optimized.png`;
+const BIRDS_ASSET = `${ambientBase}sky-birds-flight-optimized.webp`;
 const names = `${wedding.bride} & ${wedding.groom}`;
 const date = wedding.dateLabel;
 
@@ -286,13 +286,6 @@ export default function Envelope({ onComplete, onArtworkReady }: EnvelopeProps) 
               fetchPriority="low"
               onLoad={() => setBirdsReady(true)}
             />
-          </div>
-          <div className="opening-petal-rain" aria-hidden="true">
-            <span className="opening-petal opening-petal--1" />
-            <span className="opening-petal opening-petal--2" />
-            <span className="opening-petal opening-petal--3" />
-            <span className="opening-petal opening-petal--4" />
-            <span className="opening-petal opening-petal--5" />
           </div>
           <div className="scene">
             <div className="closed-view">
