@@ -13,6 +13,7 @@ import { formatGreeting } from '../../lib/supabase';
 gsap.registerPlugin(useGSAP);
 const base = `${import.meta.env.BASE_URL}assets/images/cinematic/layers/`;
 const ambientBase = `${import.meta.env.BASE_URL}assets/images/cinematic/ambient/`;
+const BIRDS_ASSET = `${ambientBase}sky-birds-flight-optimized.png`;
 const names = `${wedding.bride} & ${wedding.groom}`;
 const date = wedding.dateLabel;
 
@@ -69,6 +70,7 @@ export default function Envelope({ onComplete, onArtworkReady }: EnvelopeProps) 
   const [state, setState] = useState<'closed' | 'opening' | 'opened'>('closed');
   const [ready, setReady] = useState(false);
   const [openingImagesRequested, setOpeningImagesRequested] = useState(false);
+  const [birdsReady, setBirdsReady] = useState(false);
   const [preparingOpen, setPreparingOpen] = useState(false);
   const { guest, error: guestError } = useInvitation();
 
@@ -121,6 +123,7 @@ export default function Envelope({ onComplete, onArtworkReady }: EnvelopeProps) 
 
   const { contextSafe } = useGSAP(() => {
     gsap.set('.opening-back', { scaleY: 0 });
+    gsap.set('.sky-birds', { autoAlpha: 0, x: 0, y: 0, scale: 0.95, rotation: -3 });
     gsap.set('.opening-lining', { opacity: 0 });
     gsap.set('.card-viewport', { autoAlpha: 0 });
     gsap.set('.floating-card', { xPercent: -2.1, yPercent: 29, scale: 0.94 });
@@ -152,6 +155,11 @@ export default function Envelope({ onComplete, onArtworkReady }: EnvelopeProps) 
       // Reveal inner lining BEFORE flap folds so the sea never peeks through
       .to('.opening-lining', { opacity: 1, duration: 0.45, ease: 'sine.out' }, 0.1)
       .to('.opening-flap', { scaleY: 0, duration: 1.15, ease: 'sine.inOut' }, 0.3)
+      // The two doves glide across the sky as the cover opens.
+      .to('.sky-birds', { autoAlpha: 0.88, duration: 0.9, ease: 'sine.out' }, 0.45)
+      .to('.sky-birds', { x: '28vw', y: '-4svh', scale: 0.62, rotation: -1, duration: 3.6, ease: 'sine.out' }, 0.45)
+      .to('.sky-birds', { x: '58vw', y: '-8svh', scale: 0.22, rotation: 2, duration: 4.55, ease: 'sine.in' }, 4.05)
+      .to('.sky-birds', { autoAlpha: 0, duration: 1.6, ease: 'sine.in' }, 7.0)
       // Start raising the open back flap before the front flap disappears
       .to('.opening-back', { scaleY: 1, duration: 1.25, ease: 'sine.inOut' }, 0.95)
       .to('.opening-flap', { autoAlpha: 0, duration: 0.3, ease: 'sine.inOut' }, 1.15)
@@ -268,6 +276,17 @@ export default function Envelope({ onComplete, onArtworkReady }: EnvelopeProps) 
       } as CSSProperties}>
         <div className="opening-scene-content" inert={!ready}>
           <OpeningAtmosphere />
+          <div className="sky-birds" aria-hidden="true">
+            <img
+              className={`sky-birds__img${birdsReady ? ' is-ready' : ''}`}
+              src={openingImagesRequested ? BIRDS_ASSET : undefined}
+              alt=""
+              draggable={false}
+              decoding="async"
+              fetchPriority="low"
+              onLoad={() => setBirdsReady(true)}
+            />
+          </div>
           <div className="scene">
             <div className="closed-view">
               <img className="art" src={`${ambientBase}closed-fixed-optimized.webp`} alt="" draggable={false} fetchPriority="high" />
