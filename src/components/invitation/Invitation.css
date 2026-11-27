@@ -25,6 +25,17 @@
   pointer-events: none;
 }
 
+/* Keep both existing photographs in place and dissolve between them instead
+   of swapping the image abruptly when the current section changes. */
+.wedding-home__background--home {
+  opacity: 0;
+  transition: opacity .8s ease;
+}
+.wedding-home__background--home.is-visible { opacity: 1; }
+@media (prefers-reduced-motion: reduce) {
+  .wedding-home__background--home { transition: none; }
+}
+
 /* Global Petals & Golden Particles across ALL tabs */
 .global-particles,
 .global-petals {
@@ -539,13 +550,20 @@
 }
 
 /* ── Venue ───────────────────────────────────────────────────────────────── */
+.luxury-card--venue {
+  /* Carry the same warm stationery tone all the way to the bottom. */
+  background: linear-gradient(165deg, rgba(255, 249, 239, .97) 0%, rgba(253, 240, 223, .96) 58%, rgba(249, 226, 204, .96) 100%);
+}
 .luxury-card--venue .cinematic-sea {
   position: absolute;
   bottom: 0; left: 0; right: 0;
   height: 40%;
-  opacity: .55;
+  opacity: .35;
   z-index: 1;
   pointer-events: none;
+  /* Blend the existing sea detail into the card instead of a visible band. */
+  mask-image: linear-gradient(to bottom, transparent, #000 55%);
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 55%);
 }
 
 .venue-icon-wrap {
@@ -598,8 +616,8 @@
   gap: 5px;
   padding: 9px 6px;
   border-radius: 14px;
-  border: 1px solid rgba(210,165,80,.38);
-  background: rgba(255,248,232,.82);
+  border: 1px solid rgba(196,145,74,.36);
+  background: rgba(255, 246, 228, .48);
 }
 .venue-highlight span { font: 600 9.5px/1.2 Georgia, serif; text-transform: uppercase; letter-spacing: .05em; color: #8a5915; }
 
@@ -612,13 +630,18 @@
   padding: 10px 18px;
   border-radius: 99px;
   border: 1px solid rgba(185, 135, 55, 0.58);
-  background: linear-gradient(135deg, rgba(255, 248, 230, 0.96), rgba(248, 226, 178, 0.88));
+  background: linear-gradient(135deg, rgba(255, 245, 224, 0.96), rgba(243, 216, 170, 0.9));
   color: #8a5815;
   font: 600 10px/1 Georgia, serif;
   letter-spacing: .1em;
   text-transform: uppercase;
   text-decoration: none;
   box-shadow: 0 4px 14px rgba(130, 80, 20, 0.12);
+}
+.venue-map-btn:hover { background: #f4dfbc; }
+.venue-map-btn:focus-visible, .venue-icon-wrap:focus-visible {
+  outline: 2px solid #9d641c;
+  outline-offset: 3px;
 }
 
 /* ── Luxury RSVP Form (Compact, zero clipping) ───────────────────────────── */
@@ -734,4 +757,49 @@
 @media (prefers-reduced-motion: reduce) {
   .wedding-home, .stage-scene, .luxury-card, .card-sheen, .timeline-item, .rsvp-confirmation { animation: none !important; transition: none !important; }
   .venue-ping { animation: none !important; }
+}
+
+/* Continuous invitation: keep the Home stage the same viewport-sized canvas,
+   while the following cards participate in the natural document scroll. */
+.wedding-home {
+  height: auto;
+  min-height: 100svh;
+  overflow: clip;
+}
+.wedding-home__header { position: sticky; top: 0; }
+.wedding-stage {
+  --invitation-header-height: 80px;
+  display: block;
+  flex: none;
+  padding: 0;
+}
+.stage-scene {
+  height: auto;
+  min-height: calc(100svh - var(--invitation-header-height));
+  padding: 24px 14px max(32px, env(safe-area-inset-bottom));
+  scroll-margin-top: var(--invitation-header-height);
+}
+.stage-scene--home {
+  height: calc(100svh - var(--invitation-header-height));
+  min-height: 0;
+  padding: 10px 14px max(54px, env(safe-area-inset-bottom) + 48px);
+  overflow: clip;
+  animation: none;
+}
+.stage-scene--home:not(.is-active) .cinematic-journey__world {
+  opacity: 0;
+  visibility: hidden;
+}
+.stage-scene--home .cinematic-journey__world {
+  transition: opacity .65s ease, visibility .65s;
+}
+.stage-scene:not(.stage-scene--home) .luxury-card { max-height: none; }
+.stage-scene:not(.stage-scene--home) .luxury-card__inner { overflow: visible; }
+@media (min-width: 700px) {
+  .wedding-stage { padding: 0; }
+  .stage-scene { padding: 30px 24px 40px; }
+  .stage-scene--home { padding: 14px 24px 36px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .stage-scene--home .cinematic-journey__world { transition: none; }
 }

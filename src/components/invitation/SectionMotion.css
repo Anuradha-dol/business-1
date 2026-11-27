@@ -1,0 +1,117 @@
+/* Cards are already visible as they scroll into view. Replaying the default
+   opacity/blur card entrance on activation would make them flash blank. */
+.stage-scene :is(.luxury-card--day, .luxury-card--venue, .luxury-card--rsvp),
+.stage-scene :is(.luxury-card--day, .luxury-card--venue, .luxury-card--rsvp) .card-sheen,
+.stage-scene:not(.is-active) :is(.luxury-card--day, .luxury-card--venue, .luxury-card--rsvp) .timeline-item {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* The day unfolds like the order of a celebration: the date, then each
+     event. Existing typography, floral artwork and gold frame stay intact. */
+  .stage-scene.is-active .luxury-card--day .card-floral-art {
+    animation: detail-floral-open 800ms ease-out both;
+  }
+  .stage-scene.is-active .luxury-card--day :is(.luxury-card__hearts, .luxury-card__eyebrow, .luxury-card__title) {
+    animation: detail-rise 650ms 60ms ease-out both;
+  }
+  .stage-scene.is-active .luxury-card--day .floral-divider {
+    transform-origin: center;
+    animation: detail-divider 650ms 120ms ease-out both;
+  }
+  .stage-scene.is-active .luxury-card--day .day-countdown {
+    animation: detail-rise 650ms 180ms ease-out both;
+  }
+  .stage-scene.is-active .luxury-card--day .day-date-display {
+    animation: detail-date 650ms 240ms ease-out both;
+  }
+  .stage-scene.is-active .luxury-card--day .timeline-item {
+    animation: detail-event 650ms ease-out both;
+  }
+  .stage-scene.is-active .luxury-card--day .timeline-item:nth-child(1) { animation-delay: 300ms !important; }
+  .stage-scene.is-active .luxury-card--day .timeline-item:nth-child(2) { animation-delay: 360ms !important; }
+  .stage-scene.is-active .luxury-card--day .timeline-item:nth-child(3) { animation-delay: 420ms !important; }
+  .stage-scene.is-active .luxury-card--day .luxury-card__note {
+    animation: detail-rise 650ms 480ms ease-out both;
+  }
+
+  /* A gentle reveal of the existing floral artwork and location details,
+     followed by the individual highlights and map link. */
+  .stage-scene.is-active .luxury-card--venue .card-floral-art {
+    animation: detail-floral-open 800ms ease-out both;
+  }
+  .stage-scene.is-active .luxury-card--venue :is(.luxury-card__hearts, .luxury-card__eyebrow, .luxury-card__title) {
+    animation: detail-rise 650ms 60ms ease-out both;
+  }
+  .stage-scene.is-active .luxury-card--venue .floral-divider {
+    transform-origin: center;
+    animation: detail-divider 650ms 120ms ease-out both;
+  }
+  .stage-scene.is-active .luxury-card--venue :is(.venue-icon-wrap, .venue-tap-hint) {
+    animation: detail-venue 650ms 180ms ease-out both;
+  }
+  .stage-scene.is-active .luxury-card--venue .venue-subtitle {
+    animation: detail-venue 650ms 240ms ease-out both;
+  }
+  .stage-scene.is-active .luxury-card--venue :is(.venue-address, .venue-desc) {
+    animation: detail-rise 650ms 300ms ease-out both;
+  }
+  .stage-scene.is-active .luxury-card--venue .venue-highlight {
+    animation: detail-venue 650ms ease-out both;
+  }
+  .stage-scene.is-active .luxury-card--venue .venue-highlight:nth-child(1) { animation-delay: 360ms; }
+  .stage-scene.is-active .luxury-card--venue .venue-highlight:nth-child(2) { animation-delay: 420ms; }
+  .stage-scene.is-active .luxury-card--venue .venue-highlight:nth-child(3) { animation-delay: 480ms; }
+  .stage-scene.is-active .luxury-card--venue .venue-map-btn {
+    animation: detail-rise 650ms 540ms ease-out both;
+  }
+
+  /* The form stays visible and operable throughout; its slight movement
+     provides a welcoming arrival without delaying interaction. */
+  .stage-scene.is-active .luxury-card--rsvp .card-floral-art {
+    animation: detail-floral-open 800ms ease-out both;
+  }
+  .stage-scene.is-active .luxury-card--rsvp :is(.luxury-card__hearts, .luxury-card__eyebrow, .luxury-card__title) {
+    animation: detail-rise 650ms 60ms ease-out both;
+  }
+  .stage-scene.is-active .luxury-card--rsvp .floral-divider {
+    transform-origin: center;
+    animation: detail-divider 650ms 120ms ease-out both;
+  }
+  .stage-scene.is-active .luxury-card--rsvp .luxury-rsvp {
+    animation: detail-welcome 700ms 180ms ease-out both;
+  }
+  .stage-scene.is-active .luxury-card--rsvp .luxury-rsvp:focus-within,
+  .stage-scene.is-active .luxury-card--venue :is(.venue-icon-wrap, .venue-map-btn):focus-visible {
+    animation: none;
+  }
+}
+
+@keyframes detail-floral-open {
+  from { opacity: .8; }
+  to { opacity: 1; }
+}
+@keyframes detail-rise {
+  from { opacity: .88; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes detail-divider {
+  from { opacity: .85; transform: scaleX(.96); }
+  to { opacity: 1; transform: scaleX(1); }
+}
+@keyframes detail-date {
+  from { opacity: .88; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes detail-event {
+  from { opacity: .88; transform: translateX(-4px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+@keyframes detail-venue {
+  from { opacity: .88; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes detail-welcome {
+  from { opacity: .94; transform: translateY(3px); }
+  to { opacity: 1; transform: translateY(0); }
+}

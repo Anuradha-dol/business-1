@@ -4,10 +4,11 @@ import {
 import {
   CalendarDays, ExternalLink, Heart, Mail, MapPin, Music2, Pause, Play
 } from 'lucide-react';
-import gsap from 'gsap';
 import { wedding } from '../../data/wedding';
 import CinematicJourney from './cinematic/CinematicJourney';
+import StorySection from './StorySection';
 import './Invitation.css';
+import './SectionMotion.css';
 
 type SectionId = 'home' | 'story' | 'day' | 'venue' | 'rsvp';
 type RsvpDraft = { name: string; attendance: string; guests: string; message: string };
@@ -45,36 +46,6 @@ function GoldIcon({ children }: { children: ReactNode }) {
     </svg>
   );
 }
-
-const StoryWaveIcon = () => (
-  <GoldIcon>
-    <path d="M2 12c2.5-2.5 5-2.5 7.5 0s5 2.5 7.5 0 5-2.5 5 0" />
-    <path d="M2 17c2.5-2.5 5-2.5 7.5 0s5 2.5 7.5 0 5-2.5 5 0" />
-    <circle cx="12" cy="6" r="2.2" />
-  </GoldIcon>
-);
-
-const StorySparkIcon = () => (
-  <GoldIcon>
-    <path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1" />
-    <circle cx="12" cy="12" r="3" />
-  </GoldIcon>
-);
-
-const StoryRingsIcon = () => (
-  <GoldIcon>
-    <circle cx="9.5" cy="13.5" r="5" />
-    <circle cx="15" cy="13.5" r="5" />
-    <path d="M12 5l1.5 2h-3L12 5z" />
-  </GoldIcon>
-);
-
-const StoryChapterIcon = () => (
-  <GoldIcon>
-    <path d="M4 6.5A2.5 2.5 0 0 1 6.5 4H12v16H6.5A2.5 2.5 0 0 0 4 22V6.5z" />
-    <path d="M20 6.5A2.5 2.5 0 0 0 17.5 4H12v16h5.5a2.5 2.5 0 0 1 2.5 2V6.5z" />
-  </GoldIcon>
-);
 
 const DaySunriseIcon = () => (
   <GoldIcon>
@@ -252,18 +223,20 @@ function SeaShimmer() {
   useEffect(() => {
     const canvas = canvasRef.current; if (!canvas) return;
     const ctx = canvas.getContext('2d'); if (!ctx) return;
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let visible = false;
     const resize = () => {
       requestAnimationFrame(() => {
         if (!canvas) return;
         canvas.width = canvas.offsetWidth;
         canvas.height = canvas.offsetHeight;
+        if (visible && reducedMotion.matches) draw();
       });
     };
     resize();
     const ro = new ResizeObserver(resize); ro.observe(canvas);
     let t = 0;
     const draw = () => {
-      rafRef.current = requestAnimationFrame(draw);
       t += .012; ctx.clearRect(0, 0, canvas.width, canvas.height);
       const { width: w, height: h } = canvas;
       for (let layer = 0; layer < 3; layer++) {
@@ -277,9 +250,31 @@ function SeaShimmer() {
         ctx.lineTo(w, h); ctx.lineTo(0, h); ctx.closePath();
         ctx.fillStyle = `rgba(170,130,70,${.055 - layer * .014})`; ctx.fill();
       }
+      if (visible && !document.hidden && !reducedMotion.matches) {
+        rafRef.current = requestAnimationFrame(draw);
+      } else {
+        rafRef.current = 0;
+      }
     };
-    draw();
-    return () => { cancelAnimationFrame(rafRef.current); ro.disconnect(); };
+    const syncAnimation = () => {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = 0;
+      if (visible && !document.hidden) draw();
+    };
+    const observer = new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+      syncAnimation();
+    });
+    observer.observe(canvas);
+    document.addEventListener('visibilitychange', syncAnimation);
+    reducedMotion.addEventListener('change', syncAnimation);
+    return () => {
+      cancelAnimationFrame(rafRef.current);
+      ro.disconnect();
+      observer.disconnect();
+      document.removeEventListener('visibilitychange', syncAnimation);
+      reducedMotion.removeEventListener('change', syncAnimation);
+    };
   }, []);
   return <canvas ref={canvasRef} className="cinematic-sea" aria-hidden="true" />;
 }
@@ -333,36 +328,53 @@ const navItems: { id: SectionId; label: string; icon: typeof Heart }[] = [
 
 export default function Invitation({ onReplay, music }: Props) {
   const [active, setActive] = useState<SectionId>('home');
+  const headerRef = useRef<HTMLElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
-  const tabTransitionRef = useRef<gsap.core.Tween | null>(null);
   const [petalBurstKey, setPetalBurstKey] = useState(0);
   const { playing, needsGesture, toggle } = music;
 
   useEffect(() => {
+    const header = headerRef.current;
     const stage = stageRef.current;
-    if (!stage) return;
-    tabTransitionRef.current?.kill();
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      gsap.set(stage, { autoAlpha: 1 });
-    } else {
-      tabTransitionRef.current = gsap.fromTo(stage, { autoAlpha: 0 }, {
-        autoAlpha: 1, duration: .85, ease: 'sine.inOut',
+    if (!header || !stage) return;
+    const sections = Array.from(stage.querySelectorAll<HTMLElement>('[data-section]'));
+    let frame = 0;
+    let headerHeight = header.getBoundingClientRect().height;
+    const measureHeader = () => {
+      headerHeight = header.getBoundingClientRect().height;
+      stage.style.setProperty('--invitation-header-height', `${headerHeight}px`);
+      schedule();
+    };
+    const update = () => {
+      frame = 0;
+      // The section crossing this reading line owns the navigation state, even
+      // when its content is taller than the viewport on a small screen.
+      const readingLine = headerHeight + (window.innerHeight - headerHeight) * .4;
+      const current = sections.find(section => {
+        const rect = section.getBoundingClientRect();
+        return rect.top <= readingLine && rect.bottom > readingLine;
       });
-    }
-    return () => { tabTransitionRef.current?.kill(); };
-  }, [active]);
+      if (current) setActive(current.dataset.section as SectionId);
+    };
+    const schedule = () => { if (!frame) frame = requestAnimationFrame(update); };
+    const resizeObserver = new ResizeObserver(measureHeader);
+    resizeObserver.observe(header);
+    window.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', measureHeader, { passive: true });
+    measureHeader();
+    return () => {
+      window.removeEventListener('scroll', schedule);
+      window.removeEventListener('resize', measureHeader);
+      resizeObserver.disconnect();
+      if (frame) cancelAnimationFrame(frame);
+    };
+  }, []);
 
   const changeSection = (next: SectionId) => {
-    const stage = stageRef.current;
-    tabTransitionRef.current?.kill();
-    if (!stage) { setActive(next); return; }
-    if (next === active || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-      gsap.set(stage, { autoAlpha: 1 });
-      if (next !== active) setActive(next);
-      return;
-    }
-    tabTransitionRef.current = gsap.to(stage, {
-      autoAlpha: 0, duration: .55, ease: 'sine.inOut', onComplete: () => setActive(next),
+    const target = stageRef.current?.querySelector<HTMLElement>(`[data-section="${next}"]`);
+    target?.scrollIntoView({
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth',
+      block: 'start',
     });
   };
 
@@ -416,7 +428,12 @@ export default function Invitation({ onReplay, music }: Props) {
     <main className="wedding-home">
       <div
         className="wedding-home__background"
-        style={{ backgroundImage: `url("${import.meta.env.BASE_URL}assets/images/cinematic/${active === 'home' ? 'journey/beach-plate.webp' : 'main-background.webp'}")` }}
+        style={{ backgroundImage: `url("${import.meta.env.BASE_URL}assets/images/cinematic/main-background.webp")` }}
+        aria-hidden="true"
+      />
+      <div
+        className={`wedding-home__background wedding-home__background--home${active === 'home' ? ' is-visible' : ''}`}
+        style={{ backgroundImage: `url("${import.meta.env.BASE_URL}assets/images/cinematic/journey/beach-plate.webp")` }}
         aria-hidden="true"
       />
 
@@ -424,7 +441,7 @@ export default function Invitation({ onReplay, music }: Props) {
       <GoldenParticles />
       <PetalRain burstKey={petalBurstKey} />
 
-      <header className="wedding-home__header wedding-home__header--scrolled">
+      <header ref={headerRef} className="wedding-home__header wedding-home__header--scrolled">
         <button className="wedding-home__monogram" onClick={() => changeSection('home')} aria-label="Home">
           {wedding.monogram}<span>⌁ ❧ ⌁</span>
         </button>
@@ -454,41 +471,20 @@ export default function Invitation({ onReplay, music }: Props) {
         {needsGesture && <span className="wedding-home__music-error" role="status">Tap Music to play the song.</span>}
       </header>
 
-      <div className={`wedding-stage${active === 'home' ? ' wedding-stage--home' : ''}`} ref={stageRef}>
+      <div className="wedding-stage" ref={stageRef}>
 
         {/* ── HOME: A JOURNEY TO FOREVER ─────────────────────────────────── */}
-        {active === 'home' && (
-          <section key="home" className="stage-scene" aria-label="A Journey to Forever">
-            <CinematicJourney onReplayOpening={onReplay} />
-          </section>
-        )}
+        <section data-section="home" className={`stage-scene stage-scene--home${active === 'home' ? ' is-active' : ''}`} aria-label="A Journey to Forever">
+          <CinematicJourney onReplayOpening={onReplay} />
+        </section>
 
         {/* ── OUR STORY ──────────────────────────────────────────────────── */}
-        {active === 'story' && (
-          <section key="story" className="stage-scene" aria-labelledby="story-title">
-            <div className="luxury-card luxury-card--story">
-              <FloralCornerArt />
-              <div className="card-sheen" aria-hidden="true" />
-              <div className="luxury-card__inner">
-                <LinkedHearts size={24} className="luxury-card__hearts" />
-                <p className="luxury-card__eyebrow">Himeshi &amp; Madhawa</p>
-                <h2 id="story-title" className="luxury-card__title">Our Story</h2>
-                <p className="scene-intro">Together with our families, we invite you to celebrate our wedding.</p>
-                <FloralDivider />
-                <div className="story-timeline">
-                  <TimelineItem icon={<StoryWaveIcon />} title="Where We Met" detail="Two paths crossed, and everything felt right." delay={160} />
-                  <TimelineItem icon={<StorySparkIcon />} title="Growing Closer" detail="Years of shared laughter, family, and friendship." delay={280} />
-                  <TimelineItem icon={<StoryRingsIcon />} title="The Engagement" detail="A quiet promise to walk through life together." delay={400} />
-                  <TimelineItem icon={<StoryChapterIcon />} title="15 January 2027" detail="Beginning our next chapter in Galle with everyone we love." delay={520} />
-                </div>
-              </div>
-            </div>
-          </section>
-        )}
+        <section data-section="story" className={`stage-scene${active === 'story' ? ' is-active' : ''}`} aria-labelledby="story-title">
+          <StorySection active={active === 'story'} />
+        </section>
 
         {/* ── THE DAY ────────────────────────────────────────────────────── */}
-        {active === 'day' && (
-          <section key="day" className="stage-scene" aria-labelledby="day-title">
+          <section data-section="day" className={`stage-scene${active === 'day' ? ' is-active' : ''}`} aria-labelledby="day-title">
             <div className="luxury-card luxury-card--day">
               <FloralCornerArt />
               <div className="card-sheen" aria-hidden="true" />
@@ -513,11 +509,9 @@ export default function Invitation({ onReplay, music }: Props) {
               </div>
             </div>
           </section>
-        )}
 
         {/* ── VENUE ──────────────────────────────────────────────────────── */}
-        {active === 'venue' && (
-          <section key="venue" className="stage-scene" aria-labelledby="venue-title">
+          <section data-section="venue" className={`stage-scene${active === 'venue' ? ' is-active' : ''}`} aria-labelledby="venue-title">
             <div className="luxury-card luxury-card--venue">
               <FloralCornerArt />
               <div className="card-sheen" aria-hidden="true" />
@@ -576,11 +570,9 @@ export default function Invitation({ onReplay, music }: Props) {
               </div>
             </div>
           </section>
-        )}
 
         {/* ── RSVP ───────────────────────────────────────────────────────── */}
-        {active === 'rsvp' && (
-          <section key="rsvp" className="stage-scene" aria-labelledby="rsvp-title">
+          <section data-section="rsvp" className={`stage-scene${active === 'rsvp' ? ' is-active' : ''}`} aria-labelledby="rsvp-title">
             <div className="luxury-card luxury-card--rsvp">
               <FloralCornerArt />
               <div className="card-sheen" aria-hidden="true" />
@@ -686,7 +678,6 @@ export default function Invitation({ onReplay, music }: Props) {
               </div>
             </div>
           </section>
-        )}
 
       </div>
     </main>
