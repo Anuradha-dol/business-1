@@ -154,13 +154,15 @@
 
 /* One envelope throughout: the front and seal come from the closed artwork. */
 .opening-assembly { z-index: 3; visibility: hidden; }
-.sky-ornament-cleanup { z-index:2; opacity:0; }
+.sky-ornament-cleanup { z-index:2; opacity:1; }
 .envelope-inner-pocket {
   position: absolute;
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  clip-path: polygon(24.6% 41%, 66.9% 38.9%, 76.8% 78%, 33.2% 88%);
+  /* A slight overlap beneath the sloped lip prevents subpixel gaps as the
+     flap opens on screens with different device pixel ratios. */
+  clip-path: polygon(24.5% 40.7%, 67% 38.6%, 76.8% 78%, 33.2% 88%);
   background: radial-gradient(ellipse at 50% 42%, #ebc07d 0%, #c98f48 56%, #9f672c 100%);
 }
 .opening-lining,.opening-back,.opening-flap,.original-front,.original-seal { position:absolute; inset:0; pointer-events:none; }
@@ -269,9 +271,15 @@
 /* The portrait composition retains the full original beach and palms while
    the envelope remains in the same animated landscape coordinate system. */
 @media (max-aspect-ratio: 4/5) {
+  /* The mobile heading has its own ornament; avoid repeating the one from
+     the landscape artwork in the empty sky above the envelope. */
+  .sky-love-ornament { display:none; }
   .portrait-stage {
     background-image: var(--opening-beach);
-    background-position: 13% center;
+    /* The centre beach crop places the shore behind the landscape scene;
+       the foreground below the envelope then blends into sand, not a second
+       oversized wave from a different part of the panorama. */
+    background-position: 45% center;
     background-size: cover;
   }
   .portrait-stage::before {

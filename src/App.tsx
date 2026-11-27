@@ -20,7 +20,7 @@ export default function App() {
   return showInvitation
     ? <Invitation onReplay={replay} music={audio.music} />
     : <div onClickCapture={audio.unlockOpening} onKeyDownCapture={audio.unlockOnKey}>
-        <Envelope onComplete={showHome} />
+        <Envelope onComplete={showHome} onArtworkReady={audio.openingArtworkReady} />
         {audio.ambienceNeedsGesture && (
           <button className="opening-audio" type="button">
             <span aria-hidden="true">♫</span> Enable ocean sound

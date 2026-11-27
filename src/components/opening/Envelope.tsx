@@ -5,6 +5,7 @@ import './Envelope.css';
 import './OpeningButton.css';
 import './WindStreaks.css';
 import './PaperFlight.css';
+import OpeningAtmosphere, { OpeningWater } from './OpeningAtmosphere';
 import { wedding } from '../../data/wedding';
 
 gsap.registerPlugin(useGSAP);
@@ -16,6 +17,7 @@ const date = wedding.dateLabel;
 const CLOSED_ASSETS = [
   `${import.meta.env.BASE_URL}assets/images/cinematic/main-background.webp`,
   `${import.meta.env.BASE_URL}assets/images/cinematic/journey/beach-plate.webp`,
+  `${import.meta.env.BASE_URL}assets/images/cinematic/journey/silk.webp`,
   `${ambientBase}closed-fixed-optimized.webp`,
   `${ambientBase}sky-ornament-cleanup.webp`,
   `${base}sky.webp`,
@@ -30,7 +32,6 @@ const OPENING_ASSETS = [
 ];
 
 const FIRST_CHAPTER_ASSETS = [
-  `${import.meta.env.BASE_URL}assets/images/cinematic/journey/silk.webp`,
   `${import.meta.env.BASE_URL}assets/images/cinematic/journey/encounter-rose.webp`,
   `${import.meta.env.BASE_URL}assets/images/cinematic/journey/butterfly.webp`,
 ];
@@ -49,48 +50,65 @@ function preloadImage(src: string): Promise<void> {
   });
 }
 
-type EnvelopeProps = { onComplete?: () => void };
+type EnvelopeProps = { onComplete?: () => void; onArtworkReady?: () => void };
 
-export default function Envelope({ onComplete }: EnvelopeProps) {
+export default function Envelope({ onComplete, onArtworkReady }: EnvelopeProps) {
   const root = useRef<HTMLElement>(null);
   const timeline = useRef<gsap.core.Timeline | null>(null);
   const busy = useRef(false);
   const mounted = useRef(false);
   const closedSceneReady = useRef<Promise<void>>(Promise.resolve());
-  const openingAssets = useRef<Promise<void>>(Promise.resolve());
+  const openingAssets = useRef<Promise<void> | null>(null);
   const openingAssetsReady = useRef(false);
-  const firstChapterStarted = useRef(false);
+  const firstChapterLoad = useRef<Promise<void> | null>(null);
   const [state, setState] = useState<'closed' | 'opening' | 'opened'>('closed');
   const [ready, setReady] = useState(false);
+  const [openingImagesRequested, setOpeningImagesRequested] = useState(false);
   const [preparingOpen, setPreparingOpen] = useState(false);
   const [pendingOpen, setPendingOpen] = useState(false);
 
   const preloadFirstChapter = useCallback(() => {
-    if (firstChapterStarted.current) return;
-    firstChapterStarted.current = true;
-    FIRST_CHAPTER_ASSETS.forEach(src => { void preloadImage(src); });
+    if (!firstChapterLoad.current) {
+      firstChapterLoad.current = Promise.all(FIRST_CHAPTER_ASSETS.map(preloadImage)).then(() => {});
+    }
+    return firstChapterLoad.current;
+  }, []);
+
+  const preloadOpening = useCallback(() => {
+    if (!openingAssets.current) {
+      openingAssets.current = Promise.all(OPENING_ASSETS.map(preloadImage)).then(() => {
+        openingAssetsReady.current = true;
+      });
+    }
+    setOpeningImagesRequested(true);
+    return openingAssets.current;
   }, []);
 
   useEffect(() => {
     let cancelled = false;
-    let startedOpeningLoad = false;
+    let sceneShown = false;
     let resolveClosedScene: () => void = () => {};
     closedSceneReady.current = new Promise(resolve => { resolveClosedScene = resolve; });
     mounted.current = true;
     const showClosedScene = () => {
-      if (cancelled || startedOpeningLoad) return;
-      startedOpeningLoad = true;
-      // Prepare the larger animation and first Home scene while the guest sees
-      // the closed envelope, rather than making them wait on the first screen.
-      openingAssets.current = Promise.all(OPENING_ASSETS.map(preloadImage)).then(() => {
-        openingAssetsReady.current = true;
-      });
+      if (cancelled || sceneShown) return;
+      sceneShown = true;
       setReady(true);
       resolveClosedScene();
-      void openingAssets.current.then(() => {
+    };
+    // Do not leave a guest waiting indefinitely on a stalled connection.
+    const timeout = setTimeout(showClosedScene, 2500);
+    Promise.all(CLOSED_ASSETS.map(preloadImage)).then(() => {
+      clearTimeout(timeout);
+      showClosedScene();
+      if (cancelled) return;
+      onArtworkReady?.();
+      // Let the visible artwork finish before warming the opening and Home.
+      void preloadOpening().then(async () => {
         if (cancelled) return;
-        // Avoid competing with the opening artwork on a first mobile visit.
-        preloadFirstChapter();
+        // Give the first Home scene priority over later chapters on a cold visit.
+        await preloadFirstChapter();
+        if (cancelled) return;
         // While the guest views the envelope, prepare only the artwork used by
         // the following chapters and cards, not the unused full-scene images.
         const cinBase = `${import.meta.env.BASE_URL}assets/images/cinematic/`;
@@ -107,19 +125,13 @@ export default function Envelope({ onComplete }: EnvelopeProps) {
           `${cinBase}journey/wedding-band-ivory.webp`,
         ].forEach(src => { void preloadImage(src); });
       });
-    };
-    // Do not leave a guest waiting indefinitely on a stalled connection.
-    const timeout = setTimeout(showClosedScene, 2500);
-    Promise.all(CLOSED_ASSETS.map(preloadImage)).then(() => {
-      clearTimeout(timeout);
-      showClosedScene();
     });
     return () => {
       cancelled = true;
       mounted.current = false;
       clearTimeout(timeout);
     };
-  }, [preloadFirstChapter]);
+  }, [onArtworkReady, preloadFirstChapter, preloadOpening]);
 
   const { contextSafe } = useGSAP(() => {
     gsap.set('.opening-back', { scaleY: 0 });
@@ -181,7 +193,8 @@ export default function Envelope({ onComplete }: EnvelopeProps) {
   const beginOpening = () => {
     // The guest may tap before the opening artwork finishes. Prepare Home now
     // even if an opening image is slow or never completes.
-    preloadFirstChapter();
+    void preloadFirstChapter();
+    const openingLoad = preloadOpening();
     if (openingAssetsReady.current) {
       setPreparingOpen(false);
       playOpening();
@@ -192,7 +205,7 @@ export default function Envelope({ onComplete }: EnvelopeProps) {
     // decoded, with a short fallback for a stalled connection.
     let timeout: ReturnType<typeof setTimeout>;
     const fallback = new Promise<void>(resolve => { timeout = setTimeout(resolve, 1800); });
-    void Promise.race([openingAssets.current, fallback]).then(() => {
+    void Promise.race([openingLoad, fallback]).then(() => {
       clearTimeout(timeout);
       if (!mounted.current) return;
       setPreparingOpen(false);
@@ -216,7 +229,6 @@ export default function Envelope({ onComplete }: EnvelopeProps) {
     beginOpening();
   };
 
-  const layer = (name: string, cls = '') => <img className={`art ${cls}`} src={base + name} alt="" draggable={false} loading="lazy" />;
   const lettering = (
     <div className="card-lettering">
       <p>With joyful hearts, together with our families</p>
@@ -270,25 +282,27 @@ export default function Envelope({ onComplete }: EnvelopeProps) {
         '--opening-hearts': `url("${ambientBase}linked-hearts.svg")`,
       } as CSSProperties}>
         <div className="opening-scene-content" inert={!ready}>
+          <OpeningAtmosphere />
           <div className="scene">
             <div className="closed-view">
               <img className="art" src={`${ambientBase}closed-fixed-optimized.webp`} alt="" draggable={false} fetchPriority="high" />
               <span className="monogram closed-monogram">{wedding.monogram}</span>
             </div>
+            <OpeningWater />
             <img className="art sky-love-cleanup" src={`${ambientBase}sky-ornament-cleanup.webp`} alt="" />
             <img className="sky-love-ornament" src={`${ambientBase}linked-hearts.svg`} alt="" />
             <img className="art sky-ornament-cleanup" src={`${ambientBase}sky-ornament-cleanup.webp`} alt="" />
 
             <div className="opening-assembly">
-              <img className="art opening-clear" src={ready ? `${ambientBase}opening-clear-optimized.webp` : undefined} alt="" />
+              <img className="art opening-clear" src={openingImagesRequested ? `${ambientBase}opening-clear-optimized.webp` : undefined} alt="" />
               {/* Solid warm-gold inner pocket backing prevents the sea from bleeding through */}
               <div className="envelope-inner-pocket" aria-hidden="true" />
               <div className="opening-lining">
-                <img className="isolated-envelope" src={ready ? `${ambientBase}envelope-isolated.webp` : undefined} alt="" />
+                <img className="isolated-envelope" src={openingImagesRequested ? `${ambientBase}envelope-isolated.webp` : undefined} alt="" />
               </div>
               <div className="opening-back">
                 <div className="opening-back-image">
-                  <img className="isolated-envelope" src={ready ? `${ambientBase}envelope-isolated.webp` : undefined} alt="" />
+                  <img className="isolated-envelope" src={openingImagesRequested ? `${ambientBase}envelope-isolated.webp` : undefined} alt="" />
                 </div>
               </div>
               <div className="card-viewport">
@@ -296,14 +310,14 @@ export default function Envelope({ onComplete }: EnvelopeProps) {
                   <img className="wind-streak-overlay" src={`${ambientBase}wind-streaks.svg`} alt="" draggable={false} />
                   <div className="card-flutter" style={{ position: 'absolute', inset: 0 }}>
                     <div className="paper-surface">
-                      <img className="complete-card" src={ready ? `${ambientBase}scalloped-card.webp` : undefined} alt="" draggable={false} />
+                      <img className="complete-card" src={openingImagesRequested ? `${ambientBase}scalloped-card.webp` : undefined} alt="" draggable={false} />
                       <div className="card-motif" aria-hidden="true">
                         <img className="card-filigree" src={`${ambientBase}card-filigree.svg`} alt="" />
-                        <div className="card-shell-cleanup"><img src={ready ? `${ambientBase}scalloped-card.webp` : undefined} alt="" /></div>
+                        <div className="card-shell-cleanup"><img src={openingImagesRequested ? `${ambientBase}scalloped-card.webp` : undefined} alt="" /></div>
                         <img className="card-love-ornament" src={`${ambientBase}linked-hearts.svg`} alt="" />
                       </div>
                       {lettering}
-                      <span className="paper-curl-light" style={{ maskImage: ready ? `url("${ambientBase}scalloped-card.webp")` : 'none' }} aria-hidden="true" />
+                      <span className="paper-curl-light" style={{ maskImage: openingImagesRequested ? `url("${ambientBase}scalloped-card.webp")` : 'none' }} aria-hidden="true" />
                     </div>
                   </div>
                 </div>
@@ -316,10 +330,6 @@ export default function Envelope({ onComplete }: EnvelopeProps) {
               </div>
             </div>
 
-            <div className="ambient ambient-palm-left">{layer('closed.webp')}</div>
-            <div className="ambient ambient-palm-right">{layer('closed.webp')}</div>
-            <div className="ambient ambient-waves">{layer('closed.webp')}</div>
-            <div className="ambient ambient-cloth">{layer('closed.webp')}</div>
             <img className="art ambient-light" src={`${ambientBase}breeze-light.svg`} alt="" />
             <img className="art hotel-haze-art" src={`${ambientBase}hotel-haze.svg`} alt="" />
 

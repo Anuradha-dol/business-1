@@ -3,6 +3,14 @@ import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from 're
 const MUSIC_START = 20;
 const AMBIENCE_LEVEL = 0.42;
 const MUSIC_LEVEL = 0.68;
+const AUDIO_BASE = `${import.meta.env.BASE_URL}assets/audio/`;
+
+// Creating an Audio with a URL starts network work in some browsers even when
+// preload is changed immediately afterwards. Attach its source only when it
+// is actually going to play, so opening artwork gets first use of bandwidth.
+function ensureSource(audio: HTMLAudioElement, file: string) {
+  if (!audio.getAttribute('src')) audio.src = `${AUDIO_BASE}${file}`;
+}
 
 /** Keep both media elements alive while the opening scene is replaced. */
 export function useWeddingAudio() {
@@ -56,6 +64,7 @@ export function useWeddingAudio() {
   const startAmbience = useCallback((immediate = false) => {
     const audio = ambience.current;
     if (!audio || inInvitation.current) return;
+    ensureSource(audio, 'sea-wind.mp3');
     const attempt = ++ambienceAttempt.current;
     cancelFade(audio);
     if (!audio.paused) {
@@ -84,6 +93,7 @@ export function useWeddingAudio() {
   const startSong = useCallback((reset: boolean) => {
     const audio = song.current;
     if (!audio || !enabled.current) return;
+    ensureSource(audio, 'wedding-violin.mp3');
     cancelFade(audio);
     if (reset) audio.currentTime = MUSIC_START;
     audio.volume = 0;
@@ -102,12 +112,11 @@ export function useWeddingAudio() {
   }, [cancelFade, fade]);
 
   useEffect(() => {
-    const base = `${import.meta.env.BASE_URL}assets/audio/`;
-    const sea = new Audio(`${base}sea-wind.mp3`);
-    const violin = new Audio(`${base}wedding-violin.mp3`);
-    sea.preload = 'auto';
+    const sea = new Audio();
+    const violin = new Audio();
+    sea.preload = 'none';
     sea.loop = true;
-    violin.preload = 'auto';
+    violin.preload = 'none';
     ambience.current = sea;
     song.current = violin;
     const onPause = () => { if (inInvitation.current) setPlaying(false); };
@@ -124,8 +133,11 @@ export function useWeddingAudio() {
       animations.current.clear();
     };
     document.addEventListener('visibilitychange', onVisibilityChange);
-    startAmbience();
+    // If an image stalls indefinitely, still give autoplay-capable browsers
+    // a chance to start ambience. A gesture can always start it immediately.
+    const ambientTimer = window.setTimeout(() => startAmbience(), 15000);
     return () => {
+      window.clearTimeout(ambientTimer);
       ambienceAttempt.current++;
       cancelFade(sea);
       cancelFade(violin);
@@ -153,6 +165,7 @@ export function useWeddingAudio() {
     // require a gesture before they will allow playback later in the timeline.
     const audio = song.current;
     if (audio) {
+      ensureSource(audio, 'wedding-violin.mp3');
       audio.volume = 0;
       audio.currentTime = MUSIC_START;
       void audio.play().then(() => {
@@ -167,6 +180,8 @@ export function useWeddingAudio() {
   const unlockOnKey = useCallback((event: KeyboardEvent) => {
     if (event.key === 'Enter' || event.key === ' ') unlockOpening();
   }, [unlockOpening]);
+
+  const openingArtworkReady = useCallback(() => startAmbience(), [startAmbience]);
 
   const enterInvitation = useCallback(() => {
     inInvitation.current = true;
@@ -210,5 +225,5 @@ export function useWeddingAudio() {
     }
   }, [cancelFade, playing, startSong]);
 
-  return { unlockOpening, unlockOnKey, enterInvitation, replayOpening, ambienceNeedsGesture, music: { playing, needsGesture, toggle } };
+  return { unlockOpening, unlockOnKey, openingArtworkReady, enterInvitation, replayOpening, ambienceNeedsGesture, music: { playing, needsGesture, toggle } };
 }

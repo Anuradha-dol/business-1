@@ -1,0 +1,10 @@
+# Only content-hashed assets are cached long term. The HTML and the existing
+# unversioned images keep their normal revalidation behaviour after a deploy.
+/assets/index-*.js
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/index-*.css
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/fonts/GreatVibes-fd86ce7ba460.woff2
+  Cache-Control: public, max-age=31536000, immutable
