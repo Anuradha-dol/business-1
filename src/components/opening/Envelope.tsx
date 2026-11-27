@@ -7,6 +7,8 @@ import './WindStreaks.css';
 import './PaperFlight.css';
 import OpeningAtmosphere, { OpeningWater } from './OpeningAtmosphere';
 import { wedding } from '../../data/wedding';
+import { useInvitation } from '../../contexts/InvitationContext';
+import { formatGreeting } from '../../lib/supabase';
 
 gsap.registerPlugin(useGSAP);
 const base = `${import.meta.env.BASE_URL}assets/images/cinematic/layers/`;
@@ -68,6 +70,7 @@ export default function Envelope({ onComplete, onArtworkReady }: EnvelopeProps) 
   const [ready, setReady] = useState(false);
   const [openingImagesRequested, setOpeningImagesRequested] = useState(false);
   const [preparingOpen, setPreparingOpen] = useState(false);
+  const { guest, error: guestError } = useInvitation();
 
   const preloadFirstChapter = useCallback(() => {
     if (!firstChapterLoad.current) {
@@ -214,7 +217,8 @@ export default function Envelope({ onComplete, onArtworkReady }: EnvelopeProps) 
   };
 
   const lettering = (
-    <div className="card-lettering">
+    <div className={`card-lettering${guest ? ' card-lettering--personalized' : ''}`}>
+      {guest && <p className="card-greeting">{formatGreeting(guest)}</p>}
       <p>With joyful hearts, together with our families</p>
       <h2>{names}</h2>
       <svg className="card-flourish" viewBox="0 0 460 42" aria-hidden="true">
@@ -364,6 +368,13 @@ export default function Envelope({ onComplete, onArtworkReady }: EnvelopeProps) 
           </div>
 
           <div className="action-area">
+            {state === 'closed' && guestError && (
+              <p className="invite-status-note" role="status">
+                {guestError === 'inactive'
+                  ? 'This personal invitation link is no longer active.'
+                  : 'We could not find this personal invitation link.'}
+              </p>
+            )}
             {state === 'closed' && (
               <button className="open-action" onClick={open} type="button">
                 {preparingOpen ? 'Opening…' : 'Tap to Open'} <span aria-hidden="true">&#10023;</span>

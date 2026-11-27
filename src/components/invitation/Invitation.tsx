@@ -5,6 +5,8 @@ import {
   CalendarDays, ExternalLink, Heart, Mail, MapPin, Music2, Pause, Play
 } from 'lucide-react';
 import { wedding } from '../../data/wedding';
+import { useInvitation } from '../../contexts/InvitationContext';
+import { supabase } from '../../lib/supabase';
 import CinematicJourney from './cinematic/CinematicJourney';
 import StorySection from './StorySection';
 import { useSectionScrollMotion } from './useSectionScrollMotion';
@@ -412,26 +414,83 @@ export default function Invitation({ onReplay, music }: Props) {
     });
   }, []);
 
+  const { guest, loading: guestLoading, error: guestError } = useInvitation();
   const [draft, setDraft] = useState<RsvpDraft>(() => {
     try { return { ...emptyDraft, ...JSON.parse(localStorage.getItem(draftKey) || '{}') }; } catch { return emptyDraft; }
   });
-  const [saveStatus, setSaveStatus] = useState<'idle' | 'saved' | 'error'>('idle');
+  const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
+  const [saveErrorMsg, setSaveErrorMsg] = useState<string>('');
   const [confirmed, setConfirmed] = useState(false);
+
+  const maxGuests = guest ? guest.max_guests : 1;
+
+  // Pre-fill guest name and load existing RSVP from Supabase when token is valid
+  useEffect(() => {
+    if (!guest) return;
+    const fullName = guest.title ? `${guest.title} ${guest.name}` : guest.name;
+    setDraft(c => ({
+      ...c,
+      name: guest.partner_name ? `${fullName} & ${guest.partner_name}` : fullName,
+      guests: String(Math.min(guest.max_guests, Math.max(1, Number(c.guests) || 1))),
+    }));
+
+    supabase
+      .from('rsvp')
+      .select('status, confirmed_guests, message')
+      .eq('guest_id', guest.id)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (!data) return;
+        setDraft(c => ({
+          ...c,
+          attendance: data.status === 'accepted' ? 'accept' : 'decline',
+          guests: String(Math.min(guest.max_guests, Math.max(1, data.confirmed_guests || 1))),
+          message: data.message ?? '',
+        }));
+        setConfirmed(true);
+      });
+  }, [guest]);
 
   const changeDraft = (f: keyof RsvpDraft, v: string) => {
     setDraft(c => ({ ...c, [f]: v }));
     setSaveStatus('idle');
+    setSaveErrorMsg('');
   };
 
-  const saveRsvp = (e: FormEvent) => {
+  const saveRsvp = async (e: FormEvent) => {
     e.preventDefault();
-    try {
-      localStorage.setItem(draftKey, JSON.stringify(draft));
-      setSaveStatus('saved');
-      setConfirmed(true);
-      setPetalBurstKey(k => k + 1);
-      setTimeout(() => setConfirmed(false), 4000);
-    } catch { setSaveStatus('error'); }
+    if (!guest) return;
+    if (!draft.attendance) {
+      setSaveStatus('error');
+      setSaveErrorMsg('Please select whether you will be attending.');
+      return;
+    }
+
+    setSaveStatus('saving');
+    setSaveErrorMsg('');
+    const confirmedGuests = draft.attendance === 'accept'
+      ? Math.min(guest.max_guests, Math.max(1, Number(draft.guests) || 1))
+      : 0;
+
+    const { error } = await supabase
+      .from('rsvp')
+      .upsert({
+        guest_id: guest.id,
+        status: draft.attendance === 'accept' ? 'accepted' : 'declined',
+        confirmed_guests: confirmedGuests,
+        message: draft.message.trim() || null,
+        responded_at: new Date().toISOString(),
+      }, { onConflict: 'guest_id' });
+
+    if (error) {
+      setSaveStatus('error');
+      setSaveErrorMsg('Unable to save your response right now. Please try again.');
+      return;
+    }
+
+    setSaveStatus('saved');
+    setConfirmed(true);
+    setPetalBurstKey(k => k + 1);
   };
 
   return (
@@ -585,99 +644,139 @@ export default function Invitation({ onReplay, music }: Props) {
                 <h2 id="rsvp-title" className="luxury-card__title">RSVP</h2>
                 <FloralDivider />
 
-                {confirmed && (
+                {guestLoading ? (
+                  <p className="luxury-rsvp__note">Loading your invitation details…</p>
+                ) : !guest ? (
                   <div className="rsvp-confirmation" role="status" aria-live="polite">
                     <div className="wax-seal" aria-hidden="true">
                       <span>{wedding.monogram}</span>
                     </div>
                     <div className="rsvp-confirmation__body">
-                      <strong>Response Saved</strong>
+                      <strong>
+                        {guestError === 'inactive'
+                          ? 'Invitation Inactive'
+                          : guestError === 'invalid'
+                            ? 'Invalid Invitation Link'
+                            : 'Personal Invitation Required'}
+                      </strong>
                       <span>
-                        {draft.attendance === 'accept'
-                          ? 'Thank you — we look forward to celebrating with you in Galle.'
-                          : 'Thank you for letting us know.'}
+                        {guestError === 'inactive'
+                          ? 'This invitation link is no longer active. Please contact Himeshi or Madhawa for assistance.'
+                          : guestError === 'invalid'
+                            ? 'We could not verify this invitation link. Please use the personal link shared with you.'
+                            : 'Please open your personal invitation link to submit your RSVP.'}
                       </span>
                     </div>
                   </div>
+                ) : (
+                  <>
+                    {confirmed && (
+                      <div className="rsvp-confirmation" role="status" aria-live="polite">
+                        <div className="wax-seal" aria-hidden="true">
+                          <span>{wedding.monogram}</span>
+                        </div>
+                        <div className="rsvp-confirmation__body">
+                          <strong>Response Saved</strong>
+                          <span>
+                            {draft.attendance === 'accept'
+                              ? 'Thank you — we look forward to celebrating with you in Galle.'
+                              : 'Thank you for letting us know.'}
+                          </span>
+                        </div>
+                      </div>
+                    )}
+
+                    <form className="luxury-rsvp" onSubmit={saveRsvp}>
+                      <p className="luxury-rsvp__note">
+                        {guest.custom_greeting || 'Please let us know if you will be able to join us.'}
+                      </p>
+
+                      <div className="luxury-rsvp__field">
+                        <label className="luxury-rsvp__label" htmlFor="rsvp-name">Full Name</label>
+                        <input
+                          id="rsvp-name"
+                          className="luxury-rsvp__input"
+                          required
+                          readOnly
+                          value={draft.name}
+                          autoComplete="name"
+                        />
+                      </div>
+
+                      <div className="luxury-rsvp__field">
+                        <span className="luxury-rsvp__label">Will you be attending?</span>
+                        <div className="rsvp-toggle" role="group" aria-label="Attendance">
+                          <button
+                            type="button"
+                            className={`rsvp-toggle__btn${draft.attendance === 'accept' ? ' rsvp-toggle__btn--on' : ''}`}
+                            onClick={() => changeDraft('attendance', 'accept')}
+                          >
+                            <Heart size={13} strokeWidth={1.8} />
+                            <span>Joyfully Accepts</span>
+                          </button>
+                          <button
+                            type="button"
+                            className={`rsvp-toggle__btn${draft.attendance === 'decline' ? ' rsvp-toggle__btn--off' : ''}`}
+                            onClick={() => changeDraft('attendance', 'decline')}
+                          >
+                            <span>Unable to Attend</span>
+                          </button>
+                        </div>
+                      </div>
+
+                      {draft.attendance !== 'decline' && (
+                        <div className="luxury-rsvp__field luxury-rsvp__field--inline">
+                          <span className="luxury-rsvp__label">
+                            Guests <span>(max {maxGuests})</span>
+                          </span>
+                          <div className="guest-stepper">
+                            <button
+                              type="button"
+                              className="guest-stepper__btn"
+                              aria-label="Decrease guests"
+                              onClick={() => changeDraft('guests', String(Math.max(1, Number(draft.guests) - 1)))}
+                            >−</button>
+                            <span className="guest-stepper__val">{draft.guests}</span>
+                            <button
+                              type="button"
+                              className="guest-stepper__btn"
+                              aria-label="Increase guests"
+                              onClick={() => changeDraft('guests', String(Math.min(maxGuests, Number(draft.guests) + 1)))}
+                            >+</button>
+                          </div>
+                        </div>
+                      )}
+
+                      <div className="luxury-rsvp__field">
+                        <label className="luxury-rsvp__label" htmlFor="rsvp-msg">Message <span>(optional)</span></label>
+                        <input
+                          id="rsvp-msg"
+                          className="luxury-rsvp__input"
+                          value={draft.message}
+                          onChange={e => changeDraft('message', e.target.value)}
+                          placeholder="Write a note or dietary preference…"
+                        />
+                      </div>
+
+                      <button
+                        type="submit"
+                        disabled={saveStatus === 'saving'}
+                        className={`luxury-rsvp__submit${saveStatus === 'saved' ? ' luxury-rsvp__submit--saved' : ''}`}
+                      >
+                        {saveStatus === 'saving'
+                          ? 'Saving…'
+                          : saveStatus === 'saved'
+                            ? '✦ Response Saved'
+                            : confirmed
+                              ? 'Update Response'
+                              : 'Save Response'}
+                      </button>
+                      {saveStatus === 'error' && (
+                        <p className="luxury-rsvp__error" role="alert">{saveErrorMsg || 'Unable to save. Please try again.'}</p>
+                      )}
+                    </form>
+                  </>
                 )}
-
-                <form className="luxury-rsvp" onSubmit={saveRsvp}>
-                  <p className="luxury-rsvp__note">Please let us know if you will be able to join us. Saved on this device.</p>
-
-                  <div className="luxury-rsvp__field">
-                    <label className="luxury-rsvp__label" htmlFor="rsvp-name">Full Name</label>
-                    <input
-                      id="rsvp-name"
-                      className="luxury-rsvp__input"
-                      required
-                      value={draft.name}
-                      onChange={e => changeDraft('name', e.target.value)}
-                      autoComplete="name"
-                      placeholder="Your name"
-                    />
-                  </div>
-
-                  <div className="luxury-rsvp__field">
-                    <span className="luxury-rsvp__label">Will you be attending?</span>
-                    <div className="rsvp-toggle" role="group" aria-label="Attendance">
-                      <button
-                        type="button"
-                        className={`rsvp-toggle__btn${draft.attendance === 'accept' ? ' rsvp-toggle__btn--on' : ''}`}
-                        onClick={() => changeDraft('attendance', 'accept')}
-                      >
-                        <Heart size={13} strokeWidth={1.8} />
-                        <span>Joyfully Accepts</span>
-                      </button>
-                      <button
-                        type="button"
-                        className={`rsvp-toggle__btn${draft.attendance === 'decline' ? ' rsvp-toggle__btn--off' : ''}`}
-                        onClick={() => changeDraft('attendance', 'decline')}
-                      >
-                        <span>Unable to Attend</span>
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="luxury-rsvp__field luxury-rsvp__field--inline">
-                    <span className="luxury-rsvp__label">Guests</span>
-                    <div className="guest-stepper">
-                      <button
-                        type="button"
-                        className="guest-stepper__btn"
-                        aria-label="Decrease guests"
-                        onClick={() => changeDraft('guests', String(Math.max(1, Number(draft.guests) - 1)))}
-                      >−</button>
-                      <span className="guest-stepper__val">{draft.guests}</span>
-                      <button
-                        type="button"
-                        className="guest-stepper__btn"
-                        aria-label="Increase guests"
-                        onClick={() => changeDraft('guests', String(Math.min(20, Number(draft.guests) + 1)))}
-                      >+</button>
-                    </div>
-                  </div>
-
-                  <div className="luxury-rsvp__field">
-                    <label className="luxury-rsvp__label" htmlFor="rsvp-msg">Message <span>(optional)</span></label>
-                    <input
-                      id="rsvp-msg"
-                      className="luxury-rsvp__input"
-                      value={draft.message}
-                      onChange={e => changeDraft('message', e.target.value)}
-                      placeholder="Write a note or dietary preference…"
-                    />
-                  </div>
-
-                  <button
-                    type="submit"
-                    className={`luxury-rsvp__submit${saveStatus === 'saved' ? ' luxury-rsvp__submit--saved' : ''}`}
-                  >
-                    {saveStatus === 'saved' ? '✦ Saved on This Device' : 'Save Response'}
-                  </button>
-                  {saveStatus === 'error' && (
-                    <p className="luxury-rsvp__error" role="alert">Unable to save. Please check browser storage settings.</p>
-                  )}
-                </form>
               </div>
             </div>
           </section>
