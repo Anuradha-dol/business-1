@@ -8,7 +8,7 @@
 .story-card__inner {
   position: relative;
   z-index: 2;
-  padding: 45px 28px 32px;
+  padding: 22px 28px 32px;
   text-align: center;
   color: #76502e;
 }
@@ -72,7 +72,7 @@
 }
 
 @media (max-width: 480px) {
-  .story-card__inner { padding: 40px 20px 26px; }
+  .story-card__inner { padding: 20px 20px 26px; }
   .story-card__families {
     grid-template-columns: 1fr;
     gap: 10px;

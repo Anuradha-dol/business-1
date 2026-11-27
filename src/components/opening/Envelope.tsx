@@ -363,8 +363,27 @@ export default function Envelope({ onComplete, onArtworkReady }: EnvelopeProps) 
           </header>
 
           <div className="sand-decor" aria-hidden="true">
-            <img className="sand-decor__left" src={`${ambientBase}sand-shells-left.webp`} alt="" draggable={false} />
-            <img className="sand-decor__right" src={`${ambientBase}sand-shell-right.webp`} alt="" draggable={false} />
+            <svg className="sand-decor__petals" viewBox="0 0 390 120" fill="none" preserveAspectRatio="xMidYMax slice">
+              <defs>
+                <radialGradient id="sp1" cx="40%" cy="35%" r="65%">
+                  <stop offset="0%" stopColor="#fffdf9" stopOpacity="0.92" />
+                  <stop offset="65%" stopColor="#f5e7d3" stopOpacity="0.82" />
+                  <stop offset="100%" stopColor="#d8b589" stopOpacity="0.35" />
+                </radialGradient>
+                <filter id="petal-sand-shadow" x="-20%" y="-20%" width="140%" height="160%">
+                  <feDropShadow dx="0" dy="2" stdDeviation="2.2" floodColor="#7c4e1c" floodOpacity="0.22" />
+                </filter>
+              </defs>
+              {/* Scattered natural white petals resting still on the warm sand */}
+              <g filter="url(#petal-sand-shadow)">
+                <path d="M44 76c6-6 16-5 20 1-5 7-15 8-20-1z" fill="url(#sp1)" transform="rotate(-14 54 76)" />
+                <path d="M68 92c5-4 13-3 15 2-4 5-11 5-15-2z" fill="url(#sp1)" transform="rotate(18 75 92)" />
+                <path d="M98 64c4-4 11-3 13 2-4 4-9 4-13-2z" fill="url(#sp1)" transform="rotate(-26 104 64)" opacity="0.85" />
+                <path d="M292 68c5-4 13-3 15 2-4 5-11 5-15-2z" fill="url(#sp1)" transform="rotate(24 299 68)" opacity="0.88" />
+                <path d="M324 84c7-6 17-4 20 2-5 7-14 7-20-2z" fill="url(#sp1)" transform="rotate(-16 334 84)" />
+                <path d="M348 64c4-3 10-2 12 2-3 4-8 4-12-2z" fill="url(#sp1)" transform="rotate(12 354 64)" opacity="0.8" />
+              </g>
+            </svg>
           </div>
 
           <div className="action-area">

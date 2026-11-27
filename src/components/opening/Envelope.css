@@ -499,7 +499,7 @@
 .opening-loader__action:disabled { opacity: 0.65; cursor: default; }
 .opening-loader__action span { font-size: 14px; color: inherit; }
 
-/* Coastal seashells & petals resting naturally on the lower sand around Tap to Open */
+/* Natural scattered ivory petals resting still on the lower sand around Tap to Open */
 .sand-decor {
   position: absolute;
   inset: 0;
@@ -507,45 +507,14 @@
   pointer-events: none;
   overflow: hidden;
 }
-.sand-decor__left,
-.sand-decor__right {
+.sand-decor__petals {
   position: absolute;
-  height: auto;
+  left: 0;
+  right: 0;
+  bottom: max(0px, env(safe-area-inset-bottom));
+  width: 100%;
+  height: clamp(95px, 16svh, 145px);
   opacity: 0.92;
-  filter: drop-shadow(0 6px 12px rgba(110, 68, 22, 0.22));
   user-select: none;
-}
-.sand-decor__left {
-  left: max(4%, 14px);
-  bottom: max(5%, env(safe-area-inset-bottom) + 12px);
-  width: clamp(92px, 24vw, 150px);
-  transform: rotate(-4deg);
-  animation: sand-shell-float 7.5s ease-in-out infinite alternate;
-}
-.sand-decor__right {
-  right: max(5%, 16px);
-  bottom: max(7%, env(safe-area-inset-bottom) + 22px);
-  width: clamp(72px, 19vw, 120px);
-  transform: rotate(6deg);
-  animation: sand-shell-float 8.8s ease-in-out 1.4s infinite alternate-reverse;
-}
-@media (min-aspect-ratio: 4/5) {
-  .sand-decor__left {
-    left: 12%;
-    bottom: 3%;
-    width: clamp(100px, 12vw, 165px);
-  }
-  .sand-decor__right {
-    right: 12%;
-    bottom: 4%;
-    width: clamp(80px, 10vw, 130px);
-  }
-}
-@keyframes sand-shell-float {
-  from { transform: translateY(0) rotate(-3deg); filter: drop-shadow(0 6px 12px rgba(110, 68, 22, 0.22)); }
-  to   { transform: translateY(-3px) rotate(1deg); filter: drop-shadow(0 8px 16px rgba(175, 125, 50, 0.28)); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .sand-decor__left, .sand-decor__right { animation: none; }
 }
 

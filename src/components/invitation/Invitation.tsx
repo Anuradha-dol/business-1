@@ -533,9 +533,7 @@ export default function Invitation({ onReplay, music }: Props) {
                   aria-label="Track Jetwing Lighthouse location on Google Maps"
                   title="Tap to open in Google Maps"
                 >
-                  <MapPin size={28} strokeWidth={1.4} />
-                  <span className="venue-ping" aria-hidden="true" />
-                  <span className="venue-ping venue-ping--2" aria-hidden="true" />
+                  <MapPin size={26} strokeWidth={1.4} />
                 </a>
                 <span className="venue-tap-hint">Tap pin to track on Google Maps</span>
 
