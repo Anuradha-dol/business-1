@@ -1,8 +1,8 @@
 .journey-silk {
-  position: fixed;
+  position: absolute;
   z-index: 0;
   left: 50%;
-  bottom: -3.5vh;
+  bottom: -18vh;
   width: min(125vw, 1500px);
   height: auto;
   overflow: visible;
@@ -24,7 +24,7 @@
   .journey-silk {
     width: 190vw;
     height: auto;
-    bottom: clamp(24px, 8vh, 75px);
+    bottom: 12%;
     opacity: .72;
   }
 }

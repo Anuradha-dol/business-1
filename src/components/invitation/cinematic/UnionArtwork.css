@@ -13,11 +13,11 @@
 .union-artwork__couple-rise { opacity: 0; transform: translateY(54px) scale(.86); transform-origin: 250px 380px; }
 .union-artwork__couple { transform-origin: 250px 372px; }
 .union-artwork__opened { opacity: 0; }
-.union-artwork.is-completed .union-artwork__opened { animation: union-opened-appear .65s ease-in forwards; }
-.union-artwork.is-completed .union-artwork__closed { animation: union-closed-away .65s ease-out forwards; }
-.union-artwork.is-completed .union-artwork__lid { animation: union-lid-open 2.1s ease-in-out forwards; }
-.union-artwork.is-completed .union-artwork__couple-rise { animation: union-couple-rise 2.5s 1s ease-out forwards; }
-.union-artwork.is-completed .union-artwork__couple { animation: union-couple-dance 2.2s 2.4s ease-in-out 2 alternate forwards; }
+.union-artwork.is-completed .union-artwork__opened { animation: union-opened-appear .3s ease-in forwards; }
+.union-artwork.is-completed .union-artwork__closed { animation: union-closed-away .4s .3s ease-out forwards; }
+.union-artwork.is-completed .union-artwork__lid { animation: union-lid-open 1.8s .15s ease-in-out forwards; }
+.union-artwork.is-completed .union-artwork__couple-rise { animation: union-couple-rise 1.6s 2s ease-out forwards; }
+.union-artwork.is-completed .union-artwork__couple { animation: union-couple-dance 1.5s 3.4s ease-in-out 2 alternate forwards; }
 .union-artwork.is-reduced * { animation-duration: .01ms !important; animation-delay: 0ms !important; animation-iteration-count: 1 !important; }
 @media (prefers-reduced-motion: reduce) {
   .union-artwork * { animation-duration: .01ms !important; animation-delay: 0ms !important; animation-iteration-count: 1 !important; }

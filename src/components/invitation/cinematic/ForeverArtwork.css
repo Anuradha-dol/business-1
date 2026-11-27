@@ -1,22 +1,11 @@
-﻿.photo-band {
-  transform-box: fill-box;
-  transform-origin: center;
-}
-
-/* Each ring travels independently toward the center. */
-.photo-band--left { transform: translateX(-30px); }
-.photo-band--right { transform: translateX(30px); }
-.is-active .photo-band--left { animation: photo-band-left 2.4s cubic-bezier(.22, .7, .24, 1) forwards; }
-.is-active .photo-band--right { animation: photo-band-right 2.4s cubic-bezier(.22, .7, .24, 1) forwards; }
-
-.photo-band-sparkle {
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: photo-band-sparkle 3.5s ease-in-out infinite alternate;
-}
-
-@keyframes photo-band-left { to { transform: translateX(58px); } }
-@keyframes photo-band-right { to { transform: translateX(-58px); } }
-@keyframes photo-band-sparkle { from { opacity: .2; } to { opacity: .8; } }
+﻿.photo-band { transform-box: fill-box; transform-origin: center; }
+.photo-band--left { transform: translateX(-55px) rotate(-5deg); }
+.photo-band--right { transform: translateX(55px) rotate(5deg); }
+.is-active .photo-band--left { animation: photo-band-left 2.4s cubic-bezier(.22,.7,.24,1) forwards; }
+.is-active .photo-band--right { animation: photo-band-right 2.4s cubic-bezier(.22,.7,.24,1) forwards; }
+.photo-band-sparkle { transform-box: fill-box; transform-origin: center; animation: photo-band-sparkle 3.5s ease-in-out infinite alternate; }
+@keyframes photo-band-left { to { transform: translateX(108px) rotate(0); } }
+@keyframes photo-band-right { to { transform: translateX(-108px) rotate(0); } }
+@keyframes photo-band-sparkle { from { opacity: .2; } to { opacity: .85; } }
 
 

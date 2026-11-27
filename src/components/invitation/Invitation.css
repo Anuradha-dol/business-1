@@ -167,6 +167,10 @@
   padding: 10px 14px max(54px, env(safe-area-inset-bottom) + 48px);
 }
 
+/* The silk extends beyond the scene; clip it to the viewport without creating
+   a scrollable ancestor that mobile browsers can pan during a tap. */
+.wedding-stage--home { overflow: clip; }
+
 .stage-scene {
   width: 100%;
   max-width: 100%;

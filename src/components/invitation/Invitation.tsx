@@ -4,6 +4,7 @@ import {
 import {
   CalendarDays, ExternalLink, Heart, Mail, MapPin, Music2, Pause, Play
 } from 'lucide-react';
+import gsap from 'gsap';
 import { wedding } from '../../data/wedding';
 import CinematicJourney from './cinematic/CinematicJourney';
 import './Invitation.css';
@@ -332,8 +333,38 @@ const navItems: { id: SectionId; label: string; icon: typeof Heart }[] = [
 
 export default function Invitation({ onReplay, music }: Props) {
   const [active, setActive] = useState<SectionId>('home');
+  const stageRef = useRef<HTMLDivElement>(null);
+  const tabTransitionRef = useRef<gsap.core.Tween | null>(null);
   const [petalBurstKey, setPetalBurstKey] = useState(0);
   const { playing, needsGesture, toggle } = music;
+
+  useEffect(() => {
+    const stage = stageRef.current;
+    if (!stage) return;
+    tabTransitionRef.current?.kill();
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      gsap.set(stage, { autoAlpha: 1 });
+    } else {
+      tabTransitionRef.current = gsap.fromTo(stage, { autoAlpha: 0 }, {
+        autoAlpha: 1, duration: .85, ease: 'sine.inOut',
+      });
+    }
+    return () => { tabTransitionRef.current?.kill(); };
+  }, [active]);
+
+  const changeSection = (next: SectionId) => {
+    const stage = stageRef.current;
+    tabTransitionRef.current?.kill();
+    if (!stage) { setActive(next); return; }
+    if (next === active || window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      gsap.set(stage, { autoAlpha: 1 });
+      if (next !== active) setActive(next);
+      return;
+    }
+    tabTransitionRef.current = gsap.to(stage, {
+      autoAlpha: 0, duration: .55, ease: 'sine.inOut', onComplete: () => setActive(next),
+    });
+  };
 
   /* Preload all journey & floral assets immediately so tab/scroll transitions are instant */
   useEffect(() => {
@@ -394,7 +425,7 @@ export default function Invitation({ onReplay, music }: Props) {
       <PetalRain burstKey={petalBurstKey} />
 
       <header className="wedding-home__header wedding-home__header--scrolled">
-        <button className="wedding-home__monogram" onClick={() => setActive('home')} aria-label="Home">
+        <button className="wedding-home__monogram" onClick={() => changeSection('home')} aria-label="Home">
           {wedding.monogram}<span>⌁ ❧ ⌁</span>
         </button>
 
@@ -403,7 +434,7 @@ export default function Invitation({ onReplay, music }: Props) {
             <button
               key={item.id}
               className={active === item.id ? 'active' : ''}
-              onClick={() => setActive(item.id)}
+              onClick={() => changeSection(item.id)}
               aria-current={active === item.id ? 'page' : undefined}
             >
               {item.label}
@@ -423,7 +454,7 @@ export default function Invitation({ onReplay, music }: Props) {
         {needsGesture && <span className="wedding-home__music-error" role="status">Tap Music to play the song.</span>}
       </header>
 
-      <div className="wedding-stage">
+      <div className={`wedding-stage${active === 'home' ? ' wedding-stage--home' : ''}`} ref={stageRef}>
 
         {/* ── HOME: A JOURNEY TO FOREVER ─────────────────────────────────── */}
         {active === 'home' && (

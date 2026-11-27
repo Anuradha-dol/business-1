@@ -136,7 +136,6 @@ export default function CinematicJourney({ onReplayOpening }: { onReplayOpening?
         <div className="cinematic-journey__shore" />
         <div className="cinematic-journey__light" ref={lightRef} />
       </div>
-      <SilkLayer reducedMotion={reducedMotion} />
       <div className="cinematic-journey__scene">
         <div className="cinematic-journey__copy" ref={copyRef} aria-live="polite">
           <p className="cinematic-journey__eyebrow">{chapter === 4 ? 'A journey to forever' : `Chapter ${String(chapter + 1).padStart(2, '0')}  ·  ${current.title}`}</p>
@@ -146,9 +145,12 @@ export default function CinematicJourney({ onReplayOpening }: { onReplayOpening?
             {chapters.map((item, index) => <span key={item.title} className={index <= chapter ? 'is-reached' : ''} />)}
           </div>
         </div>
-        <div className="cinematic-journey__art" ref={artRef}>
-          {chapter === 2 ? <PromiseArtwork active={phase !== 'leaving'} completed={completed} reducedMotion={reducedMotion} onInteractionComplete={finishInteraction} /> : chapter === 3 ? <UnionArtwork active={phase !== 'leaving'} completed={completed} reducedMotion={reducedMotion} onInteractionComplete={finishInteraction} /> : <SceneArtwork chapter={chapter} active={phase !== 'leaving'} completed={completed} reducedMotion={reducedMotion} onInteractionComplete={finishInteraction} />}
-          {chapter < 4 && <button type="button" className="cinematic-journey__object-button" aria-label={current.action} disabled={phase !== 'ready'} onClick={advance} />}
+        <div className="cinematic-journey__art">
+          <SilkLayer reducedMotion={reducedMotion} />
+          <div className="cinematic-journey__art-object" ref={artRef}>
+            {chapter === 2 ? <PromiseArtwork active={phase !== 'leaving'} completed={completed} reducedMotion={reducedMotion} onInteractionComplete={finishInteraction} /> : chapter === 3 ? <UnionArtwork active={phase !== 'leaving'} completed={completed} reducedMotion={reducedMotion} onInteractionComplete={finishInteraction} /> : <SceneArtwork chapter={chapter} active={phase !== 'leaving'} completed={completed} reducedMotion={reducedMotion} onInteractionComplete={finishInteraction} />}
+            {chapter < 4 && <button type="button" className="cinematic-journey__object-button" aria-label={current.action} disabled={phase !== 'ready'} onClick={advance} />}
+          </div>
         </div>
         <div className="cinematic-journey__bottom">
           {chapter < 4 && <><button type="button" className="cinematic-journey__hint" disabled={phase !== 'ready'} onClick={advance}><span aria-hidden="true">✧</span> {current.hint} <span aria-hidden="true">→</span></button><button type="button" className="cinematic-journey__skip" onClick={skip}>Skip to forever <span aria-hidden="true">→</span></button></>}
