@@ -158,9 +158,9 @@ export default function Envelope({ onComplete, onArtworkReady }: EnvelopeProps) 
       .to('.opening-flap', { scaleY: 0, duration: 1.15, ease: 'sine.inOut' }, 0.3)
       // Distant doves enter the upper sky right as the envelope begins unsealing
       .to('.sky-birds', { autoAlpha: 0.88, duration: 0.9, ease: 'sine.out' }, 0.45)
-      .to('.sky-birds', { x: '28vw', y: '-5svh', scale: 0.62, rotation: -1, duration: 2.55, ease: 'sine.out' }, 0.45)
-      .to('.sky-birds', { x: '56vw', y: '-9svh', scale: 0.24, rotation: 2, duration: 2.6, ease: 'sine.in' }, 3.0)
-      .to('.sky-birds', { autoAlpha: 0, duration: 1.4, ease: 'sine.in' }, 4.2)
+      .to('.sky-birds', { x: '28vw', y: '-4svh', scale: 0.62, rotation: -1, duration: 3.6, ease: 'sine.out' }, 0.45)
+      .to('.sky-birds', { x: '58vw', y: '-8svh', scale: 0.22, rotation: 2, duration: 4.55, ease: 'sine.in' }, 4.05)
+      .to('.sky-birds', { autoAlpha: 0, duration: 1.6, ease: 'sine.in' }, 7.0)
       // Start raising the open back flap before the front flap disappears
       .to('.opening-back', { scaleY: 1, duration: 1.25, ease: 'sine.inOut' }, 0.95)
       .to('.opening-flap', { autoAlpha: 0, duration: 0.3, ease: 'sine.inOut' }, 1.15)
