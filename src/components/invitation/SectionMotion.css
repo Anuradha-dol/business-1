@@ -7,13 +7,30 @@
 }
 
 @media (prefers-reduced-motion: no-preference) {
+  /* The scroll position sets the destination; these transitions let the
+     individual pieces continue settling after a swipe or a tab jump ends.
+     They stay visible and interactive throughout. */
+  .stage-scene:not(.stage-scene--home) :is(
+    .luxury-card, .card-floral-art, .luxury-card__hearts,
+    .luxury-card__eyebrow, .luxury-card__title, .floral-divider,
+    .story-card__heading, .story-card__family, .story-card__joining,
+    .story-card__invitation, .day-countdown, .day-date-display,
+    .timeline-item, .luxury-card__note, .venue-icon-wrap, .venue-tap-hint,
+    .venue-subtitle, .venue-address, .venue-desc, .venue-highlight,
+    .venue-map-btn, .luxury-rsvp__note, .luxury-rsvp__field, .luxury-rsvp__submit
+  ) {
+    transition: transform 1.05s cubic-bezier(.22, 1, .36, 1);
+  }
+
   .stage-scene:not(.stage-scene--home) > .luxury-card {
-    transform: translate3d(0, calc(var(--invitation-scene-motion, 0) * 38px), 0);
+    transform: translate3d(0, calc(var(--invitation-scene-motion, 0) * 58px), 0);
+    transition-duration: 1.15s;
   }
 
   /* Flowers drift in separately from the frame, with their original opacity. */
   .stage-scene:not(.stage-scene--home) .card-floral-art {
-    transform: translate3d(calc(var(--invitation-scene-early, 0) * -18px), calc(var(--invitation-scene-early, 0) * -9px), 0);
+    transform: translate3d(calc(var(--invitation-scene-early, 0) * -30px), calc(var(--invitation-scene-early, 0) * -16px), 0);
+    transition-duration: 1.35s;
   }
   .stage-scene:not(.stage-scene--home) :is(.luxury-card__hearts, .luxury-card__eyebrow, .luxury-card__title, .floral-divider) {
     transform: translate3d(0, calc(var(--invitation-scene-early, 0) * 10px), 0);
@@ -25,37 +42,42 @@
   .luxury-card--venue :is(.venue-icon-wrap, .venue-tap-hint) {
     transform: translate3d(0, calc(var(--invitation-scene-motion, 0) * 14px), 0);
   }
-  .luxury-card--venue .venue-icon-wrap { transition: none; }
+  .luxury-card--venue .venue-icon-wrap { transition-duration: 1.1s; }
   .luxury-card--venue .venue-icon-wrap:hover {
     transform: translate3d(0, calc(var(--invitation-scene-motion, 0) * 14px), 0) scale(1.08);
   }
   .luxury-card--day .day-date-display,
   .luxury-card--venue :is(.venue-subtitle, .venue-address, .venue-desc) {
-    transform: translate3d(0, calc(var(--invitation-scene-motion, 0) * 21px), 0);
+    transform: translate3d(0, calc(var(--invitation-scene-motion, 0) * 27px), 0);
+    transition-duration: 1.2s;
   }
   .luxury-card--day .timeline-item:nth-child(1),
   .luxury-card--venue .venue-highlight:nth-child(1) {
-    transform: translate3d(calc(var(--invitation-scene-motion, 0) * -12px), calc(var(--invitation-scene-motion, 0) * 16px), 0);
+    transform: translate3d(calc(var(--invitation-scene-motion, 0) * -18px), calc(var(--invitation-scene-motion, 0) * 23px), 0);
+    transition-duration: .95s;
   }
   .luxury-card--day .timeline-item:nth-child(2),
   .luxury-card--venue .venue-highlight:nth-child(2) {
-    transform: translate3d(0, calc(var(--invitation-scene-motion, 0) * 21px), 0);
+    transform: translate3d(0, calc(var(--invitation-scene-motion, 0) * 30px), 0);
+    transition-duration: 1.15s;
   }
   .luxury-card--day .timeline-item:nth-child(3),
   .luxury-card--venue .venue-highlight:nth-child(3) {
-    transform: translate3d(calc(var(--invitation-scene-motion, 0) * 12px), calc(var(--invitation-scene-motion, 0) * 26px), 0);
+    transform: translate3d(calc(var(--invitation-scene-motion, 0) * 18px), calc(var(--invitation-scene-motion, 0) * 35px), 0);
+    transition-duration: 1.35s;
   }
   .luxury-card--day .luxury-card__note,
   .luxury-card--venue .venue-map-btn {
-    transform: translate3d(0, calc(var(--invitation-scene-late, 0) * 28px), 0);
+    transform: translate3d(0, calc(var(--invitation-scene-late, 0) * 38px), 0);
+    transition-duration: 1.4s;
   }
 
   /* The individual form rows remain fully visible and usable throughout. */
   .luxury-rsvp__note { transform: translate3d(0, calc(var(--invitation-scene-early, 0) * 12px), 0); }
-  .luxury-rsvp__field:nth-of-type(1) { transform: translate3d(0, calc(var(--invitation-scene-early, 0) * 16px), 0); }
-  .luxury-rsvp__field:nth-of-type(2) { transform: translate3d(0, calc(var(--invitation-scene-motion, 0) * 20px), 0); }
-  .luxury-rsvp__field:nth-of-type(3) { transform: translate3d(0, calc(var(--invitation-scene-motion, 0) * 24px), 0); }
+  .luxury-rsvp__field:nth-of-type(1) { transform: translate3d(0, calc(var(--invitation-scene-early, 0) * 22px), 0); transition-duration: .95s; }
+  .luxury-rsvp__field:nth-of-type(2) { transform: translate3d(0, calc(var(--invitation-scene-motion, 0) * 28px), 0); transition-duration: 1.1s; }
+  .luxury-rsvp__field:nth-of-type(3) { transform: translate3d(0, calc(var(--invitation-scene-motion, 0) * 34px), 0); transition-duration: 1.25s; }
   .luxury-rsvp__field:nth-of-type(4),
-  .luxury-rsvp__submit { transform: translate3d(0, calc(var(--invitation-scene-late, 0) * 28px), 0); }
-  .luxury-rsvp:focus-within :is(.luxury-rsvp__field, .luxury-rsvp__submit) { transform: none; }
+  .luxury-rsvp__submit { transform: translate3d(0, calc(var(--invitation-scene-late, 0) * 40px), 0); transition-duration: 1.4s; }
+  .luxury-rsvp:focus-within :is(.luxury-rsvp__field, .luxury-rsvp__submit) { transform: none; transition: none; }
 }

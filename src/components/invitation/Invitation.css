@@ -791,20 +791,13 @@
   overflow: clip;
   animation: none;
 }
-.stage-scene--home:not(.is-active) .cinematic-journey__world {
-  opacity: 0;
-  visibility: hidden;
-}
-.stage-scene--home .cinematic-journey__world {
-  transition: opacity .65s ease, visibility .65s;
-}
+/* The Home world is fixed behind the invitation. Keep that same composited
+   backdrop on screen across sections: fading it at the active-tab boundary
+   swaps its lighting and water for a second copy of the beach mid-scroll. */
 .stage-scene:not(.stage-scene--home) .luxury-card { max-height: none; }
 .stage-scene:not(.stage-scene--home) .luxury-card__inner { overflow: visible; }
 @media (min-width: 700px) {
   .wedding-stage { padding: 0; }
   .stage-scene { padding: 30px 24px 40px; }
   .stage-scene--home { padding: 14px 24px 36px; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .stage-scene--home .cinematic-journey__world { transition: none; }
 }

@@ -65,10 +65,10 @@
    The same scroll-driven motion works in either direction and on tab clicks. */
 @media (prefers-reduced-motion: no-preference) {
   .story-card__heading { transform: translate3d(0, calc(var(--invitation-scene-early, 0) * 12px), 0); }
-  .story-card__family--groom { transform: translate3d(calc(var(--invitation-scene-motion, 0) * -16px), calc(var(--invitation-scene-motion, 0) * 12px), 0); }
-  .story-card__family--bride { transform: translate3d(calc(var(--invitation-scene-late, 0) * 16px), calc(var(--invitation-scene-late, 0) * 12px), 0); }
-  .story-card__joining { transform: translate3d(0, calc(var(--invitation-scene-late, 0) * 17px), 0); }
-  .story-card__invitation { transform: translate3d(0, calc(var(--invitation-scene-late, 0) * 24px), 0); }
+  .story-card__family--groom { transform: translate3d(calc(var(--invitation-scene-motion, 0) * -27px), calc(var(--invitation-scene-motion, 0) * 18px), 0); }
+  .story-card__family--bride { transform: translate3d(calc(var(--invitation-scene-late, 0) * 27px), calc(var(--invitation-scene-late, 0) * 18px), 0); }
+  .story-card__joining { transform: translate3d(0, calc(var(--invitation-scene-late, 0) * 24px), 0); }
+  .story-card__invitation { transform: translate3d(0, calc(var(--invitation-scene-late, 0) * 34px), 0); }
 }
 
 @media (max-width: 480px) {

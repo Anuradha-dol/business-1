@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type CSSProperties } from 'react';
+import { useCallback, useEffect, useRef, useState, type CSSProperties } from 'react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import './Envelope.css';
@@ -14,7 +14,7 @@ const date = wedding.dateLabel;
 
 const CLOSED_ASSETS = [
   `${import.meta.env.BASE_URL}assets/images/cinematic/main-background.webp`,
-  `${ambientBase}closed-fixed.webp`,
+  `${ambientBase}closed-fixed-optimized.webp`,
   `${ambientBase}sky-ornament-cleanup.webp`,
   `${base}sky.webp`,
   `${base}sand.webp`,
@@ -24,7 +24,7 @@ const OPENING_ASSETS = [
   `${ambientBase}envelope-isolated.webp`,
   `${ambientBase}flap-clean.webp`,
   `${ambientBase}scalloped-card.webp`,
-  `${ambientBase}opening-clear.webp`,
+  `${ambientBase}opening-clear-optimized.webp`,
 ];
 
 const FIRST_CHAPTER_ASSETS = [
@@ -55,15 +55,26 @@ export default function Envelope({ onComplete }: EnvelopeProps) {
   const timeline = useRef<gsap.core.Timeline | null>(null);
   const busy = useRef(false);
   const mounted = useRef(false);
+  const closedSceneReady = useRef<Promise<void>>(Promise.resolve());
   const openingAssets = useRef<Promise<void>>(Promise.resolve());
   const openingAssetsReady = useRef(false);
+  const firstChapterStarted = useRef(false);
   const [state, setState] = useState<'closed' | 'opening' | 'opened'>('closed');
   const [ready, setReady] = useState(false);
   const [preparingOpen, setPreparingOpen] = useState(false);
+  const [pendingOpen, setPendingOpen] = useState(false);
+
+  const preloadFirstChapter = useCallback(() => {
+    if (firstChapterStarted.current) return;
+    firstChapterStarted.current = true;
+    FIRST_CHAPTER_ASSETS.forEach(src => { void preloadImage(src); });
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
     let startedOpeningLoad = false;
+    let resolveClosedScene: () => void = () => {};
+    closedSceneReady.current = new Promise(resolve => { resolveClosedScene = resolve; });
     mounted.current = true;
     const showClosedScene = () => {
       if (cancelled || startedOpeningLoad) return;
@@ -73,12 +84,12 @@ export default function Envelope({ onComplete }: EnvelopeProps) {
       openingAssets.current = Promise.all(OPENING_ASSETS.map(preloadImage)).then(() => {
         openingAssetsReady.current = true;
       });
-      // These are needed only after the opening animation; don't make the tap
-      // wait for the next scene as well as the envelope artwork.
-      FIRST_CHAPTER_ASSETS.forEach(src => { void preloadImage(src); });
       setReady(true);
+      resolveClosedScene();
       void openingAssets.current.then(() => {
         if (cancelled) return;
+        // Avoid competing with the opening artwork on a first mobile visit.
+        preloadFirstChapter();
         // While the guest views the envelope, prepare only the artwork used by
         // the following chapters and cards, not the unused full-scene images.
         const cinBase = `${import.meta.env.BASE_URL}assets/images/cinematic/`;
@@ -107,7 +118,7 @@ export default function Envelope({ onComplete }: EnvelopeProps) {
       mounted.current = false;
       clearTimeout(timeout);
     };
-  }, []);
+  }, [preloadFirstChapter]);
 
   const { contextSafe } = useGSAP(() => {
     gsap.set('.opening-back', { scaleY: 0 });
@@ -166,16 +177,18 @@ export default function Envelope({ onComplete }: EnvelopeProps) {
     if (reduced) tl.progress(1);
   });
 
-  const open = () => {
-    if (!ready || busy.current || state !== 'closed') return;
-    busy.current = true;
+  const beginOpening = () => {
+    // The guest may tap before the opening artwork finishes. Prepare Home now
+    // even if an opening image is slow or never completes.
+    preloadFirstChapter();
     if (openingAssetsReady.current) {
+      setPreparingOpen(false);
       playOpening();
       return;
     }
     setPreparingOpen(true);
-    // If the guest opens immediately, keep the existing loader visible until
-    // the essential layered scene is decoded, with a short fallback for poor networks.
+    // Keep the closed scene visible if the guest taps before the layers are
+    // decoded, with a short fallback for a stalled connection.
     let timeout: ReturnType<typeof setTimeout>;
     const fallback = new Promise<void>(resolve => { timeout = setTimeout(resolve, 1800); });
     void Promise.race([openingAssets.current, fallback]).then(() => {
@@ -184,6 +197,22 @@ export default function Envelope({ onComplete }: EnvelopeProps) {
       setPreparingOpen(false);
       playOpening();
     });
+  };
+
+  const open = () => {
+    if (busy.current || state !== 'closed') return;
+    busy.current = true;
+    if (!ready) {
+      setPendingOpen(true);
+      setPreparingOpen(true);
+      void closedSceneReady.current.then(() => {
+        if (!mounted.current) return;
+        setPendingOpen(false);
+        beginOpening();
+      });
+      return;
+    }
+    beginOpening();
   };
 
   const layer = (name: string, cls = '') => <img className={`art ${cls}`} src={base + name} alt="" draggable={false} loading="lazy" />;
@@ -201,10 +230,13 @@ export default function Envelope({ onComplete }: EnvelopeProps) {
 
   return (
     <main className={`invitation-opening${ready ? ' invitation-opening--ready' : ''}`} ref={root} aria-busy={state === 'opening' || !ready || preparingOpen}>
-      {(!ready || preparingOpen) && (
-        <div className="opening-loader" aria-hidden="true">
+      {!ready && (
+        <div className="opening-loader">
           <div className="opening-loader__crest">{wedding.monogram}</div>
-          <div className="opening-loader__bar"><span /></div>
+          <div className="opening-loader__bar" aria-hidden="true"><span /></div>
+          <button className="open-action opening-loader__action" onClick={open} type="button" disabled={pendingOpen}>
+            {pendingOpen ? 'Opening…' : 'Tap to Open'} <span aria-hidden="true">&#10023;</span>
+          </button>
         </div>
       )}
 
@@ -230,10 +262,10 @@ export default function Envelope({ onComplete }: EnvelopeProps) {
       </svg>
 
       <div className="portrait-stage" style={{ '--sky-art': `url("${base}sky.webp")`, '--sand-art': `url("${base}sand.webp")` } as CSSProperties}>
-        <div className="opening-scene-content">
+        <div className="opening-scene-content" inert={!ready}>
           <div className="scene">
             <div className="closed-view">
-              <img className="art" src={`${ambientBase}closed-fixed.webp`} alt="" draggable={false} />
+              <img className="art" src={`${ambientBase}closed-fixed-optimized.webp`} alt="" draggable={false} fetchPriority="high" />
               <span className="monogram closed-monogram">{wedding.monogram}</span>
             </div>
             <img className="art sky-love-cleanup" src={`${ambientBase}sky-ornament-cleanup.webp`} alt="" />
@@ -241,7 +273,7 @@ export default function Envelope({ onComplete }: EnvelopeProps) {
             <img className="art sky-ornament-cleanup" src={`${ambientBase}sky-ornament-cleanup.webp`} alt="" />
 
             <div className="opening-assembly">
-              <img className="art opening-clear" src={ready ? `${ambientBase}opening-clear.webp` : undefined} alt="" />
+              <img className="art opening-clear" src={ready ? `${ambientBase}opening-clear-optimized.webp` : undefined} alt="" />
               {/* Solid warm-gold inner pocket backing prevents the sea from bleeding through */}
               <div className="envelope-inner-pocket" aria-hidden="true" />
               <div className="opening-lining">
@@ -269,10 +301,10 @@ export default function Envelope({ onComplete }: EnvelopeProps) {
                   </div>
                 </div>
               </div>
-              <div className="original-front"><img className="art" src={`${ambientBase}closed-fixed.webp`} alt="" /></div>
+              <div className="original-front"><img className="art" src={`${ambientBase}closed-fixed-optimized.webp`} alt="" /></div>
               <div className="opening-flap"><img className="art" src={`${ambientBase}flap-clean.webp`} alt="" /></div>
               <div className="original-seal">
-                <img className="art" src={`${ambientBase}closed-fixed.webp`} alt="" />
+                <img className="art" src={`${ambientBase}closed-fixed-optimized.webp`} alt="" />
                 <span className="monogram closed-monogram">{wedding.monogram}</span>
               </div>
             </div>
@@ -312,7 +344,7 @@ export default function Envelope({ onComplete }: EnvelopeProps) {
           <div className="action-area">
             {state === 'closed' && (
               <button className="open-action" onClick={open} type="button">
-                Tap to Open <span aria-hidden="true">&#10023;</span>
+                {preparingOpen ? 'Opening…' : 'Tap to Open'} <span aria-hidden="true">&#10023;</span>
               </button>
             )}
           </div>
