@@ -362,6 +362,11 @@ export default function Envelope({ onComplete, onArtworkReady }: EnvelopeProps) 
             <time dateTime={wedding.dateISO}>{date}</time>
           </header>
 
+          <div className="sand-decor" aria-hidden="true">
+            <img className="sand-decor__left" src={`${ambientBase}sand-shells-left.webp`} alt="" draggable={false} />
+            <img className="sand-decor__right" src={`${ambientBase}sand-shell-right.webp`} alt="" draggable={false} />
+          </div>
+
           <div className="action-area">
             {state === 'closed' && (
               <button className="open-action" onClick={open} type="button">

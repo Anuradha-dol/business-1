@@ -7,7 +7,9 @@ import {
 import { wedding } from '../../data/wedding';
 import CinematicJourney from './cinematic/CinematicJourney';
 import StorySection from './StorySection';
+import { useSectionScrollMotion } from './useSectionScrollMotion';
 import './Invitation.css';
+import './SectionMotion.css';
 
 type SectionId = 'home' | 'story' | 'day' | 'venue' | 'rsvp';
 type RsvpDraft = { name: string; attendance: string; guests: string; message: string };
@@ -46,11 +48,19 @@ function GoldIcon({ children }: { children: ReactNode }) {
   );
 }
 
-const DaySunriseIcon = () => (
+const DayCeremonyIcon = () => (
   <GoldIcon>
-    <path d="M12 4v3M4.9 10.9l2.1 2.1M19.1 10.9l-2.1 2.1" />
-    <path d="M7 17a5 5 0 0 1 10 0" />
-    <path d="M3 17h18M6 20h12" />
+    <circle cx="9.5" cy="13.5" r="4.5" />
+    <circle cx="14.5" cy="13.5" r="4.5" />
+    <path d="M12 5l1.5 2h-3L12 5z" />
+  </GoldIcon>
+);
+
+const DayPoruwaIcon = () => (
+  <GoldIcon>
+    <path d="M12 4c1.4 1.6 1.4 3.4 0 5-1.4-1.6-1.4-3.4 0-5z" />
+    <path d="M7 11h10l-1.5 4h-7L7 11z" />
+    <path d="M12 15v5M8.5 20h7" />
   </GoldIcon>
 );
 
@@ -61,9 +71,10 @@ const DayToastIcon = () => (
   </GoldIcon>
 );
 
-const DayMoonIcon = () => (
+const DayFarewellIcon = () => (
   <GoldIcon>
-    <path d="M19 14.5A7.5 7.5 0 0 1 9.5 5a7.5 7.5 0 1 0 9.5 9.5z" />
+    <path d="M18.5 14.5A7 7 0 0 1 9.5 5.5a7 7 0 1 0 9 9z" />
+    <path d="M16 5l.6 1.4L18 7l-1.4.6L16 9l-.6-1.4L14 7l1.4-.6L16 5z" />
   </GoldIcon>
 );
 
@@ -326,13 +337,54 @@ const navItems: { id: SectionId; label: string; icon: typeof Heart }[] = [
 ];
 
 export default function Invitation({ onReplay, music }: Props) {
+  useSectionScrollMotion();
   const [active, setActive] = useState<SectionId>('home');
+  const headerRef = useRef<HTMLElement>(null);
+  const stageRef = useRef<HTMLDivElement>(null);
   const [petalBurstKey, setPetalBurstKey] = useState(0);
   const { playing, needsGesture, toggle } = music;
 
-  /* Pure tab-switcher: no scroll, just setActive */
+  useEffect(() => {
+    const header = headerRef.current;
+    const stage = stageRef.current;
+    if (!header || !stage) return;
+    const sections = Array.from(stage.querySelectorAll<HTMLElement>('[data-section]'));
+    let frame = 0;
+    const measureHeader = () => {
+      const headerHeight = header.getBoundingClientRect().height;
+      stage.style.setProperty('--invitation-header-height', `${headerHeight}px`);
+      schedule();
+    };
+    const update = () => {
+      frame = 0;
+      const stageRect = stage.getBoundingClientRect();
+      const readingLine = stageRect.top + stageRect.height * .38;
+      const current = sections.find(section => {
+        const rect = section.getBoundingClientRect();
+        return rect.top <= readingLine && rect.bottom > readingLine;
+      });
+      if (current) setActive(current.dataset.section as SectionId);
+    };
+    const schedule = () => { if (!frame) frame = requestAnimationFrame(update); };
+    const resizeObserver = new ResizeObserver(measureHeader);
+    resizeObserver.observe(header);
+    stage.addEventListener('scroll', schedule, { passive: true });
+    window.addEventListener('resize', measureHeader, { passive: true });
+    measureHeader();
+    return () => {
+      stage.removeEventListener('scroll', schedule);
+      window.removeEventListener('resize', measureHeader);
+      resizeObserver.disconnect();
+      if (frame) cancelAnimationFrame(frame);
+    };
+  }, []);
+
   const changeSection = (next: SectionId) => {
-    setActive(next);
+    const target = stageRef.current?.querySelector<HTMLElement>(`[data-section="${next}"]`);
+    target?.scrollIntoView({
+      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth',
+      block: 'start',
+    });
   };
 
   /* Preload all journey & floral assets immediately so tab/scroll transitions are instant */
@@ -392,7 +444,7 @@ export default function Invitation({ onReplay, music }: Props) {
       <GoldenParticles />
       <PetalRain burstKey={petalBurstKey} />
 
-      <header className="wedding-home__header wedding-home__header--scrolled">
+      <header ref={headerRef} className="wedding-home__header wedding-home__header--scrolled">
         <button className="wedding-home__monogram" onClick={() => changeSection('home')} aria-label="Home">
           {wedding.monogram}<span>⌁ ❧ ⌁</span>
         </button>
@@ -422,7 +474,7 @@ export default function Invitation({ onReplay, music }: Props) {
         {needsGesture && <span className="wedding-home__music-error" role="status">Tap Music to play the song.</span>}
       </header>
 
-      <div className="wedding-stage">
+      <div className="wedding-stage" ref={stageRef}>
 
         {/* ── HOME: A JOURNEY TO FOREVER ─────────────────────────────────── */}
         <section data-section="home" className={`stage-scene stage-scene--home${active === 'home' ? ' is-active' : ''}`} aria-label="A Journey to Forever">
@@ -452,11 +504,11 @@ export default function Invitation({ onReplay, music }: Props) {
                   <span className="day-date-display__month-year">{wedding.month} {wedding.year}</span>
                 </time>
                 <div className="day-timeline">
-                  <TimelineItem icon={<DaySunriseIcon />} title="Wedding Ceremony" detail="Time to be confirmed" delay={160} />
-                  <TimelineItem icon={<DayToastIcon />} title="Cocktail &amp; Reception" detail="Time to be confirmed" delay={280} />
-                  <TimelineItem icon={<DayMoonIcon />} title="Dinner &amp; Celebration" detail="Time to be confirmed" delay={400} />
+                  <TimelineItem icon={<DayCeremonyIcon />} title="Wedding Ceremony" detail="4:00 PM" delay={160} />
+                  <TimelineItem icon={<DayPoruwaIcon />} title="Poruwa Ceremony" detail="4:14 PM" delay={260} />
+                  <TimelineItem icon={<DayToastIcon />} title="Cocktail &amp; Reception" detail="4:55 PM" delay={360} />
+                  <TimelineItem icon={<DayFarewellIcon />} title="Couple’s Farewell" detail="10:15 PM" delay={460} />
                 </div>
-                <p className="luxury-card__note">Exact timings will be shared closer to the wedding.</p>
               </div>
             </div>
           </section>

@@ -764,7 +764,8 @@
 
 
 /* ═══════════════════════════════════════════════════════════════════
-   100SVH PURE TAB-SWITCHER — no page scroll, sections switch on tap
+   LOCKED 100SVH VIEWPORT + INTERNAL SMOOTH SCROLL CONTAINER
+   Keeps mobile browser URL bar & header completely steady while scrolling
    ═══════════════════════════════════════════════════════════════════ */
 .wedding-home {
   height: 100svh;
@@ -774,47 +775,42 @@
 .wedding-home__header {
   position: relative;
   flex-shrink: 0;
+  z-index: 30;
 }
 .wedding-stage {
-  display: flex;
+  --invitation-header-height: 80px;
+  display: block;
   flex: 1;
   min-height: 0;
   padding: 0;
-  position: relative;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+  scroll-behavior: smooth;
 }
 .stage-scene {
-  position: absolute;
-  inset: 0;
+  position: relative;
   width: 100%;
-  height: 100%;
+  height: auto;
+  min-height: calc(100svh - var(--invitation-header-height));
   display: flex;
   align-items: center;
   justify-content: center;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.42s cubic-bezier(.22,.85,.35,1);
-  overflow: hidden;
-}
-.stage-scene.is-active {
-  opacity: 1;
-  pointer-events: auto;
+  padding: 24px 14px max(32px, env(safe-area-inset-bottom));
+  scroll-margin-top: 0;
 }
 .stage-scene--home {
+  height: calc(100svh - var(--invitation-header-height));
+  min-height: 0;
+  padding: 10px 14px max(54px, env(safe-area-inset-bottom) + 48px);
   overflow: clip;
   animation: none;
 }
-.stage-scene:not(.stage-scene--home) {
-  padding: 10px 14px max(16px, env(safe-area-inset-bottom));
-  align-items: center;
-}
-.stage-scene:not(.stage-scene--home) .luxury-card {
-  max-height: calc(100% - 8px);
-}
-.stage-scene:not(.stage-scene--home) .luxury-card__inner {
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-}
+.stage-scene:not(.stage-scene--home) .luxury-card { max-height: none; }
+.stage-scene:not(.stage-scene--home) .luxury-card__inner { overflow: visible; }
 @media (min-width: 700px) {
-  .stage-scene:not(.stage-scene--home) { padding: 20px 24px 32px; }
+  .wedding-stage { padding: 0; }
+  .stage-scene { padding: 30px 24px 40px; }
+  .stage-scene--home { padding: 14px 24px 36px; }
 }

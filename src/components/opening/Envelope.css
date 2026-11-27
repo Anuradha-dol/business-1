@@ -468,30 +468,84 @@
   100% { background-position: -200% 0; width: 30%; margin-left: 70%; }
 }
 
-/* "Continue" / "Opening..." action button */
+/* "Continue" / "Opening..." action button — matches TAP TO OPEN luxury style */
 .opening-loader__action {
   position: relative;
   z-index: 1;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 10px;
-  padding: 12px 28px;
-  border-radius: 99px;
-  border: 1px solid rgba(190, 140, 60, 0.6);
-  background: rgba(255, 248, 232, 0.88);
-  color: #80501d;
-  font: 500 11px/1.2 Georgia, serif;
-  letter-spacing: 0.18em;
+  padding: 10px 14px 8px;
+  border: 0;
+  border-bottom: 1px solid rgba(126, 82, 38, 0.58);
+  border-radius: 0;
+  background: transparent;
+  color: #684219;
+  font: 600 11px/1.3 Georgia, serif;
+  letter-spacing: 0.16em;
   text-transform: uppercase;
-  box-shadow: 0 4px 18px rgba(130, 80, 20, 0.14), inset 0 1px 0 rgba(255, 240, 190, 0.8);
-  transition: transform 0.25s, box-shadow 0.25s;
+  text-shadow: 0 1px 3px rgba(255, 247, 232, 0.9);
+  box-shadow: none;
+  transition: color 0.3s ease, border-color 0.3s ease, transform 0.25s ease;
   min-height: 44px;
   cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
 }
 .opening-loader__action:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(130, 80, 20, 0.2), inset 0 1px 0 rgba(255, 240, 190, 0.9);
+  color: #523114;
+  border-color: #795329;
+  transform: translateY(-1px);
 }
 .opening-loader__action:disabled { opacity: 0.65; cursor: default; }
-.opening-loader__action span { font-size: 16px; color: #a06820; }
+.opening-loader__action span { font-size: 14px; color: inherit; }
+
+/* Coastal seashells & petals resting naturally on the lower sand around Tap to Open */
+.sand-decor {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  overflow: hidden;
+}
+.sand-decor__left,
+.sand-decor__right {
+  position: absolute;
+  height: auto;
+  opacity: 0.92;
+  filter: drop-shadow(0 6px 12px rgba(110, 68, 22, 0.22));
+  user-select: none;
+}
+.sand-decor__left {
+  left: max(4%, 14px);
+  bottom: max(5%, env(safe-area-inset-bottom) + 12px);
+  width: clamp(92px, 24vw, 150px);
+  transform: rotate(-4deg);
+  animation: sand-shell-float 7.5s ease-in-out infinite alternate;
+}
+.sand-decor__right {
+  right: max(5%, 16px);
+  bottom: max(7%, env(safe-area-inset-bottom) + 22px);
+  width: clamp(72px, 19vw, 120px);
+  transform: rotate(6deg);
+  animation: sand-shell-float 8.8s ease-in-out 1.4s infinite alternate-reverse;
+}
+@media (min-aspect-ratio: 4/5) {
+  .sand-decor__left {
+    left: 12%;
+    bottom: 3%;
+    width: clamp(100px, 12vw, 165px);
+  }
+  .sand-decor__right {
+    right: 12%;
+    bottom: 4%;
+    width: clamp(80px, 10vw, 130px);
+  }
+}
+@keyframes sand-shell-float {
+  from { transform: translateY(0) rotate(-3deg); filter: drop-shadow(0 6px 12px rgba(110, 68, 22, 0.22)); }
+  to   { transform: translateY(-3px) rotate(1deg); filter: drop-shadow(0 8px 16px rgba(175, 125, 50, 0.28)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sand-decor__left, .sand-decor__right { animation: none; }
+}
 
