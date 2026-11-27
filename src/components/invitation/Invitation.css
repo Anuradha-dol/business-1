@@ -25,6 +25,22 @@
   pointer-events: none;
 }
 
+/* Keep the beach's cover crop steady when a mobile browser's address bar
+   expands or collapses. Use the same fixed canvas for the Home world and the
+   two existing backdrop layers, so the horizon stays aligned as they blend. */
+@supports (height: 100lvh) {
+  .wedding-home__background,
+  .stage-scene--home .cinematic-journey__world {
+    height: 100lvh;
+    bottom: auto;
+  }
+}
+
+@media (max-width: 900px) and (orientation: portrait) {
+  /* Match the Home world's existing portrait crop before either layer fades. */
+  .wedding-home__background { background-position: 13% center; }
+}
+
 /* Keep both existing photographs in place and dissolve between them instead
    of swapping the image abruptly when the current section changes. */
 .wedding-home__background--home {

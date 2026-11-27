@@ -7,6 +7,12 @@
 }
 
 @media (prefers-reduced-motion: no-preference) {
+  /* The card rises with the visitor's scroll instead of restarting an
+     opacity animation when the active navigation item changes. */
+  .stage-scene:not(.stage-scene--home) > .luxury-card {
+    transform: translate3d(0, var(--invitation-card-lift, 0px), 0);
+  }
+
   /* The day unfolds like the order of a celebration: the date, then each
      event. Existing typography, floral artwork and gold frame stay intact. */
   .stage-scene.is-active .luxury-card--day .card-floral-art {

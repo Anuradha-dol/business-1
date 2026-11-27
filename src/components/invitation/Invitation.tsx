@@ -7,6 +7,7 @@ import {
 import { wedding } from '../../data/wedding';
 import CinematicJourney from './cinematic/CinematicJourney';
 import StorySection from './StorySection';
+import { useSectionScrollMotion } from './useSectionScrollMotion';
 import './Invitation.css';
 import './SectionMotion.css';
 
@@ -327,6 +328,7 @@ const navItems: { id: SectionId; label: string; icon: typeof Heart }[] = [
 ];
 
 export default function Invitation({ onReplay, music }: Props) {
+  useSectionScrollMotion();
   const [active, setActive] = useState<SectionId>('home');
   const headerRef = useRef<HTMLElement>(null);
   const stageRef = useRef<HTMLDivElement>(null);
