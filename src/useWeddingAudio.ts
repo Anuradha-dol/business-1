@@ -21,6 +21,7 @@ export function useWeddingAudio() {
   const enabled = useRef(true);
   const unlocked = useRef(false);
   const ambienceAttempt = useRef(0);
+  const ambienceAutoplayTimer = useRef<number | null>(null);
   const [playing, setPlaying] = useState(false);
   const [needsGesture, setNeedsGesture] = useState(false);
   const [ambienceNeedsGesture, setAmbienceNeedsGesture] = useState(false);
@@ -135,9 +136,11 @@ export function useWeddingAudio() {
     document.addEventListener('visibilitychange', onVisibilityChange);
     // If an image stalls indefinitely, still give autoplay-capable browsers
     // a chance to start ambience. A gesture can always start it immediately.
-    const ambientTimer = window.setTimeout(() => startAmbience(), 15000);
     return () => {
-      window.clearTimeout(ambientTimer);
+      if (ambienceAutoplayTimer.current !== null) {
+        window.clearTimeout(ambienceAutoplayTimer.current);
+        ambienceAutoplayTimer.current = null;
+      }
       ambienceAttempt.current++;
       cancelFade(sea);
       cancelFade(violin);
@@ -168,10 +171,16 @@ export function useWeddingAudio() {
     if (event.key === 'Enter' || event.key === ' ') unlockOpening();
   }, [unlockOpening]);
 
-  // Do not fetch audio while the closed artwork is still being prepared. The
-  // opening tap is the reliable autoplay gesture and starts ambience below;
-  // keeping the request there also protects the image loading path.
-  const openingArtworkReady = useCallback(() => {}, []);
+  // Once the critical opening artwork is ready, let the browser fetch and try
+  // ambience during an idle gap. This keeps image rendering first while giving
+  // autoplay-capable browsers sound before the guest taps the envelope.
+  const openingArtworkReady = useCallback(() => {
+    if (ambienceAutoplayTimer.current !== null) window.clearTimeout(ambienceAutoplayTimer.current);
+    ambienceAutoplayTimer.current = window.setTimeout(() => {
+      ambienceAutoplayTimer.current = null;
+      if (!inInvitation.current && !unlocked.current) startAmbience();
+    }, 800);
+  }, [startAmbience]);
 
   const enterInvitation = useCallback(() => {
     inInvitation.current = true;
