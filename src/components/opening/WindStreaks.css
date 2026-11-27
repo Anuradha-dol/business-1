@@ -50,6 +50,31 @@
 .wind-mote--3 { top: 61%; left: 88%; animation: wind-mote-drift 9.2s ease-in-out 4.8s infinite; }
 .wind-mote--4 { top: 36%; left: 68%; width: 5px; height: 5px; animation: wind-mote-drift 7.6s ease-in-out 6.2s infinite; }
 
+/* One clear, staggered sea breeze leads the envelope opening. These use the
+   wind SVGs already present in the scene, so opening it adds no image fetches. */
+.opening-breeze .wind-pass--1 { animation: opening-breeze-pass-1 2s cubic-bezier(.22,.7,.2,1) both; }
+.opening-breeze .wind-pass--2 { animation: opening-breeze-pass-2 2s cubic-bezier(.22,.7,.2,1) .2s both; }
+.opening-breeze .wind-pass--3 { animation: opening-breeze-pass-3 2s cubic-bezier(.22,.7,.2,1) .4s both; }
+
+@keyframes opening-breeze-pass-1 {
+  0% { opacity: 0; transform: translate3d(12%, 1%, 0); }
+  30% { opacity: .38; }
+  52% { opacity: .5; transform: translate3d(-1%, 0, 0); }
+  100% { opacity: 0; transform: translate3d(-14%, -1%, 0); }
+}
+@keyframes opening-breeze-pass-2 {
+  0% { opacity: 0; transform: translate3d(14%, -1.5%, 0) scaleY(-.85); }
+  32% { opacity: .34; }
+  54% { opacity: .44; transform: translate3d(0, 0, 0) scaleY(-.85); }
+  100% { opacity: 0; transform: translate3d(-13%, 1%, 0) scaleY(-.85); }
+}
+@keyframes opening-breeze-pass-3 {
+  0% { opacity: 0; transform: translate3d(16%, 1.5%, 0); }
+  34% { opacity: .3; }
+  56% { opacity: .4; transform: translate3d(0, 0, 0); }
+  100% { opacity: 0; transform: translate3d(-15%, -1.5%, 0); }
+}
+
 .gust .ambient-wind {
   opacity: 0;
 }

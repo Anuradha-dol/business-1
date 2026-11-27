@@ -798,6 +798,7 @@
   padding: 24px 14px max(32px, env(safe-area-inset-bottom));
   scroll-margin-top: 0;
 }
+.stage-scene[data-section="story"] { overflow: clip; }
 .stage-scene--home {
   height: calc(100svh - var(--invitation-header-height));
   min-height: 0;

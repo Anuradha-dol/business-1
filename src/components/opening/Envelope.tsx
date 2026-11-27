@@ -33,7 +33,6 @@ const OPENING_ASSETS = [
   `${ambientBase}flap-clean.webp`,
   `${ambientBase}scalloped-card-883012c28e99.webp`,
   `${ambientBase}opening-clear-optimized.webp`,
-  `${ambientBase}sky-birds-flight-optimized.png`,
 ];
 
 const FIRST_CHAPTER_ASSETS = [
@@ -122,7 +121,6 @@ export default function Envelope({ onComplete, onArtworkReady }: EnvelopeProps) 
 
   const { contextSafe } = useGSAP(() => {
     gsap.set('.opening-back', { scaleY: 0 });
-    gsap.set('.sky-birds', { autoAlpha: 0, x: 0, y: 0, scale: 0.95, rotation: -3 });
     gsap.set('.opening-lining', { opacity: 0 });
     gsap.set('.card-viewport', { autoAlpha: 0 });
     gsap.set('.floating-card', { xPercent: -2.1, yPercent: 29, scale: 0.94 });
@@ -147,22 +145,19 @@ export default function Envelope({ onComplete, onArtworkReady }: EnvelopeProps) 
     const card = root.current?.querySelector('.complete-card');
     const distance = (card?.getBoundingClientRect().right ?? window.innerWidth) + 120;
 
-    tl.to(['.heading', '.mobile-heading', '.sky-love-ornament'], { autoAlpha: 0, y: -6, duration: 0.8, ease: 'sine.inOut' }, 0)
+    tl.add(() => root.current?.classList.add('opening-breeze'), 0)
+      .to(['.heading', '.mobile-heading', '.sky-love-ornament'], { autoAlpha: 0, y: -6, duration: 0.8, ease: 'sine.inOut' }, 0)
       .to('.sky-ornament-cleanup', { opacity: 1, duration: 0.8, ease: 'sine.inOut' }, 0)
       .set('.opening-assembly', { autoAlpha: 1 }, 0)
       // Reveal inner lining BEFORE flap folds so the sea never peeks through
       .to('.opening-lining', { opacity: 1, duration: 0.45, ease: 'sine.out' }, 0.1)
       .to('.opening-flap', { scaleY: 0, duration: 1.15, ease: 'sine.inOut' }, 0.3)
-      // Distant doves enter the upper sky right as the envelope begins unsealing
-      .to('.sky-birds', { autoAlpha: 0.88, duration: 0.9, ease: 'sine.out' }, 0.45)
-      .to('.sky-birds', { x: '28vw', y: '-4svh', scale: 0.62, rotation: -1, duration: 3.6, ease: 'sine.out' }, 0.45)
-      .to('.sky-birds', { x: '58vw', y: '-8svh', scale: 0.22, rotation: 2, duration: 4.55, ease: 'sine.in' }, 4.05)
-      .to('.sky-birds', { autoAlpha: 0, duration: 1.6, ease: 'sine.in' }, 7.0)
       // Start raising the open back flap before the front flap disappears
       .to('.opening-back', { scaleY: 1, duration: 1.25, ease: 'sine.inOut' }, 0.95)
       .to('.opening-flap', { autoAlpha: 0, duration: 0.3, ease: 'sine.inOut' }, 1.15)
-      .to('.card-viewport', { autoAlpha: 1, duration: 0.5, ease: 'sine.inOut' }, 1.85)
-      .to('.floating-card', { yPercent: -15, scale: 0.8, rotation: -0.8, duration: 2.8, ease: 'sine.inOut' }, 2.15)
+      // Let the breeze cross the open cover before the personalized letter appears.
+      .to('.card-viewport', { autoAlpha: 1, duration: 0.5, ease: 'sine.inOut' }, 2.65)
+      .to('.floating-card', { yPercent: -15, scale: 0.8, rotation: -0.8, duration: 2.15, ease: 'sine.inOut' }, 2.95)
       .to('.card-viewport', { clipPath: 'polygon(0% 0%,100% 0%,100% 100%,100% 100%,100% 100%,0% 100%,0% 100%,0% 100%)', duration: 0.55, ease: 'sine.inOut' }, 4.45)
       .set('.card-viewport', { zIndex: 5 }, 5.0)
       .add(() => root.current?.classList.add('gust'), 4.85)
@@ -273,14 +268,6 @@ export default function Envelope({ onComplete, onArtworkReady }: EnvelopeProps) 
       } as CSSProperties}>
         <div className="opening-scene-content" inert={!ready}>
           <OpeningAtmosphere />
-          <div className="sky-birds" aria-hidden="true">
-            <img
-              className="sky-birds__img"
-              src={openingImagesRequested ? `${ambientBase}sky-birds-flight-optimized.png` : undefined}
-              alt=""
-              draggable={false}
-            />
-          </div>
           <div className="scene">
             <div className="closed-view">
               <img className="art" src={`${ambientBase}closed-fixed-optimized.webp`} alt="" draggable={false} fetchPriority="high" />
