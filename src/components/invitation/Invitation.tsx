@@ -238,8 +238,10 @@ function SeaShimmer() {
     const resize = () => {
       requestAnimationFrame(() => {
         if (!canvas) return;
-        canvas.width = canvas.offsetWidth;
-        canvas.height = canvas.offsetHeight;
+        const w = Math.max(1, Math.min(canvas.clientWidth || 360, 600));
+        const h = Math.max(1, Math.min(canvas.clientHeight || 180, 320));
+        canvas.width = w;
+        canvas.height = h;
         if (visible && reducedMotion.matches) draw();
       });
     };

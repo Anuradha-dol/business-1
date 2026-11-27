@@ -68,7 +68,6 @@ export default function Envelope({ onComplete, onArtworkReady }: EnvelopeProps) 
   const [ready, setReady] = useState(false);
   const [openingImagesRequested, setOpeningImagesRequested] = useState(false);
   const [preparingOpen, setPreparingOpen] = useState(false);
-  const [pendingOpen, setPendingOpen] = useState(false);
 
   const preloadFirstChapter = useCallback(() => {
     if (!firstChapterLoad.current) {
@@ -107,28 +106,11 @@ export default function Envelope({ onComplete, onArtworkReady }: EnvelopeProps) 
       if (cancelled) return;
       onArtworkReady?.();
       BACKGROUND_CLOSED_ASSETS.forEach(src => { void preloadImage(src); });
-      // Let the visible artwork finish before warming the opening and Home.
-      void preloadOpening().then(async () => {
-        if (cancelled) return;
-        // Give the first Home scene priority over later chapters on a cold visit.
-        await preloadFirstChapter();
-        if (cancelled) return;
-        // While the guest views the envelope, prepare only the artwork used by
-        // the following chapters and cards, not the unused full-scene images.
-        const cinBase = `${import.meta.env.BASE_URL}assets/images/cinematic/`;
-        [
-          `${cinBase}ambient/floral-corner.jpg`,
-          `${cinBase}journey/calla-left.webp`,
-          `${cinBase}journey/calla-right.webp`,
-          `${cinBase}journey/promise-cloche-v2.webp`,
-          `${cinBase}journey/promise-ring-v2.webp`,
-          `${cinBase}journey/promise-rose-v2.webp`,
-          `${cinBase}journey/union-box-v2.webp`,
-          `${cinBase}journey/union-box-closed.webp`,
-          `${cinBase}journey/union-couple-v2.webp`,
-          `${cinBase}journey/wedding-band-ivory.webp`,
-        ].forEach(src => { void preloadImage(src); });
-      });
+      // On slow connections, wait briefly after the closed scene paints before
+      // warming only the opening-flap layers; defer Home chapters until open().
+      setTimeout(() => {
+        if (!cancelled) void preloadOpening();
+      }, 350);
     });
     return () => {
       cancelled = true;
@@ -221,11 +203,9 @@ export default function Envelope({ onComplete, onArtworkReady }: EnvelopeProps) 
     if (busy.current || state !== 'closed') return;
     busy.current = true;
     if (!ready) {
-      setPendingOpen(true);
       setPreparingOpen(true);
       void closedSceneReady.current.then(() => {
         if (!mounted.current) return;
-        setPendingOpen(false);
         beginOpening();
       });
       return;
@@ -252,9 +232,6 @@ export default function Envelope({ onComplete, onArtworkReady }: EnvelopeProps) 
           <div className="opening-loader__crest">{wedding.monogram}</div>
           <p className="opening-loader__status" role="status">Preparing your invitation</p>
           <div className="opening-loader__bar" aria-hidden="true"><span /></div>
-          <button className="opening-loader__action" onClick={open} type="button" disabled={pendingOpen}>
-            {pendingOpen ? 'Opening…' : 'Continue'} <span aria-hidden="true">&#8594;</span>
-          </button>
         </div>
 
       <svg className="wind-filters" aria-hidden="true" focusable="false">

@@ -13,7 +13,7 @@ export default function App() {
     // Audio must be unlocked before fullscreen consumes the user's gesture.
     audio.unlockOpening();
     const target = event.target;
-    if (!(target instanceof Element) || !target.closest('.envelope-hit, .open-action, .opening-loader__action')) return;
+    if (!(target instanceof Element) || !target.closest('.envelope-hit, .open-action')) return;
     if (fullscreenAttempted.current || !window.matchMedia('(pointer: coarse) and (max-width: 900px)').matches) return;
     fullscreenAttempted.current = true;
     const root = document.documentElement;
