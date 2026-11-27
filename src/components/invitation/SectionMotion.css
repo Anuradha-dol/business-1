@@ -1,123 +1,61 @@
-/* Cards are already visible as they scroll into view. Replaying the default
-   opacity/blur card entrance on activation would make them flash blank. */
+/* The scroll position drives each layer continuously. Nothing is hidden while
+   navigation changes, so a quick swipe or tab click cannot restart a fade. */
 .stage-scene :is(.luxury-card--day, .luxury-card--venue, .luxury-card--rsvp),
 .stage-scene :is(.luxury-card--day, .luxury-card--venue, .luxury-card--rsvp) .card-sheen,
-.stage-scene:not(.is-active) :is(.luxury-card--day, .luxury-card--venue, .luxury-card--rsvp) .timeline-item {
+.stage-scene :is(.luxury-card--day, .luxury-card--venue, .luxury-card--rsvp) .timeline-item {
   animation: none;
 }
 
 @media (prefers-reduced-motion: no-preference) {
-  /* The card rises with the visitor's scroll instead of restarting an
-     opacity animation when the active navigation item changes. */
   .stage-scene:not(.stage-scene--home) > .luxury-card {
-    transform: translate3d(0, var(--invitation-card-lift, 0px), 0);
+    transform: translate3d(0, calc(var(--invitation-scene-motion, 0) * 38px), 0);
   }
 
-  /* The day unfolds like the order of a celebration: the date, then each
-     event. Existing typography, floral artwork and gold frame stay intact. */
-  .stage-scene.is-active .luxury-card--day .card-floral-art {
-    animation: detail-floral-open 800ms ease-out both;
+  /* Flowers drift in separately from the frame, with their original opacity. */
+  .stage-scene:not(.stage-scene--home) .card-floral-art {
+    transform: translate3d(calc(var(--invitation-scene-early, 0) * -18px), calc(var(--invitation-scene-early, 0) * -9px), 0);
   }
-  .stage-scene.is-active .luxury-card--day :is(.luxury-card__hearts, .luxury-card__eyebrow, .luxury-card__title) {
-    animation: detail-rise 650ms 60ms ease-out both;
-  }
-  .stage-scene.is-active .luxury-card--day .floral-divider {
-    transform-origin: center;
-    animation: detail-divider 650ms 120ms ease-out both;
-  }
-  .stage-scene.is-active .luxury-card--day .day-countdown {
-    animation: detail-rise 650ms 180ms ease-out both;
-  }
-  .stage-scene.is-active .luxury-card--day .day-date-display {
-    animation: detail-date 650ms 240ms ease-out both;
-  }
-  .stage-scene.is-active .luxury-card--day .timeline-item {
-    animation: detail-event 650ms ease-out both;
-  }
-  .stage-scene.is-active .luxury-card--day .timeline-item:nth-child(1) { animation-delay: 300ms !important; }
-  .stage-scene.is-active .luxury-card--day .timeline-item:nth-child(2) { animation-delay: 360ms !important; }
-  .stage-scene.is-active .luxury-card--day .timeline-item:nth-child(3) { animation-delay: 420ms !important; }
-  .stage-scene.is-active .luxury-card--day .luxury-card__note {
-    animation: detail-rise 650ms 480ms ease-out both;
+  .stage-scene:not(.stage-scene--home) :is(.luxury-card__hearts, .luxury-card__eyebrow, .luxury-card__title, .floral-divider) {
+    transform: translate3d(0, calc(var(--invitation-scene-early, 0) * 10px), 0);
   }
 
-  /* A gentle reveal of the existing floral artwork and location details,
-     followed by the individual highlights and map link. */
-  .stage-scene.is-active .luxury-card--venue .card-floral-art {
-    animation: detail-floral-open 800ms ease-out both;
+  /* Different parts of each scene travel different distances, so the date,
+     event details and venue settle into place independently. */
+  .luxury-card--day .day-countdown,
+  .luxury-card--venue :is(.venue-icon-wrap, .venue-tap-hint) {
+    transform: translate3d(0, calc(var(--invitation-scene-motion, 0) * 14px), 0);
   }
-  .stage-scene.is-active .luxury-card--venue :is(.luxury-card__hearts, .luxury-card__eyebrow, .luxury-card__title) {
-    animation: detail-rise 650ms 60ms ease-out both;
+  .luxury-card--venue .venue-icon-wrap { transition: none; }
+  .luxury-card--venue .venue-icon-wrap:hover {
+    transform: translate3d(0, calc(var(--invitation-scene-motion, 0) * 14px), 0) scale(1.08);
   }
-  .stage-scene.is-active .luxury-card--venue .floral-divider {
-    transform-origin: center;
-    animation: detail-divider 650ms 120ms ease-out both;
+  .luxury-card--day .day-date-display,
+  .luxury-card--venue :is(.venue-subtitle, .venue-address, .venue-desc) {
+    transform: translate3d(0, calc(var(--invitation-scene-motion, 0) * 21px), 0);
   }
-  .stage-scene.is-active .luxury-card--venue :is(.venue-icon-wrap, .venue-tap-hint) {
-    animation: detail-venue 650ms 180ms ease-out both;
+  .luxury-card--day .timeline-item:nth-child(1),
+  .luxury-card--venue .venue-highlight:nth-child(1) {
+    transform: translate3d(calc(var(--invitation-scene-motion, 0) * -12px), calc(var(--invitation-scene-motion, 0) * 16px), 0);
   }
-  .stage-scene.is-active .luxury-card--venue .venue-subtitle {
-    animation: detail-venue 650ms 240ms ease-out both;
+  .luxury-card--day .timeline-item:nth-child(2),
+  .luxury-card--venue .venue-highlight:nth-child(2) {
+    transform: translate3d(0, calc(var(--invitation-scene-motion, 0) * 21px), 0);
   }
-  .stage-scene.is-active .luxury-card--venue :is(.venue-address, .venue-desc) {
-    animation: detail-rise 650ms 300ms ease-out both;
+  .luxury-card--day .timeline-item:nth-child(3),
+  .luxury-card--venue .venue-highlight:nth-child(3) {
+    transform: translate3d(calc(var(--invitation-scene-motion, 0) * 12px), calc(var(--invitation-scene-motion, 0) * 26px), 0);
   }
-  .stage-scene.is-active .luxury-card--venue .venue-highlight {
-    animation: detail-venue 650ms ease-out both;
-  }
-  .stage-scene.is-active .luxury-card--venue .venue-highlight:nth-child(1) { animation-delay: 360ms; }
-  .stage-scene.is-active .luxury-card--venue .venue-highlight:nth-child(2) { animation-delay: 420ms; }
-  .stage-scene.is-active .luxury-card--venue .venue-highlight:nth-child(3) { animation-delay: 480ms; }
-  .stage-scene.is-active .luxury-card--venue .venue-map-btn {
-    animation: detail-rise 650ms 540ms ease-out both;
+  .luxury-card--day .luxury-card__note,
+  .luxury-card--venue .venue-map-btn {
+    transform: translate3d(0, calc(var(--invitation-scene-late, 0) * 28px), 0);
   }
 
-  /* The form stays visible and operable throughout; its slight movement
-     provides a welcoming arrival without delaying interaction. */
-  .stage-scene.is-active .luxury-card--rsvp .card-floral-art {
-    animation: detail-floral-open 800ms ease-out both;
-  }
-  .stage-scene.is-active .luxury-card--rsvp :is(.luxury-card__hearts, .luxury-card__eyebrow, .luxury-card__title) {
-    animation: detail-rise 650ms 60ms ease-out both;
-  }
-  .stage-scene.is-active .luxury-card--rsvp .floral-divider {
-    transform-origin: center;
-    animation: detail-divider 650ms 120ms ease-out both;
-  }
-  .stage-scene.is-active .luxury-card--rsvp .luxury-rsvp {
-    animation: detail-welcome 700ms 180ms ease-out both;
-  }
-  .stage-scene.is-active .luxury-card--rsvp .luxury-rsvp:focus-within,
-  .stage-scene.is-active .luxury-card--venue :is(.venue-icon-wrap, .venue-map-btn):focus-visible {
-    animation: none;
-  }
-}
-
-@keyframes detail-floral-open {
-  from { opacity: .8; }
-  to { opacity: 1; }
-}
-@keyframes detail-rise {
-  from { opacity: .88; transform: translateY(4px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@keyframes detail-divider {
-  from { opacity: .85; transform: scaleX(.96); }
-  to { opacity: 1; transform: scaleX(1); }
-}
-@keyframes detail-date {
-  from { opacity: .88; transform: translateY(4px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@keyframes detail-event {
-  from { opacity: .88; transform: translateX(-4px); }
-  to { opacity: 1; transform: translateX(0); }
-}
-@keyframes detail-venue {
-  from { opacity: .88; transform: translateY(4px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@keyframes detail-welcome {
-  from { opacity: .94; transform: translateY(3px); }
-  to { opacity: 1; transform: translateY(0); }
+  /* The individual form rows remain fully visible and usable throughout. */
+  .luxury-rsvp__note { transform: translate3d(0, calc(var(--invitation-scene-early, 0) * 12px), 0); }
+  .luxury-rsvp__field:nth-of-type(1) { transform: translate3d(0, calc(var(--invitation-scene-early, 0) * 16px), 0); }
+  .luxury-rsvp__field:nth-of-type(2) { transform: translate3d(0, calc(var(--invitation-scene-motion, 0) * 20px), 0); }
+  .luxury-rsvp__field:nth-of-type(3) { transform: translate3d(0, calc(var(--invitation-scene-motion, 0) * 24px), 0); }
+  .luxury-rsvp__field:nth-of-type(4),
+  .luxury-rsvp__submit { transform: translate3d(0, calc(var(--invitation-scene-late, 0) * 28px), 0); }
+  .luxury-rsvp:focus-within :is(.luxury-rsvp__field, .luxury-rsvp__submit) { transform: none; }
 }

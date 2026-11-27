@@ -61,28 +61,14 @@
   font: 13px/1.55 Georgia, serif;
 }
 
-/* Each family enters from its own side; the ampersand then joins them. */
-.story-card--active .story-card__heading { animation: story-rise .7s ease-out both; }
-.story-card--active .story-card__family--groom { animation: story-from-left .7s .12s ease-out both; }
-.story-card--active .story-card__family--bride { animation: story-from-right .7s .24s ease-out both; }
-.story-card--active .story-card__joining { animation: story-join .7s .36s ease-out both; }
-.story-card--active .story-card__invitation { animation: story-rise .7s .48s ease-out both; }
-
-@keyframes story-rise {
-  from { opacity: .88; transform: translateY(4px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@keyframes story-from-left {
-  from { opacity: .88; transform: translateX(-4px); }
-  to { opacity: 1; transform: translateX(0); }
-}
-@keyframes story-from-right {
-  from { opacity: .88; transform: translateX(4px); }
-  to { opacity: 1; transform: translateX(0); }
-}
-@keyframes story-join {
-  from { opacity: .88; }
-  to { opacity: 1; }
+/* The two families come gently together as the visitor reaches the story.
+   The same scroll-driven motion works in either direction and on tab clicks. */
+@media (prefers-reduced-motion: no-preference) {
+  .story-card__heading { transform: translate3d(0, calc(var(--invitation-scene-early, 0) * 12px), 0); }
+  .story-card__family--groom { transform: translate3d(calc(var(--invitation-scene-motion, 0) * -16px), calc(var(--invitation-scene-motion, 0) * 12px), 0); }
+  .story-card__family--bride { transform: translate3d(calc(var(--invitation-scene-late, 0) * 16px), calc(var(--invitation-scene-late, 0) * 12px), 0); }
+  .story-card__joining { transform: translate3d(0, calc(var(--invitation-scene-late, 0) * 17px), 0); }
+  .story-card__invitation { transform: translate3d(0, calc(var(--invitation-scene-late, 0) * 24px), 0); }
 }
 
 @media (max-width: 480px) {
@@ -97,11 +83,4 @@
   .story-card__parents { font-size: 12px; line-height: 1.4; }
   .story-card__joining { font-size: 25px; }
   .story-card__invitation { margin-top: 16px; font-size: 12px; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .story-card--active .story-card__heading,
-  .story-card--active .story-card__family,
-  .story-card--active .story-card__joining,
-  .story-card--active .story-card__invitation { animation: none; }
 }

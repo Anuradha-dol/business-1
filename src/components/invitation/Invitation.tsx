@@ -384,7 +384,6 @@ export default function Invitation({ onReplay, music }: Props) {
   useEffect(() => {
     const base = `${import.meta.env.BASE_URL}assets/images/cinematic/`;
     [
-      `${base}main-background.webp`,
       `${base}ambient/floral-corner.jpg`,
       `${base}journey/beach-plate.webp`,
       `${base}journey/encounter-rose.webp`,
@@ -430,11 +429,6 @@ export default function Invitation({ onReplay, music }: Props) {
     <main className="wedding-home">
       <div
         className="wedding-home__background"
-        style={{ backgroundImage: `url("${import.meta.env.BASE_URL}assets/images/cinematic/main-background.webp")` }}
-        aria-hidden="true"
-      />
-      <div
-        className={`wedding-home__background wedding-home__background--home${active === 'home' ? ' is-visible' : ''}`}
         style={{ backgroundImage: `url("${import.meta.env.BASE_URL}assets/images/cinematic/journey/beach-plate.webp")` }}
         aria-hidden="true"
       />

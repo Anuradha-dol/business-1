@@ -27,7 +27,7 @@
 
 /* Keep the beach's cover crop steady when a mobile browser's address bar
    expands or collapses. Use the same fixed canvas for the Home world and the
-   two existing backdrop layers, so the horizon stays aligned as they blend. */
+   shared backdrop, so the horizon stays aligned on every section. */
 @supports (height: 100lvh) {
   .wedding-home__background,
   .stage-scene--home .cinematic-journey__world {
@@ -39,17 +39,6 @@
 @media (max-width: 900px) and (orientation: portrait) {
   /* Match the Home world's existing portrait crop before either layer fades. */
   .wedding-home__background { background-position: 13% center; }
-}
-
-/* Keep both existing photographs in place and dissolve between them instead
-   of swapping the image abruptly when the current section changes. */
-.wedding-home__background--home {
-  opacity: 0;
-  transition: opacity .8s ease;
-}
-.wedding-home__background--home.is-visible { opacity: 1; }
-@media (prefers-reduced-motion: reduce) {
-  .wedding-home__background--home { transition: none; }
 }
 
 /* Global Petals & Golden Particles across ALL tabs */

@@ -10,17 +10,29 @@ export function useSectionScrollMotion() {
     const update = () => {
       frame = 0;
       const viewportHeight = document.documentElement.clientHeight;
-      const travel = Math.min(36, viewportHeight * 0.045);
+      const clamp = (value: number) => Math.max(0, Math.min(1, value));
 
-      // Read all positions before writing any styles to avoid repeated layouts.
-      const lifts = scenes.map((scene) => {
-        if (reducedMotion.matches) return 0;
-        const top = scene.getBoundingClientRect().top;
-        const progress = Math.max(0, Math.min(1, (viewportHeight - top) / (viewportHeight * 0.72)));
-        return travel * (1 - progress);
+      // Read before writing: all layers share this continuous scroll progress,
+      // rather than restarting an entrance when the active navigation changes.
+      const remaining = scenes.map((scene) => {
+        if (reducedMotion.matches || viewportHeight === 0) return [0, 0, 0];
+        const { top, bottom } = scene.getBoundingClientRect();
+        const fromBelow = clamp((viewportHeight - top) / (viewportHeight * 0.72));
+        const fromAbove = clamp(bottom / (viewportHeight * 0.45));
+        const progress = Math.min(fromBelow, fromAbove);
+        // Slightly offset the layers along the same scroll timeline. Smoothstep
+        // keeps each one gentle at both ends, including on a reversed scroll.
+        const remaining = (value: number) => {
+          const p = clamp(value);
+          return 1 - p * p * (3 - 2 * p);
+        };
+        return [remaining(progress / .8), remaining(progress), remaining((progress - .12) / .88)];
       });
       scenes.forEach((scene, index) => {
-        scene.style.setProperty('--invitation-card-lift', `${lifts[index].toFixed(2)}px`);
+        const [early, middle, late] = remaining[index];
+        scene.style.setProperty('--invitation-scene-early', early.toFixed(4));
+        scene.style.setProperty('--invitation-scene-motion', middle.toFixed(4));
+        scene.style.setProperty('--invitation-scene-late', late.toFixed(4));
       });
     };
     const schedule = () => {
@@ -36,7 +48,11 @@ export function useSectionScrollMotion() {
       window.removeEventListener('resize', schedule);
       reducedMotion.removeEventListener('change', schedule);
       if (frame) window.cancelAnimationFrame(frame);
-      scenes.forEach((scene) => scene.style.removeProperty('--invitation-card-lift'));
+      scenes.forEach((scene) => {
+        scene.style.removeProperty('--invitation-scene-early');
+        scene.style.removeProperty('--invitation-scene-motion');
+        scene.style.removeProperty('--invitation-scene-late');
+      });
     };
   }, []);
 }
