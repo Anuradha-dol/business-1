@@ -56,9 +56,9 @@ function preloadImage(src: string): Promise<void> {
   });
 }
 
-type EnvelopeProps = { onComplete?: () => void; onArtworkReady?: () => void };
+type EnvelopeProps = { onComplete?: () => void; onArtworkReady?: () => void; onOpeningStart?: () => void };
 
-export default function Envelope({ onComplete, onArtworkReady }: EnvelopeProps) {
+export default function Envelope({ onComplete, onArtworkReady, onOpeningStart }: EnvelopeProps) {
   const root = useRef<HTMLElement>(null);
   const timeline = useRef<gsap.core.Timeline | null>(null);
   const busy = useRef(false);
@@ -187,6 +187,9 @@ export default function Envelope({ onComplete, onArtworkReady }: EnvelopeProps) 
   });
 
   const beginOpening = () => {
+    // Keep the first tap as the audio gesture so ocean ambience can start
+    // immediately without making the artwork wait for the audio request.
+    onOpeningStart?.();
     // The guest may tap before the opening artwork finishes. Prepare Home now
     // even if an opening image is slow or never completes.
     void preloadFirstChapter();

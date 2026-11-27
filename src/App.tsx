@@ -19,10 +19,10 @@ export default function App() {
 
   return showInvitation
     ? <Invitation onReplay={replay} music={audio.music} />
-    : <div onClickCapture={audio.unlockOpening} onKeyDownCapture={audio.unlockOnKey}>
-        <Envelope onComplete={showHome} onArtworkReady={audio.openingArtworkReady} />
+    : <div onKeyDownCapture={audio.unlockOnKey}>
+        <Envelope onComplete={showHome} onArtworkReady={audio.openingArtworkReady} onOpeningStart={audio.unlockOpening} />
         {audio.ambienceNeedsGesture && (
-          <button className="opening-audio" type="button">
+          <button className="opening-audio" type="button" onClick={audio.unlockOpening}>
             <span aria-hidden="true">♫</span> Enable ocean sound
           </button>
         )}

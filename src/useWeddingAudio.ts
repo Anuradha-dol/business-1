@@ -155,33 +155,23 @@ export function useWeddingAudio() {
     if (inInvitation.current) return;
     if (unlocked.current) {
       // Permit another attempt if the browser denied an earlier gesture.
-      if (ambience.current?.paused) startAmbience();
+      if (ambience.current?.paused) startAmbience(true);
       return;
     }
     unlocked.current = true;
-    startAmbience();
-    if (!enabled.current) return;
-    // Prime this exact media element during the click; some mobile browsers
-    // require a gesture before they will allow playback later in the timeline.
-    const audio = song.current;
-    if (audio) {
-      ensureSource(audio, 'wedding-violin.mp3');
-      audio.volume = 0;
-      audio.currentTime = MUSIC_START;
-      void audio.play().then(() => {
-        if (!inInvitation.current) {
-          audio.pause();
-          audio.currentTime = MUSIC_START;
-        }
-      }).catch(() => { /* The music control remains the fallback. */ });
-    }
+    // This callback runs from the opening tap. Start ambience at once while
+    // keeping the request asynchronous so it never holds up the artwork.
+    startAmbience(true);
   }, [startAmbience]);
 
   const unlockOnKey = useCallback((event: KeyboardEvent) => {
     if (event.key === 'Enter' || event.key === ' ') unlockOpening();
   }, [unlockOpening]);
 
-  const openingArtworkReady = useCallback(() => startAmbience(), [startAmbience]);
+  // Do not fetch audio while the closed artwork is still being prepared. The
+  // opening tap is the reliable autoplay gesture and starts ambience below;
+  // keeping the request there also protects the image loading path.
+  const openingArtworkReady = useCallback(() => {}, []);
 
   const enterInvitation = useCallback(() => {
     inInvitation.current = true;
