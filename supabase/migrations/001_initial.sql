@@ -47,6 +47,13 @@ CREATE TRIGGER guests_updated_at
 ALTER TABLE guests ENABLE ROW LEVEL SECURITY;
 ALTER TABLE rsvp   ENABLE ROW LEVEL SECURITY;
 
+-- Supabase table privileges and RLS policies are separate checks. The guest
+-- invitation is read with the public anon key, so grant the required table
+-- privileges here and let the policies below restrict which rows/actions work.
+GRANT SELECT ON TABLE guests TO anon;
+GRANT SELECT, INSERT, UPDATE ON TABLE rsvp TO anon;
+GRANT ALL ON TABLE guests, rsvp TO authenticated;
+
 -- Drop existing policies if re-running
 DROP POLICY IF EXISTS "anon_read_guest_by_token"  ON guests;
 DROP POLICY IF EXISTS "anon_insert_rsvp"           ON rsvp;

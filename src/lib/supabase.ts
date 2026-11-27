@@ -47,8 +47,10 @@ export function formatGreeting(guest: Pick<Guest, 'name' | 'title' | 'invitation
 
   switch (invitation_type) {
     case 'individual': return `Dear ${displayName}`;
-    case 'couple':     return `Dear ${name} & ${partner_name ?? 'Partner'}`;
-    case 'family':     return `Dear ${name} & Family`;
+    // A couple invitation may be created before the second name is known.
+    // Don't print a placeholder, and preserve an honorific such as Mrs.
+    case 'couple':     return `Dear ${displayName}${partner_name ? ` & ${partner_name}` : ''}`;
+    case 'family':     return `Dear ${displayName} & Family`;
     case 'custom':     return `Dear ${displayName}${partner_name ? ` & ${partner_name}` : ''} & Family`;
     default:           return `Dear ${displayName}`;
   }
