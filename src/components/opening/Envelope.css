@@ -265,3 +265,50 @@
   .card-lettering time { font-size:1.08cqw; }
   .mobile-heading p { font-size:9px; letter-spacing:.10em; }
 }
+
+/* The portrait composition retains the full original beach and palms while
+   the envelope remains in the same animated landscape coordinate system. */
+@media (max-aspect-ratio: 4/5) {
+  .portrait-stage {
+    background-image: var(--opening-beach);
+    background-position: 13% center;
+    background-size: cover;
+  }
+  .portrait-stage::before {
+    display:block;
+    top:0;
+    height:34%;
+    background:var(--opening-palms) left top / auto 100svh no-repeat;
+    mask-image:radial-gradient(ellipse 75% 85% at 0 0, #000 8%, transparent 100%);
+    -webkit-mask-image:radial-gradient(ellipse 75% 85% at 0 0, #000 8%, transparent 100%);
+  }
+  .portrait-stage::after { display:none; }
+  .mobile-heading {
+    top: 16%;
+    width: 94%;
+  }
+  .mobile-heading::before,
+  .mobile-heading h1::after {
+    content: '';
+    display:block;
+    width: min(46%, 180px);
+    height: 22px;
+    margin: 0 auto 15px;
+    background: var(--opening-hearts) center / 24px 21px no-repeat,
+      linear-gradient(90deg, transparent, #bb873f 32%, transparent 32% 68%, #bb873f 68%, transparent) center / 100% 1px no-repeat;
+    opacity:.82;
+  }
+  .mobile-heading h1 {
+    white-space: nowrap;
+    font-size: clamp(33px, 9.5vw, 54px);
+    margin: 7px 0 6px;
+  }
+  .mobile-heading h1::after { margin: 4px auto 8px; }
+  .mobile-heading time { font-size: clamp(10px, 3vw, 12px); }
+  .scene {
+    top:55%;
+    mask-image:linear-gradient(to bottom, transparent 0%, black 32%, black 85%, transparent 100%);
+    -webkit-mask-image:linear-gradient(to bottom, transparent 0%, black 32%, black 85%, transparent 100%);
+  }
+  .action-area { bottom:max(14%, calc(env(safe-area-inset-bottom) + 24px)); }
+}

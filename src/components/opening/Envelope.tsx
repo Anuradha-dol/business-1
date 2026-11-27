@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState, type CSSProperties } from 're
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import './Envelope.css';
+import './OpeningButton.css';
 import './WindStreaks.css';
 import './PaperFlight.css';
 import { wedding } from '../../data/wedding';
@@ -14,6 +15,7 @@ const date = wedding.dateLabel;
 
 const CLOSED_ASSETS = [
   `${import.meta.env.BASE_URL}assets/images/cinematic/main-background.webp`,
+  `${import.meta.env.BASE_URL}assets/images/cinematic/journey/beach-plate.webp`,
   `${ambientBase}closed-fixed-optimized.webp`,
   `${ambientBase}sky-ornament-cleanup.webp`,
   `${base}sky.webp`,
@@ -28,7 +30,6 @@ const OPENING_ASSETS = [
 ];
 
 const FIRST_CHAPTER_ASSETS = [
-  `${import.meta.env.BASE_URL}assets/images/cinematic/journey/beach-plate.webp`,
   `${import.meta.env.BASE_URL}assets/images/cinematic/journey/silk.webp`,
   `${import.meta.env.BASE_URL}assets/images/cinematic/journey/encounter-rose.webp`,
   `${import.meta.env.BASE_URL}assets/images/cinematic/journey/butterfly.webp`,
@@ -261,7 +262,13 @@ export default function Envelope({ onComplete }: EnvelopeProps) {
         </defs>
       </svg>
 
-      <div className="portrait-stage" style={{ '--sky-art': `url("${base}sky.webp")`, '--sand-art': `url("${base}sand.webp")` } as CSSProperties}>
+      <div className="portrait-stage" style={{
+        '--sky-art': `url("${base}sky.webp")`,
+        '--sand-art': `url("${base}sand.webp")`,
+        '--opening-beach': `url("${import.meta.env.BASE_URL}assets/images/cinematic/journey/beach-plate.webp")`,
+        '--opening-palms': `url("${import.meta.env.BASE_URL}assets/images/cinematic/main-background.webp")`,
+        '--opening-hearts': `url("${ambientBase}linked-hearts.svg")`,
+      } as CSSProperties}>
         <div className="opening-scene-content" inert={!ready}>
           <div className="scene">
             <div className="closed-view">
