@@ -5,7 +5,9 @@ import './admin.css';
 type InvitationType = Guest['invitation_type'];
 type GuestWithRsvp = Guest & { rsvp: Rsvp | null };
 
-const SITE_URL = 'https://a042c208.himeshi-and-madhawa.pages.dev';
+// Use the stable production hostname so invitation links don't depend on a
+// preview deployment that can expire or belong to a different commit.
+const SITE_URL = 'https://himeshi-and-madhawa.pages.dev';
 
 function inviteLink(token: string) {
   return `${SITE_URL}/?invite=${token}`;
