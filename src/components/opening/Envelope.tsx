@@ -377,7 +377,7 @@ export default function Envelope({ onComplete, onArtworkReady }: EnvelopeProps) 
             )}
             {state === 'closed' && (
               <button className="open-action" onClick={open} type="button">
-                {preparingOpen ? 'Opening…' : 'Tap to Open'} <span aria-hidden="true">&#10023;</span>
+                {preparingOpen ? 'Opening…' : 'Unseal Your Invitation'} <span aria-hidden="true">&#10023;</span>
               </button>
             )}
           </div>
