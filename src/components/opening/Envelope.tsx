@@ -287,6 +287,13 @@ export default function Envelope({ onComplete, onArtworkReady }: EnvelopeProps) 
               onLoad={() => setBirdsReady(true)}
             />
           </div>
+          <div className="opening-petal-rain" aria-hidden="true">
+            <span className="opening-petal opening-petal--1" />
+            <span className="opening-petal opening-petal--2" />
+            <span className="opening-petal opening-petal--3" />
+            <span className="opening-petal opening-petal--4" />
+            <span className="opening-petal opening-petal--5" />
+          </div>
           <div className="scene">
             <div className="closed-view">
               <img className="art" src={`${ambientBase}closed-fixed-optimized.webp`} alt="" draggable={false} fetchPriority="high" />
