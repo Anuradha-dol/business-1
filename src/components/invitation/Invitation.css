@@ -77,9 +77,7 @@
 }
 
 .wedding-home__header--scrolled {
-  background: rgba(252, 240, 222, 0.78);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: #fcf0de;
   border-bottom: 1px solid rgba(210, 165, 90, 0.25);
 }
 
