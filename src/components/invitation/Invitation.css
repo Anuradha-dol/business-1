@@ -813,24 +813,48 @@
   .stage-scene--home { padding: 14px 24px 36px; }
 }
 
-/* ── RSVP Tab: fit cleanly inside the visible stage on first open ────────── */
+/* ── Story, Day & RSVP Tabs: fit cleanly inside visible stage on first open ── */
+.stage-scene[data-section="story"],
+.stage-scene[data-section="day"],
 .stage-scene[data-section="rsvp"] {
   padding: 12px 14px max(16px, env(safe-area-inset-bottom));
 }
+.stage-scene[data-section="story"] .luxury-card,
+.stage-scene[data-section="day"] .luxury-card,
 .stage-scene[data-section="rsvp"] .luxury-card--rsvp {
   max-width: 560px;
   max-height: calc(100svh - var(--invitation-header-height) - 28px);
 }
+.stage-scene[data-section="story"] .luxury-card__inner,
+.stage-scene[data-section="day"] .luxury-card__inner,
 .stage-scene[data-section="rsvp"] .luxury-card--rsvp .luxury-card__inner {
   padding: 18px 20px 20px;
   justify-content: flex-start;
   overflow-y: auto;
 }
+.stage-scene[data-section="story"] .luxury-card__title,
+.stage-scene[data-section="day"] .luxury-card__title,
 .luxury-card--rsvp .luxury-card__title {
   font-size: clamp(28px, 4.8vw, 38px);
 }
+.stage-scene[data-section="story"] .floral-divider,
+.stage-scene[data-section="day"] .floral-divider,
 .luxury-card--rsvp .floral-divider {
   margin: 4px auto 8px;
+}
+.stage-scene[data-section="story"] .timeline-item,
+.stage-scene[data-section="day"] .timeline-item {
+  padding: 7px 4px;
+  gap: 11px;
+}
+.stage-scene[data-section="day"] .day-date-display__day {
+  font-size: 36px;
+}
+.stage-scene[data-section="day"] .countdown {
+  padding: 6px 10px;
+}
+.stage-scene[data-section="day"] .countdown__num {
+  font-size: 22px;
 }
 .luxury-card--rsvp .rsvp-confirmation {
   padding: 8px 11px;
@@ -857,12 +881,18 @@
   margin-top: 2px;
 }
 @media (min-width: 700px) {
+  .stage-scene[data-section="story"],
+  .stage-scene[data-section="day"],
   .stage-scene[data-section="rsvp"] {
     padding: 14px 24px 18px;
   }
+  .stage-scene[data-section="story"] .luxury-card,
+  .stage-scene[data-section="day"] .luxury-card,
   .stage-scene[data-section="rsvp"] .luxury-card--rsvp {
     max-height: calc(100svh - var(--invitation-header-height) - 32px);
   }
+  .stage-scene[data-section="story"] .luxury-card__inner,
+  .stage-scene[data-section="day"] .luxury-card__inner,
   .stage-scene[data-section="rsvp"] .luxury-card--rsvp .luxury-card__inner {
     padding: 22px 34px 24px;
     justify-content: flex-start;

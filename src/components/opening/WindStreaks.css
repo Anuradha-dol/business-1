@@ -10,22 +10,29 @@
 }
 
 .wind-pass {
-  display: none;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  user-select: none;
+  opacity: 0;
 }
 
 .wind-pass--1 {
-  animation: ambient-wind-pass-1 7.8s ease-in-out 0.4s infinite;
+  animation: ambient-wind-pass-1 11.5s ease-in-out 0.6s infinite;
 }
 
 .wind-pass--2 {
   top: 6%;
   transform: scaleY(-0.85);
-  animation: ambient-wind-pass-2 9.4s ease-in-out 2.6s infinite;
+  animation: ambient-wind-pass-2 14.2s ease-in-out 4.5s infinite;
 }
 
 .wind-pass--3 {
   top: -4%;
-  animation: ambient-wind-pass-3 11.2s ease-in-out 5.1s infinite;
+  animation: ambient-wind-pass-3 16.8s ease-in-out 8.2s infinite;
 }
 
 /* Soft drifting golden breeze motes */
@@ -48,27 +55,27 @@
 }
 
 @keyframes ambient-wind-pass-1 {
-  0%, 4% { opacity: 0; transform: translate3d(14%, 1.5%, 0); }
-  20% { opacity: 0.36; }
-  38% { opacity: 0.46; }
-  56% { opacity: 0.2; }
-  66%, 100% { opacity: 0; transform: translate3d(-15%, -1.5%, 0); }
+  0%, 10% { opacity: 0; transform: translate3d(12%, 1%, 0); }
+  22% { opacity: 0.24; }
+  34% { opacity: 0.30; }
+  46% { opacity: 0.10; }
+  54%, 100% { opacity: 0; transform: translate3d(-14%, -1.5%, 0); }
 }
 
 @keyframes ambient-wind-pass-2 {
-  0%, 8% { opacity: 0; transform: translate3d(16%, -2%, 0) scaleY(-0.85); }
-  26% { opacity: 0.28; }
-  45% { opacity: 0.38; }
-  64% { opacity: 0.16; }
-  74%, 100% { opacity: 0; transform: translate3d(-14%, 1%, 0) scaleY(-0.85); }
+  0%, 12% { opacity: 0; transform: translate3d(14%, -1.5%, 0) scaleY(-0.85); }
+  26% { opacity: 0.18; }
+  38% { opacity: 0.24; }
+  50% { opacity: 0.08; }
+  58%, 100% { opacity: 0; transform: translate3d(-13%, 1%, 0) scaleY(-0.85); }
 }
 
 @keyframes ambient-wind-pass-3 {
-  0%, 10% { opacity: 0; transform: translate3d(18%, 2%, 0); }
-  30% { opacity: 0.24; }
-  48% { opacity: 0.32; }
-  66% { opacity: 0.14; }
-  76%, 100% { opacity: 0; transform: translate3d(-16%, -2%, 0); }
+  0%, 14% { opacity: 0; transform: translate3d(16%, 1.5%, 0); }
+  28% { opacity: 0.16; }
+  40% { opacity: 0.22; }
+  52% { opacity: 0.08; }
+  60%, 100% { opacity: 0; transform: translate3d(-15%, -1.5%, 0); }
 }
 
 @keyframes wind-mote-drift {
@@ -100,12 +107,12 @@
 }
 
 @keyframes wind-streak-pass {
-  0% { opacity: 0; transform: translate3d(7%, 0, 0); }
-  10% { opacity: 0.6; }
-  27% { opacity: 0.95; }
-  52% { opacity: 0.88; }
-  78% { opacity: 0.52; }
-  100% { opacity: 0; transform: translate3d(-8%, -1%, 0); }
+  0% { opacity: 0; transform: translate3d(8%, 0.5%, 0); }
+  16% { opacity: 0.42; }
+  34% { opacity: 0.16; }
+  56% { opacity: 0.48; }
+  76% { opacity: 0.22; }
+  100% { opacity: 0; transform: translate3d(-9%, -1%, 0); }
 }
 
 @media (prefers-reduced-motion: reduce) {

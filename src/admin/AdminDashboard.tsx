@@ -1,19 +1,14 @@
 import { useState, useEffect, useCallback } from 'react';
 import {
   Check,
-  CheckCircle2,
-  Clock,
   Copy,
   Download,
+  ExternalLink,
   MessageCircle,
   Plus,
   RefreshCw,
   Search,
-  Sparkles,
-  UserCheck,
-  Users,
   X,
-  XCircle,
 } from 'lucide-react';
 import { supabase, type Guest, type Rsvp, formatGreeting } from '../lib/supabase';
 import { wedding } from '../data/wedding';
@@ -166,8 +161,8 @@ function GuestModal({ editing, onClose, onSaved }: GuestModalProps) {
   );
 }
 
-// ── Guest Row ────────────────────────────────────────────────
-function GuestRow({ g, onEdit, onRefresh }: { g: GuestWithRsvp; onEdit: (g: Guest) => void; onRefresh: () => void }) {
+// ── Shared Guest Actions Hook/Helpers ────────────────────────
+function useGuestActions(g: GuestWithRsvp, onRefresh: () => void) {
   const [busy, setBusy]     = useState(false);
   const [copied, setCopied] = useState(false);
   const link = inviteLink(g.token);
@@ -197,15 +192,28 @@ function GuestRow({ g, onEdit, onRefresh }: { g: GuestWithRsvp; onEdit: (g: Gues
   const rsvpStatus = g.rsvp ? g.rsvp.status : 'pending';
   const badgeClass = rsvpStatus === 'accepted' ? 'adm-badge--accepted' : rsvpStatus === 'declined' ? 'adm-badge--declined' : 'adm-badge--pending';
 
+  return { busy, copied, link, copyLink, toggleActive, deleteGuest, rsvpStatus, badgeClass };
+}
+
+// ── Desktop Guest Row ────────────────────────────────────────
+function GuestRow({ g, onEdit, onRefresh }: { g: GuestWithRsvp; onEdit: (g: Guest) => void; onRefresh: () => void }) {
+  const { busy, copied, link, copyLink, toggleActive, deleteGuest, rsvpStatus, badgeClass } = useGuestActions(g, onRefresh);
+
   return (
-    <tr style={!g.is_active ? { opacity: 0.55 } : undefined}>
+    <tr style={!g.is_active ? { opacity: 0.52 } : undefined}>
       <td>
         <div className="adm-guest-name">{g.title ? `${g.title} ` : ''}{g.name}</div>
-        {g.partner_name && <div className="adm-guest-partner">&amp; {g.partner_name}</div>}
+        {(g.partner_name || g.contact) && (
+          <div className="adm-guest-partner">
+            {g.partner_name ? `& ${g.partner_name}` : ''}
+            {g.partner_name && g.contact ? ' · ' : ''}
+            {g.contact ?? ''}
+          </div>
+        )}
       </td>
       <td><span className={`adm-badge adm-badge--${g.invitation_type}`}>{g.invitation_type}</span></td>
-      <td>{g.max_guests}</td>
-      <td>{g.rsvp ? g.rsvp.confirmed_guests : '—'}</td>
+      <td className="adm-num">{g.max_guests}</td>
+      <td className="adm-num">{g.rsvp ? g.rsvp.confirmed_guests : '—'}</td>
       <td><span className={`adm-badge ${badgeClass}`}>{rsvpStatus}</span></td>
       <td>
         {g.rsvp?.message ? (
@@ -216,27 +224,37 @@ function GuestRow({ g, onEdit, onRefresh }: { g: GuestWithRsvp; onEdit: (g: Gues
       </td>
       <td>
         <div className="adm-link-cell">
-          <span className="adm-link-text" title={link}>{g.token.slice(0, 8)}…</span>
+          <span className="adm-link-text" title={link}>{g.token.slice(0, 8)}</span>
           <button
             className={`adm-icon-btn${copied ? ' adm-icon-btn--copied' : ''}`}
             title={copied ? 'Copied!' : 'Copy invitation link'}
             aria-label="Copy invitation link"
             onClick={copyLink}
           >
-            {copied ? <Check size={15} /> : <Copy size={15} />}
+            {copied ? <Check size={14} /> : <Copy size={14} />}
           </button>
+          <a
+            className="adm-icon-btn"
+            href={link}
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Preview guest invitation"
+            aria-label="Preview guest invitation"
+          >
+            <ExternalLink size={14} />
+          </a>
           <button
             className="adm-icon-btn"
             title="Share on WhatsApp"
             aria-label="Share invitation on WhatsApp"
             onClick={() => whatsapp(g)}
           >
-            <MessageCircle size={15} />
+            <MessageCircle size={14} />
           </button>
         </div>
       </td>
       <td>
-        <div style={{ display: 'flex', gap: 6 }}>
+        <div className="adm-row-actions">
           <button className="adm-btn adm-btn--ghost adm-btn--sm" onClick={() => onEdit(g)}>Edit</button>
           <button className="adm-btn adm-btn--ghost adm-btn--sm" disabled={busy} onClick={toggleActive}>
             {g.is_active ? 'Deactivate' : 'Activate'}
@@ -250,15 +268,94 @@ function GuestRow({ g, onEdit, onRefresh }: { g: GuestWithRsvp; onEdit: (g: Gues
   );
 }
 
+// ── Mobile Guest Card (Zero Horizontal Swiping) ──────────────
+function GuestMobileCard({ g, onEdit, onRefresh }: { g: GuestWithRsvp; onEdit: (g: Guest) => void; onRefresh: () => void }) {
+  const { busy, copied, link, copyLink, toggleActive, deleteGuest, rsvpStatus, badgeClass } = useGuestActions(g, onRefresh);
+
+  return (
+    <article className="adm-gcard" style={!g.is_active ? { opacity: 0.58 } : undefined}>
+      <div className="adm-gcard__head">
+        <div>
+          <div className="adm-guest-name">{g.title ? `${g.title} ` : ''}{g.name}</div>
+          {(g.partner_name || g.contact) && (
+            <div className="adm-guest-partner">
+              {g.partner_name ? `& ${g.partner_name}` : ''}
+              {g.partner_name && g.contact ? ' · ' : ''}
+              {g.contact ?? ''}
+            </div>
+          )}
+        </div>
+        <span className={`adm-badge ${badgeClass}`}>{rsvpStatus}</span>
+      </div>
+
+      <div className="adm-gcard__meta">
+        <div>
+          <span className="adm-gcard__k">Type</span>
+          <span className={`adm-badge adm-badge--${g.invitation_type}`}>{g.invitation_type}</span>
+        </div>
+        <div>
+          <span className="adm-gcard__k">Seats</span>
+          <strong className="adm-gcard__v">
+            {g.rsvp ? `${g.rsvp.confirmed_guests} / ${g.max_guests}` : `— / ${g.max_guests}`}
+          </strong>
+        </div>
+        <div>
+          <span className="adm-gcard__k">Status</span>
+          <strong className="adm-gcard__v">{g.is_active ? 'Active' : 'Inactive'}</strong>
+        </div>
+      </div>
+
+      {g.rsvp?.message && (
+        <p className="adm-gcard__msg">“{g.rsvp.message}”</p>
+      )}
+
+      <div className="adm-gcard__actions">
+        <div className="adm-gcard__share">
+          <button
+            className={`adm-btn adm-btn--ghost adm-btn--sm${copied ? ' adm-btn--copied' : ''}`}
+            onClick={copyLink}
+          >
+            {copied ? <Check size={13} /> : <Copy size={13} />}
+            {copied ? 'Copied' : 'Copy Link'}
+          </button>
+          <button className="adm-btn adm-btn--ghost adm-btn--sm" onClick={() => whatsapp(g)}>
+            <MessageCircle size={13} />
+            WhatsApp
+          </button>
+          <a
+            className="adm-btn adm-btn--ghost adm-btn--sm"
+            href={link}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <ExternalLink size={13} />
+            Open
+          </a>
+        </div>
+        <div className="adm-gcard__manage">
+          <button className="adm-btn adm-btn--ghost adm-btn--sm" onClick={() => onEdit(g)}>Edit</button>
+          <button className="adm-btn adm-btn--ghost adm-btn--sm" disabled={busy} onClick={toggleActive}>
+            {g.is_active ? 'Deactivate' : 'Activate'}
+          </button>
+          <button className="adm-btn adm-btn--danger adm-btn--sm" disabled={busy} onClick={deleteGuest}>
+            Delete
+          </button>
+        </div>
+      </div>
+    </article>
+  );
+}
+
 // ── Main Dashboard ───────────────────────────────────────────
 export default function AdminDashboard() {
-  const [guests, setGuests]     = useState<GuestWithRsvp[]>([]);
-  const [loading, setLoading]   = useState(true);
-  const [search, setSearch]     = useState('');
-  const [filter, setFilter]     = useState<'all' | 'accepted' | 'declined' | 'pending'>('all');
-  const [showCreate, setCreate] = useState(false);
-  const [editing, setEditing]   = useState<Guest | null>(null);
-  const [stats, setStats]       = useState({ total: 0, accepted: 0, declined: 0, pending: 0, attending: 0 });
+  const [guests, setGuests]         = useState<GuestWithRsvp[]>([]);
+  const [loading, setLoading]       = useState(true);
+  const [search, setSearch]         = useState('');
+  const [filter, setFilter]         = useState<'all' | 'accepted' | 'declined' | 'pending'>('all');
+  const [typeFilter, setTypeFilter] = useState<'all' | InvitationType>('all');
+  const [showCreate, setCreate]     = useState(false);
+  const [editing, setEditing]       = useState<Guest | null>(null);
+  const [stats, setStats]           = useState({ total: 0, accepted: 0, declined: 0, pending: 0, attending: 0, maxSeats: 0 });
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -276,7 +373,8 @@ export default function AdminDashboard() {
       const accepted  = rows.filter(g => g.rsvp?.status === 'accepted').length;
       const declined  = rows.filter(g => g.rsvp?.status === 'declined').length;
       const attending = rows.filter(g => g.rsvp?.status === 'accepted').reduce((s, g) => s + (g.rsvp?.confirmed_guests ?? 0), 0);
-      setStats({ total: rows.length, accepted, declined, pending: rows.length - accepted - declined, attending });
+      const maxSeats  = rows.reduce((s, g) => s + (g.max_guests || 0), 0);
+      setStats({ total: rows.length, accepted, declined, pending: rows.length - accepted - declined, attending, maxSeats });
     }
     setLoading(false);
   }, []);
@@ -285,14 +383,22 @@ export default function AdminDashboard() {
 
   const filtered = guests.filter(g => {
     const q = search.toLowerCase();
-    const matchSearch = !q || g.name.toLowerCase().includes(q) || (g.partner_name ?? '').toLowerCase().includes(q) || (g.rsvp?.message ?? '').toLowerCase().includes(q);
-    const matchFilter = filter === 'all' || (filter === 'accepted' && g.rsvp?.status === 'accepted') || (filter === 'declined' && g.rsvp?.status === 'declined') || (filter === 'pending' && !g.rsvp);
-    return matchSearch && matchFilter;
+    const matchSearch = !q
+      || g.name.toLowerCase().includes(q)
+      || (g.partner_name ?? '').toLowerCase().includes(q)
+      || (g.contact ?? '').toLowerCase().includes(q)
+      || (g.rsvp?.message ?? '').toLowerCase().includes(q);
+    const matchFilter = filter === 'all'
+      || (filter === 'accepted' && g.rsvp?.status === 'accepted')
+      || (filter === 'declined' && g.rsvp?.status === 'declined')
+      || (filter === 'pending' && !g.rsvp);
+    const matchType = typeFilter === 'all' || g.invitation_type === typeFilter;
+    return matchSearch && matchFilter && matchType;
   });
 
-  const responseRate = stats.total > 0
-    ? Math.round(((stats.accepted + stats.declined) / stats.total) * 100)
-    : 0;
+  const respondedCount = stats.accepted + stats.declined;
+  const responseRate = stats.total > 0 ? Math.round((respondedCount / stats.total) * 100) : 0;
+  const seatPct = stats.maxSeats > 0 ? Math.min(100, Math.round((stats.attending / stats.maxSeats) * 100)) : 0;
 
   const exportCsv = () => {
     const headers = ['Name','Title','Type','Partner','Max Guests','Confirmed','RSVP Status','Message','Token','Active','Created'];
@@ -314,93 +420,13 @@ export default function AdminDashboard() {
     <main className="adm-main">
       <div className="adm-header">
         <div>
-          <div className="adm-header__eyebrow">Invitation Concierge</div>
+          <div className="adm-header__eyebrow">Guest Concierge</div>
           <h1 className="adm-page-title">Guest Directory &amp; Attendance</h1>
           <p className="adm-page-sub">
-            Manage personal invitations, monitor live RSVP confirmations, and coordinate guest arrivals.
+            {respondedCount} of {stats.total} invitations responded ({responseRate}%) &middot; {stats.attending} of {stats.maxSeats} seats confirmed
           </p>
         </div>
-        <div className="adm-header__pill">
-          <Sparkles size={14} color="#a56c20" />
-          <span>Response Rate: <strong>{responseRate}%</strong></span>
-        </div>
-      </div>
-
-      {/* Stats */}
-      <div className="adm-stats">
-        <div className="adm-stat">
-          <div className="adm-stat__top">
-            <span className="adm-stat__label">Total Invitations</span>
-            <span className="adm-stat__icon"><Users size={15} /></span>
-          </div>
-          <div className="adm-stat__value adm-stat__value--gold">{stats.total}</div>
-        </div>
-        <div className="adm-stat">
-          <div className="adm-stat__top">
-            <span className="adm-stat__label">Accepted</span>
-            <span className="adm-stat__icon adm-stat__icon--green"><CheckCircle2 size={15} /></span>
-          </div>
-          <div className="adm-stat__value adm-stat__value--green">{stats.accepted}</div>
-        </div>
-        <div className="adm-stat">
-          <div className="adm-stat__top">
-            <span className="adm-stat__label">Declined</span>
-            <span className="adm-stat__icon adm-stat__icon--red"><XCircle size={15} /></span>
-          </div>
-          <div className="adm-stat__value adm-stat__value--red">{stats.declined}</div>
-        </div>
-        <div className="adm-stat">
-          <div className="adm-stat__top">
-            <span className="adm-stat__label">Awaiting Reply</span>
-            <span className="adm-stat__icon"><Clock size={15} /></span>
-          </div>
-          <div className="adm-stat__value">{stats.pending}</div>
-        </div>
-        <div className="adm-stat">
-          <div className="adm-stat__top">
-            <span className="adm-stat__label">Confirmed Guests</span>
-            <span className="adm-stat__icon adm-stat__icon--blue"><UserCheck size={15} /></span>
-          </div>
-          <div className="adm-stat__value adm-stat__value--blue">{stats.attending}</div>
-        </div>
-      </div>
-
-      {/* Toolbar */}
-      <div className="adm-toolbar">
-        <div className="adm-toolbar__left">
-          <div className="adm-search">
-            <span className="adm-search__icon" aria-hidden="true"><Search size={15} /></span>
-            <input
-              className="adm-input"
-              placeholder="Search guests, partners, or messages…"
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-            />
-          </div>
-
-          <div className="adm-filter-tabs" role="tablist" aria-label="Filter guests by RSVP status">
-            {([
-              ['all', 'All', stats.total],
-              ['accepted', 'Accepted', stats.accepted],
-              ['declined', 'Declined', stats.declined],
-              ['pending', 'Pending', stats.pending],
-            ] as const).map(([key, label, count]) => (
-              <button
-                key={key}
-                type="button"
-                role="tab"
-                aria-selected={filter === key}
-                className={`adm-filter-tab${filter === key ? ' adm-filter-tab--active' : ''}`}
-                onClick={() => setFilter(key)}
-              >
-                <span>{label}</span>
-                <span className="adm-filter-count">{count}</span>
-              </button>
-            ))}
-          </div>
-        </div>
-
-        <div className="adm-toolbar__right">
+        <div className="adm-header__actions">
           <button className="adm-btn adm-btn--ghost" onClick={() => void load()} disabled={loading} aria-label="Refresh guest responses">
             <RefreshCw size={14} className={loading ? 'adm-spin' : undefined} />
             Refresh
@@ -416,30 +442,121 @@ export default function AdminDashboard() {
         </div>
       </div>
 
-      {/* Table */}
+      {/* Executive Summary Strip */}
+      <div className="adm-stats">
+        <div className="adm-stat">
+          <div className="adm-stat__label">Total Invitations</div>
+          <div className="adm-stat__value adm-stat__value--gold">{stats.total}</div>
+          <div className="adm-stat__meta">{respondedCount} responded</div>
+        </div>
+        <div className="adm-stat">
+          <div className="adm-stat__label">Accepted</div>
+          <div className="adm-stat__value adm-stat__value--green">{stats.accepted}</div>
+          <div className="adm-stat__meta">{stats.total > 0 ? Math.round((stats.accepted / stats.total) * 100) : 0}% of list</div>
+        </div>
+        <div className="adm-stat">
+          <div className="adm-stat__label">Declined</div>
+          <div className="adm-stat__value adm-stat__value--red">{stats.declined}</div>
+          <div className="adm-stat__meta">{stats.total > 0 ? Math.round((stats.declined / stats.total) * 100) : 0}% of list</div>
+        </div>
+        <div className="adm-stat">
+          <div className="adm-stat__label">Awaiting Reply</div>
+          <div className="adm-stat__value">{stats.pending}</div>
+          <div className="adm-stat__meta">Pending RSVP</div>
+        </div>
+        <div className="adm-stat adm-stat--wide">
+          <div className="adm-stat__label">Confirmed Headcount</div>
+          <div className="adm-stat__row">
+            <div className="adm-stat__value adm-stat__value--blue">{stats.attending}</div>
+            <span className="adm-stat__cap">/ {stats.maxSeats} max</span>
+          </div>
+          <div className="adm-progress" aria-hidden="true">
+            <span style={{ width: `${seatPct}%` }} />
+          </div>
+        </div>
+      </div>
+
+      {/* Toolbar */}
+      <div className="adm-toolbar">
+        <div className="adm-toolbar__left">
+          <div className="adm-search">
+            <span className="adm-search__icon" aria-hidden="true"><Search size={15} /></span>
+            <input
+              className="adm-input"
+              placeholder="Search name, partner, contact, or note…"
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+            />
+          </div>
+
+          <select
+            className="adm-select adm-type-select"
+            aria-label="Filter by invitation type"
+            value={typeFilter}
+            onChange={e => setTypeFilter(e.target.value as 'all' | InvitationType)}
+          >
+            <option value="all">All Types</option>
+            <option value="individual">Individual</option>
+            <option value="couple">Couple</option>
+            <option value="family">Family</option>
+            <option value="custom">Custom</option>
+          </select>
+        </div>
+
+        <div className="adm-filter-tabs" role="tablist" aria-label="Filter guests by RSVP status">
+          {([
+            ['all', 'All', stats.total],
+            ['accepted', 'Accepted', stats.accepted],
+            ['declined', 'Declined', stats.declined],
+            ['pending', 'Pending', stats.pending],
+          ] as const).map(([key, label, count]) => (
+            <button
+              key={key}
+              type="button"
+              role="tab"
+              aria-selected={filter === key}
+              className={`adm-filter-tab${filter === key ? ' adm-filter-tab--active' : ''}`}
+              onClick={() => setFilter(key)}
+            >
+              <span>{label}</span>
+              <span className="adm-filter-count">{count}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Guest Directory (Desktop Table + Mobile Cards) */}
       {loading ? (
         <div className="adm-table-wrap">
           <div className="adm-loading"><span className="adm-spinner" style={{ marginRight: 8 }} />Loading guest directory…</div>
         </div>
-      ) : (
+      ) : filtered.length === 0 ? (
         <div className="adm-table-wrap">
-          <table className="adm-table">
-            <thead>
-              <tr>
-                <th>Guest</th><th>Type</th><th>Max</th><th>Confirmed</th><th>RSVP Status</th><th>Guest Message</th><th>Invitation Link</th><th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.length === 0 ? (
-                <tr><td colSpan={8} className="adm-empty">No guests match your current search or filter.</td></tr>
-              ) : (
-                filtered.map(g => (
-                  <GuestRow key={g.id} g={g} onEdit={setEditing} onRefresh={load} />
-                ))
-              )}
-            </tbody>
-          </table>
+          <div className="adm-empty">No guests match your current search or filter.</div>
         </div>
+      ) : (
+        <>
+          <div className="adm-table-wrap adm-desktop-only">
+            <table className="adm-table">
+              <thead>
+                <tr>
+                  <th>Guest</th><th>Type</th><th>Max</th><th>Confirmed</th><th>RSVP</th><th>Message</th><th>Invitation Link</th><th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filtered.map(g => (
+                  <GuestRow key={g.id} g={g} onEdit={setEditing} onRefresh={load} />
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <div className="adm-mobile-cards">
+            {filtered.map(g => (
+              <GuestMobileCard key={g.id} g={g} onEdit={setEditing} onRefresh={load} />
+            ))}
+          </div>
+        </>
       )}
 
       {(showCreate || editing) && (
