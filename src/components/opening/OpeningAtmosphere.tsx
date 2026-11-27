@@ -8,7 +8,6 @@ export default function OpeningAtmosphere() {
       <div className="opening-atmosphere__palm">
         <img src={`${images}main-background.webp`} alt="" draggable={false} />
       </div>
-      <img className="opening-atmosphere__fabric" src={`${images}journey/silk.webp`} alt="" draggable={false} />
     </div>
   );
 }

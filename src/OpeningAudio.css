@@ -5,17 +5,17 @@
   right: max(12px, env(safe-area-inset-right));
   display: inline-flex;
   align-items: center;
+  min-height: 44px;
   gap: 6px;
-  padding: 7px 12px;
-  border: 1px solid rgba(201, 154, 90, 0.75);
-  border-radius: 999px;
-  background: rgba(255, 247, 232, 0.92);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  color: #80521f;
-  box-shadow: 0 3px 14px rgba(109, 68, 28, 0.14);
+  padding: 8px 4px;
+  border: 0;
+  border-bottom: 1px solid rgba(126, 82, 38, .55);
+  border-radius: 0;
+  background: transparent;
+  color: #684219;
+  text-shadow: 0 1px 4px rgba(255, 247, 232, .95);
   font: 600 10px/1.2 Georgia, serif;
-  letter-spacing: .04em;
+  letter-spacing: .07em;
 }
 
 .opening-audio:focus-visible {

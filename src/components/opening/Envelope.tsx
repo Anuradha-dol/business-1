@@ -15,23 +15,26 @@ const names = `${wedding.bride} & ${wedding.groom}`;
 const date = wedding.dateLabel;
 
 const CLOSED_ASSETS = [
-  `${import.meta.env.BASE_URL}assets/images/cinematic/main-background.webp`,
+  `${import.meta.env.BASE_URL}assets/images/cinematic/ambient/closed-fixed-optimized.webp`,
   `${import.meta.env.BASE_URL}assets/images/cinematic/journey/beach-plate.webp`,
-  `${import.meta.env.BASE_URL}assets/images/cinematic/journey/silk.webp`,
-  `${ambientBase}closed-fixed-optimized.webp`,
+  `${import.meta.env.BASE_URL}assets/images/cinematic/main-background.webp`,
+];
+
+const BACKGROUND_CLOSED_ASSETS = [
   `${ambientBase}sky-ornament-cleanup.webp`,
   `${base}sky.webp`,
   `${base}sand.webp`,
 ];
 
 const OPENING_ASSETS = [
-  `${ambientBase}envelope-isolated.webp`,
+  `${ambientBase}envelope-isolated-e71f21f1b289.webp`,
   `${ambientBase}flap-clean.webp`,
-  `${ambientBase}scalloped-card.webp`,
+  `${ambientBase}scalloped-card-883012c28e99.webp`,
   `${ambientBase}opening-clear-optimized.webp`,
 ];
 
 const FIRST_CHAPTER_ASSETS = [
+  `${import.meta.env.BASE_URL}assets/images/cinematic/journey/silk.webp`,
   `${import.meta.env.BASE_URL}assets/images/cinematic/journey/encounter-rose.webp`,
   `${import.meta.env.BASE_URL}assets/images/cinematic/journey/butterfly.webp`,
 ];
@@ -97,12 +100,13 @@ export default function Envelope({ onComplete, onArtworkReady }: EnvelopeProps) 
       resolveClosedScene();
     };
     // Do not leave a guest waiting indefinitely on a stalled connection.
-    const timeout = setTimeout(showClosedScene, 2500);
+    const timeout = setTimeout(showClosedScene, 8000);
     Promise.all(CLOSED_ASSETS.map(preloadImage)).then(() => {
       clearTimeout(timeout);
       showClosedScene();
       if (cancelled) return;
       onArtworkReady?.();
+      BACKGROUND_CLOSED_ASSETS.forEach(src => { void preloadImage(src); });
       // Let the visible artwork finish before warming the opening and Home.
       void preloadOpening().then(async () => {
         if (cancelled) return;
@@ -243,15 +247,15 @@ export default function Envelope({ onComplete, onArtworkReady }: EnvelopeProps) 
 
   return (
     <main className={`invitation-opening${ready ? ' invitation-opening--ready' : ''}`} ref={root} aria-busy={state === 'opening' || !ready || preparingOpen}>
-      {!ready && (
-        <div className="opening-loader">
+        <div className={`opening-loader${ready ? ' opening-loader--hidden' : ''}`} aria-hidden={ready} inert={ready}>
+          <p className="opening-loader__eyebrow">A celebration of love</p>
           <div className="opening-loader__crest">{wedding.monogram}</div>
+          <p className="opening-loader__status" role="status">Preparing your invitation</p>
           <div className="opening-loader__bar" aria-hidden="true"><span /></div>
-          <button className="open-action opening-loader__action" onClick={open} type="button" disabled={pendingOpen}>
-            {pendingOpen ? 'Opening…' : 'Tap to Open'} <span aria-hidden="true">&#10023;</span>
+          <button className="opening-loader__action" onClick={open} type="button" disabled={pendingOpen}>
+            {pendingOpen ? 'Opening…' : 'Continue'} <span aria-hidden="true">&#8594;</span>
           </button>
         </div>
-      )}
 
       <svg className="wind-filters" aria-hidden="true" focusable="false">
         <defs>
@@ -298,11 +302,11 @@ export default function Envelope({ onComplete, onArtworkReady }: EnvelopeProps) 
               {/* Solid warm-gold inner pocket backing prevents the sea from bleeding through */}
               <div className="envelope-inner-pocket" aria-hidden="true" />
               <div className="opening-lining">
-                <img className="isolated-envelope" src={openingImagesRequested ? `${ambientBase}envelope-isolated.webp` : undefined} alt="" />
+                <img className="isolated-envelope" src={openingImagesRequested ? `${ambientBase}envelope-isolated-e71f21f1b289.webp` : undefined} alt="" />
               </div>
               <div className="opening-back">
                 <div className="opening-back-image">
-                  <img className="isolated-envelope" src={openingImagesRequested ? `${ambientBase}envelope-isolated.webp` : undefined} alt="" />
+                  <img className="isolated-envelope" src={openingImagesRequested ? `${ambientBase}envelope-isolated-e71f21f1b289.webp` : undefined} alt="" />
                 </div>
               </div>
               <div className="card-viewport">
@@ -310,14 +314,14 @@ export default function Envelope({ onComplete, onArtworkReady }: EnvelopeProps) 
                   <img className="wind-streak-overlay" src={`${ambientBase}wind-streaks.svg`} alt="" draggable={false} />
                   <div className="card-flutter" style={{ position: 'absolute', inset: 0 }}>
                     <div className="paper-surface">
-                      <img className="complete-card" src={openingImagesRequested ? `${ambientBase}scalloped-card.webp` : undefined} alt="" draggable={false} />
+                      <img className="complete-card" src={openingImagesRequested ? `${ambientBase}scalloped-card-883012c28e99.webp` : undefined} alt="" draggable={false} />
                       <div className="card-motif" aria-hidden="true">
                         <img className="card-filigree" src={`${ambientBase}card-filigree.svg`} alt="" />
-                        <div className="card-shell-cleanup"><img src={openingImagesRequested ? `${ambientBase}scalloped-card.webp` : undefined} alt="" /></div>
+                        <div className="card-shell-cleanup"><img src={openingImagesRequested ? `${ambientBase}scalloped-card-883012c28e99.webp` : undefined} alt="" /></div>
                         <img className="card-love-ornament" src={`${ambientBase}linked-hearts.svg`} alt="" />
                       </div>
                       {lettering}
-                      <span className="paper-curl-light" style={{ maskImage: openingImagesRequested ? `url("${ambientBase}scalloped-card.webp")` : 'none' }} aria-hidden="true" />
+                      <span className="paper-curl-light" style={{ maskImage: openingImagesRequested ? `url("${ambientBase}scalloped-card-883012c28e99.webp")` : 'none' }} aria-hidden="true" />
                     </div>
                   </div>
                 </div>

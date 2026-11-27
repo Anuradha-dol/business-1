@@ -8,3 +8,9 @@
 
 /assets/fonts/GreatVibes-fd86ce7ba460.woff2
   Cache-Control: public, max-age=31536000, immutable
+
+/assets/images/cinematic/ambient/envelope-isolated-e71f21f1b289.webp
+  Cache-Control: public, max-age=31536000, immutable
+
+/assets/images/cinematic/ambient/scalloped-card-883012c28e99.webp
+  Cache-Control: public, max-age=31536000, immutable

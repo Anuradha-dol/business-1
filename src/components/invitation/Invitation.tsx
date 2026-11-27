@@ -7,9 +7,7 @@ import {
 import { wedding } from '../../data/wedding';
 import CinematicJourney from './cinematic/CinematicJourney';
 import StorySection from './StorySection';
-import { useSectionScrollMotion } from './useSectionScrollMotion';
 import './Invitation.css';
-import './SectionMotion.css';
 
 type SectionId = 'home' | 'story' | 'day' | 'venue' | 'rsvp';
 type RsvpDraft = { name: string; attendance: string; guests: string; message: string };
@@ -328,56 +326,13 @@ const navItems: { id: SectionId; label: string; icon: typeof Heart }[] = [
 ];
 
 export default function Invitation({ onReplay, music }: Props) {
-  useSectionScrollMotion();
   const [active, setActive] = useState<SectionId>('home');
-  const headerRef = useRef<HTMLElement>(null);
-  const stageRef = useRef<HTMLDivElement>(null);
   const [petalBurstKey, setPetalBurstKey] = useState(0);
   const { playing, needsGesture, toggle } = music;
 
-  useEffect(() => {
-    const header = headerRef.current;
-    const stage = stageRef.current;
-    if (!header || !stage) return;
-    const sections = Array.from(stage.querySelectorAll<HTMLElement>('[data-section]'));
-    let frame = 0;
-    let headerHeight = header.getBoundingClientRect().height;
-    const measureHeader = () => {
-      headerHeight = header.getBoundingClientRect().height;
-      stage.style.setProperty('--invitation-header-height', `${headerHeight}px`);
-      schedule();
-    };
-    const update = () => {
-      frame = 0;
-      // The section crossing this reading line owns the navigation state, even
-      // when its content is taller than the viewport on a small screen.
-      const readingLine = headerHeight + (window.innerHeight - headerHeight) * .4;
-      const current = sections.find(section => {
-        const rect = section.getBoundingClientRect();
-        return rect.top <= readingLine && rect.bottom > readingLine;
-      });
-      if (current) setActive(current.dataset.section as SectionId);
-    };
-    const schedule = () => { if (!frame) frame = requestAnimationFrame(update); };
-    const resizeObserver = new ResizeObserver(measureHeader);
-    resizeObserver.observe(header);
-    window.addEventListener('scroll', schedule, { passive: true });
-    window.addEventListener('resize', measureHeader, { passive: true });
-    measureHeader();
-    return () => {
-      window.removeEventListener('scroll', schedule);
-      window.removeEventListener('resize', measureHeader);
-      resizeObserver.disconnect();
-      if (frame) cancelAnimationFrame(frame);
-    };
-  }, []);
-
+  /* Pure tab-switcher: no scroll, just setActive */
   const changeSection = (next: SectionId) => {
-    const target = stageRef.current?.querySelector<HTMLElement>(`[data-section="${next}"]`);
-    target?.scrollIntoView({
-      behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth',
-      block: 'start',
-    });
+    setActive(next);
   };
 
   /* Preload all journey & floral assets immediately so tab/scroll transitions are instant */
@@ -437,7 +392,7 @@ export default function Invitation({ onReplay, music }: Props) {
       <GoldenParticles />
       <PetalRain burstKey={petalBurstKey} />
 
-      <header ref={headerRef} className="wedding-home__header wedding-home__header--scrolled">
+      <header className="wedding-home__header wedding-home__header--scrolled">
         <button className="wedding-home__monogram" onClick={() => changeSection('home')} aria-label="Home">
           {wedding.monogram}<span>⌁ ❧ ⌁</span>
         </button>
@@ -467,7 +422,7 @@ export default function Invitation({ onReplay, music }: Props) {
         {needsGesture && <span className="wedding-home__music-error" role="status">Tap Music to play the song.</span>}
       </header>
 
-      <div className="wedding-stage" ref={stageRef}>
+      <div className="wedding-stage">
 
         {/* ── HOME: A JOURNEY TO FOREVER ─────────────────────────────────── */}
         <section data-section="home" className={`stage-scene stage-scene--home${active === 'home' ? ' is-active' : ''}`} aria-label="A Journey to Forever">
