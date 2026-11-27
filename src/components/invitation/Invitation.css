@@ -713,6 +713,14 @@
   width: 32px; height: 32px; border: 0; background: transparent;
   color: #8a5815; font: 600 16px/1 Georgia, serif; display: grid; place-items: center;
 }
+.guest-stepper__btn:disabled {
+  opacity: .35;
+  cursor: not-allowed;
+}
+.guest-stepper--locked {
+  background: rgba(244, 232, 210, .75);
+  border-color: rgba(185, 145, 90, .45);
+}
 .guest-stepper__val {
   min-width: 32px; text-align: center; font: 600 13.5px/1 Georgia, serif; color: #8a5815;
   border-left: 1px solid rgba(215,180,130,.35); border-right: 1px solid rgba(215,180,130,.35);
@@ -807,4 +815,60 @@
   .wedding-stage { padding: 0; }
   .stage-scene { padding: 30px 24px 40px; }
   .stage-scene--home { padding: 14px 24px 36px; }
+}
+
+/* ── RSVP Tab: fit cleanly inside the visible stage on first open ────────── */
+.stage-scene[data-section="rsvp"] {
+  padding: 12px 14px max(16px, env(safe-area-inset-bottom));
+}
+.stage-scene[data-section="rsvp"] .luxury-card--rsvp {
+  max-width: 560px;
+  max-height: calc(100svh - var(--invitation-header-height) - 28px);
+}
+.stage-scene[data-section="rsvp"] .luxury-card--rsvp .luxury-card__inner {
+  padding: 18px 20px 20px;
+  justify-content: flex-start;
+  overflow-y: auto;
+}
+.luxury-card--rsvp .luxury-card__title {
+  font-size: clamp(28px, 4.8vw, 38px);
+}
+.luxury-card--rsvp .floral-divider {
+  margin: 4px auto 8px;
+}
+.luxury-card--rsvp .rsvp-confirmation {
+  padding: 8px 11px;
+  margin-bottom: 8px;
+}
+.luxury-card--rsvp .luxury-rsvp {
+  gap: 8px;
+}
+.luxury-card--rsvp .luxury-rsvp__field {
+  gap: 4px;
+}
+.luxury-card--rsvp .luxury-rsvp__input {
+  padding: 8px 12px;
+  font-size: 13px;
+}
+.luxury-card--rsvp .rsvp-toggle__btn {
+  padding: 8px 6px;
+}
+.luxury-card--rsvp .luxury-rsvp__field--inline {
+  padding: 5px 2px;
+}
+.luxury-card--rsvp .luxury-rsvp__submit {
+  padding: 11px 18px;
+  margin-top: 2px;
+}
+@media (min-width: 700px) {
+  .stage-scene[data-section="rsvp"] {
+    padding: 14px 24px 18px;
+  }
+  .stage-scene[data-section="rsvp"] .luxury-card--rsvp {
+    max-height: calc(100svh - var(--invitation-header-height) - 32px);
+  }
+  .stage-scene[data-section="rsvp"] .luxury-card--rsvp .luxury-card__inner {
+    padding: 22px 34px 24px;
+    justify-content: flex-start;
+  }
 }

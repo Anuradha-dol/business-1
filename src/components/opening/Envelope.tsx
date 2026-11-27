@@ -33,6 +33,7 @@ const OPENING_ASSETS = [
   `${ambientBase}flap-clean.webp`,
   `${ambientBase}scalloped-card-883012c28e99.webp`,
   `${ambientBase}opening-clear-optimized.webp`,
+  `${ambientBase}sky-birds-pair.webp`,
 ];
 
 const FIRST_CHAPTER_ASSETS = [
@@ -124,7 +125,7 @@ export default function Envelope({ onComplete, onArtworkReady }: EnvelopeProps) 
 
   const { contextSafe } = useGSAP(() => {
     gsap.set('.opening-back', { scaleY: 0 });
-    gsap.set('.sky-birds', { autoAlpha: 0 });
+    gsap.set('.sky-birds', { autoAlpha: 0, xPercent: 0, yPercent: 0, scale: 1, rotation: -3 });
     gsap.set('.opening-lining', { opacity: 0 });
     gsap.set('.card-viewport', { autoAlpha: 0 });
     gsap.set('.floating-card', { xPercent: -2.1, yPercent: 29, scale: 0.94 });
@@ -159,9 +160,10 @@ export default function Envelope({ onComplete, onArtworkReady }: EnvelopeProps) 
       .to('.opening-back', { scaleY: 1, duration: 1.25, ease: 'sine.inOut' }, 0.95)
       .to('.opening-flap', { autoAlpha: 0, duration: 0.3, ease: 'sine.inOut' }, 1.15)
       .to('.card-viewport', { autoAlpha: 1, duration: 0.5, ease: 'sine.inOut' }, 1.85)
-      .to('.sky-birds', { autoAlpha: 1, duration: 0.6, ease: 'sine.inOut' }, 2.05)
+      .to('.sky-birds', { autoAlpha: 0.96, duration: 0.7, ease: 'sine.out' }, 1.95)
+      .to('.sky-birds', { xPercent: 95, yPercent: -105, scale: 0.24, rotation: 4, duration: 3.4, ease: 'sine.inOut' }, 1.95)
       .to('.floating-card', { yPercent: -15, scale: 0.8, rotation: -0.8, duration: 2.8, ease: 'sine.inOut' }, 2.15)
-      .to('.sky-birds', { autoAlpha: 0, duration: 0.4, ease: 'sine.inOut' }, 4.7)
+      .to('.sky-birds', { autoAlpha: 0, duration: 1.15, ease: 'sine.in' }, 4.2)
       .to('.card-viewport', { clipPath: 'polygon(0% 0%,100% 0%,100% 100%,100% 100%,100% 100%,0% 100%,0% 100%,0% 100%)', duration: 0.55, ease: 'sine.inOut' }, 4.45)
       .set('.card-viewport', { zIndex: 5 }, 5.0)
       .add(() => root.current?.classList.add('gust'), 4.85)
@@ -272,24 +274,12 @@ export default function Envelope({ onComplete, onArtworkReady }: EnvelopeProps) 
         <div className="opening-scene-content" inert={!ready}>
           <OpeningAtmosphere />
           <div className="sky-birds" aria-hidden="true">
-            <svg className="sky-bird sky-bird--one" viewBox="0 0 160 100" focusable="false">
-              <g className="sky-bird__shape">
-                <path className="sky-bird__wing sky-bird__wing--left" d="M78 52C60 42 49 22 18 10c12 25 25 39 46 50-16-4-29 0-47 12 25-4 41-4 62-10Z" />
-                <path className="sky-bird__wing sky-bird__wing--right" d="M82 52c18-13 34-34 63-40-10 24-26 40-48 51 17-4 31-1 49 10-25-3-42-3-64-9Z" />
-                <path className="sky-bird__body" d="M52 54c17-10 38-14 59-8l31-8-20 17c-15 10-34 13-52 8L52 77l8-17-27 4 19-10Z" />
-                <path className="sky-bird__tail" d="M57 58 27 53l23 12-20 14 31-9M57 59 42 42l25 12" />
-                <path className="sky-bird__beak" d="m139 47 18-5-15 10Z" />
-              </g>
-            </svg>
-            <svg className="sky-bird sky-bird--two" viewBox="0 0 160 100" focusable="false">
-              <g className="sky-bird__shape">
-                <path className="sky-bird__wing sky-bird__wing--left" d="M78 52C60 42 49 22 18 10c12 25 25 39 46 50-16-4-29 0-47 12 25-4 41-4 62-10Z" />
-                <path className="sky-bird__wing sky-bird__wing--right" d="M82 52c18-13 34-34 63-40-10 24-26 40-48 51 17-4 31-1 49 10-25-3-42-3-64-9Z" />
-                <path className="sky-bird__body" d="M52 54c17-10 38-14 59-8l31-8-20 17c-15 10-34 13-52 8L52 77l8-17-27 4 19-10Z" />
-                <path className="sky-bird__tail" d="M57 58 27 53l23 12-20 14 31-9M57 59 42 42l25 12" />
-                <path className="sky-bird__beak" d="m139 47 18-5-15 10Z" />
-              </g>
-            </svg>
+            <img
+              className="sky-birds__img"
+              src={openingImagesRequested ? `${ambientBase}sky-birds-pair.webp` : undefined}
+              alt=""
+              draggable={false}
+            />
           </div>
           <div className="scene">
             <div className="closed-view">

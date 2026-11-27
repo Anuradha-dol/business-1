@@ -1,5 +1,22 @@
 import { useState, useEffect, useCallback } from 'react';
+import {
+  Check,
+  CheckCircle2,
+  Clock,
+  Copy,
+  Download,
+  MessageCircle,
+  Plus,
+  RefreshCw,
+  Search,
+  Sparkles,
+  UserCheck,
+  Users,
+  X,
+  XCircle,
+} from 'lucide-react';
 import { supabase, type Guest, type Rsvp, formatGreeting } from '../lib/supabase';
+import { wedding } from '../data/wedding';
 import './admin.css';
 
 type InvitationType = Guest['invitation_type'];
@@ -13,15 +30,11 @@ function inviteLink(token: string) {
   return `${SITE_URL}/?invite=${token}`;
 }
 
-function copy(text: string) {
-  navigator.clipboard.writeText(text).catch(() => {});
-}
-
 function whatsapp(guest: Guest) {
   const link = inviteLink(guest.token);
   const name = guest.title ? `${guest.title} ${guest.name}` : guest.name;
   const msg  = encodeURIComponent(
-    `Dear ${name},\n\nYou are cordially invited to the wedding of Himeshi & Madhawa on 15 January 2027.\n\nOpen your personal invitation: ${link}`
+    `Dear ${name},\n\nYou are cordially invited to the wedding of ${wedding.bride} & ${wedding.groom} on ${wedding.dateLabel}.\n\nOpen your personal invitation: ${link}`
   );
   window.open(`https://wa.me/?text=${msg}`, '_blank');
 }
@@ -83,10 +96,10 @@ function GuestModal({ editing, onClose, onSaved }: GuestModalProps) {
 
   return (
     <div className="adm-modal-overlay" onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
-      <div className="adm-modal">
+      <div className="adm-modal" role="dialog" aria-modal="true" aria-labelledby="adm-modal-title">
         <div className="adm-modal__header">
-          <h2 className="adm-modal__title">{editing ? 'Edit Guest' : 'New Invitation'}</h2>
-          <button className="adm-icon-btn" onClick={onClose} aria-label="Close">✕</button>
+          <h2 id="adm-modal-title" className="adm-modal__title">{editing ? 'Edit Guest Invitation' : 'Create Personal Invitation'}</h2>
+          <button className="adm-icon-btn" onClick={onClose} aria-label="Close"><X size={18} /></button>
         </div>
 
         {error && <div className="adm-alert adm-alert--err">{error}</div>}
@@ -135,7 +148,7 @@ function GuestModal({ editing, onClose, onSaved }: GuestModalProps) {
 
             <div className="adm-field--full adm-field">
               <label className="adm-label">Custom Greeting <small>(optional)</small></label>
-              <input className="adm-input" value={form.custom_greeting ?? ''} onChange={e => set('custom_greeting', e.target.value)} placeholder="e.g. We'd love to have you with us!" />
+              <input className="adm-input" value={form.custom_greeting ?? ''} onChange={e => set('custom_greeting', e.target.value)} placeholder="e.g. We would be honoured to have you with us!" />
             </div>
           </div>
 
@@ -144,7 +157,7 @@ function GuestModal({ editing, onClose, onSaved }: GuestModalProps) {
           <div className="adm-modal__footer">
             <button type="button" className="adm-btn adm-btn--ghost" onClick={onClose}>Cancel</button>
             <button type="submit" className="adm-btn adm-btn--primary" disabled={loading}>
-              {loading ? <><span className="adm-spinner" />Saving…</> : (editing ? 'Update' : 'Create Invitation')}
+              {loading ? <><span className="adm-spinner" />Saving…</> : (editing ? 'Save Changes' : 'Create Invitation')}
             </button>
           </div>
         </form>
@@ -155,8 +168,16 @@ function GuestModal({ editing, onClose, onSaved }: GuestModalProps) {
 
 // ── Guest Row ────────────────────────────────────────────────
 function GuestRow({ g, onEdit, onRefresh }: { g: GuestWithRsvp; onEdit: (g: Guest) => void; onRefresh: () => void }) {
-  const [busy, setBusy] = useState(false);
+  const [busy, setBusy]     = useState(false);
+  const [copied, setCopied] = useState(false);
   const link = inviteLink(g.token);
+
+  const copyLink = () => {
+    navigator.clipboard.writeText(link).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1800);
+    }).catch(() => {});
+  };
 
   const toggleActive = async () => {
     setBusy(true);
@@ -179,8 +200,8 @@ function GuestRow({ g, onEdit, onRefresh }: { g: GuestWithRsvp; onEdit: (g: Gues
   return (
     <tr style={!g.is_active ? { opacity: 0.55 } : undefined}>
       <td>
-        <div style={{ fontWeight: 500 }}>{g.title ? `${g.title} ` : ''}{g.name}</div>
-        {g.partner_name && <div style={{ fontSize: 11, color: 'var(--adm-muted)' }}>& {g.partner_name}</div>}
+        <div className="adm-guest-name">{g.title ? `${g.title} ` : ''}{g.name}</div>
+        {g.partner_name && <div className="adm-guest-partner">&amp; {g.partner_name}</div>}
       </td>
       <td><span className={`adm-badge adm-badge--${g.invitation_type}`}>{g.invitation_type}</span></td>
       <td>{g.max_guests}</td>
@@ -195,18 +216,32 @@ function GuestRow({ g, onEdit, onRefresh }: { g: GuestWithRsvp; onEdit: (g: Gues
       </td>
       <td>
         <div className="adm-link-cell">
-          <span className="adm-link-text" title={link}>{g.token.slice(0,8)}…</span>
-          <button className="adm-icon-btn" title="Copy link" onClick={() => copy(link)}>⎘</button>
-          <button className="adm-icon-btn" title="Share on WhatsApp" onClick={() => whatsapp(g)}>💬</button>
+          <span className="adm-link-text" title={link}>{g.token.slice(0, 8)}…</span>
+          <button
+            className={`adm-icon-btn${copied ? ' adm-icon-btn--copied' : ''}`}
+            title={copied ? 'Copied!' : 'Copy invitation link'}
+            aria-label="Copy invitation link"
+            onClick={copyLink}
+          >
+            {copied ? <Check size={15} /> : <Copy size={15} />}
+          </button>
+          <button
+            className="adm-icon-btn"
+            title="Share on WhatsApp"
+            aria-label="Share invitation on WhatsApp"
+            onClick={() => whatsapp(g)}
+          >
+            <MessageCircle size={15} />
+          </button>
         </div>
       </td>
       <td>
-        <div style={{ display:'flex', gap:6 }}>
-          <button className="adm-btn adm-btn--ghost" style={{ padding:'5px 10px', fontSize:12 }} onClick={() => onEdit(g)}>Edit</button>
-          <button className="adm-btn adm-btn--ghost" style={{ padding:'5px 10px', fontSize:12 }} disabled={busy} onClick={toggleActive}>
+        <div style={{ display: 'flex', gap: 6 }}>
+          <button className="adm-btn adm-btn--ghost adm-btn--sm" onClick={() => onEdit(g)}>Edit</button>
+          <button className="adm-btn adm-btn--ghost adm-btn--sm" disabled={busy} onClick={toggleActive}>
             {g.is_active ? 'Deactivate' : 'Activate'}
           </button>
-          <button className="adm-btn adm-btn--danger" style={{ padding:'5px 10px', fontSize:12 }} disabled={busy} onClick={deleteGuest}>
+          <button className="adm-btn adm-btn--danger adm-btn--sm" disabled={busy} onClick={deleteGuest}>
             Delete
           </button>
         </div>
@@ -255,6 +290,10 @@ export default function AdminDashboard() {
     return matchSearch && matchFilter;
   });
 
+  const responseRate = stats.total > 0
+    ? Math.round(((stats.accepted + stats.declined) / stats.total) * 100)
+    : 0;
+
   const exportCsv = () => {
     const headers = ['Name','Title','Type','Partner','Max Guests','Confirmed','RSVP Status','Message','Token','Active','Created'];
     const rows = guests.map(g => [
@@ -272,49 +311,127 @@ export default function AdminDashboard() {
   };
 
   return (
-    <div className="adm-main">
-      <h1 className="adm-page-title">Dashboard</h1>
+    <main className="adm-main">
+      <div className="adm-header">
+        <div>
+          <div className="adm-header__eyebrow">Invitation Concierge</div>
+          <h1 className="adm-page-title">Guest Directory &amp; Attendance</h1>
+          <p className="adm-page-sub">
+            Manage personal invitations, monitor live RSVP confirmations, and coordinate guest arrivals.
+          </p>
+        </div>
+        <div className="adm-header__pill">
+          <Sparkles size={14} color="#a56c20" />
+          <span>Response Rate: <strong>{responseRate}%</strong></span>
+        </div>
+      </div>
 
       {/* Stats */}
       <div className="adm-stats">
-        <div className="adm-stat"><div className="adm-stat__label">Total Invitations</div><div className="adm-stat__value adm-stat__value--gold">{stats.total}</div></div>
-        <div className="adm-stat"><div className="adm-stat__label">Accepted</div><div className="adm-stat__value adm-stat__value--green">{stats.accepted}</div></div>
-        <div className="adm-stat"><div className="adm-stat__label">Declined</div><div className="adm-stat__value adm-stat__value--red">{stats.declined}</div></div>
-        <div className="adm-stat"><div className="adm-stat__label">Pending</div><div className="adm-stat__value">{stats.pending}</div></div>
-        <div className="adm-stat"><div className="adm-stat__label">Total Attending</div><div className="adm-stat__value adm-stat__value--blue">{stats.attending}</div></div>
+        <div className="adm-stat">
+          <div className="adm-stat__top">
+            <span className="adm-stat__label">Total Invitations</span>
+            <span className="adm-stat__icon"><Users size={15} /></span>
+          </div>
+          <div className="adm-stat__value adm-stat__value--gold">{stats.total}</div>
+        </div>
+        <div className="adm-stat">
+          <div className="adm-stat__top">
+            <span className="adm-stat__label">Accepted</span>
+            <span className="adm-stat__icon adm-stat__icon--green"><CheckCircle2 size={15} /></span>
+          </div>
+          <div className="adm-stat__value adm-stat__value--green">{stats.accepted}</div>
+        </div>
+        <div className="adm-stat">
+          <div className="adm-stat__top">
+            <span className="adm-stat__label">Declined</span>
+            <span className="adm-stat__icon adm-stat__icon--red"><XCircle size={15} /></span>
+          </div>
+          <div className="adm-stat__value adm-stat__value--red">{stats.declined}</div>
+        </div>
+        <div className="adm-stat">
+          <div className="adm-stat__top">
+            <span className="adm-stat__label">Awaiting Reply</span>
+            <span className="adm-stat__icon"><Clock size={15} /></span>
+          </div>
+          <div className="adm-stat__value">{stats.pending}</div>
+        </div>
+        <div className="adm-stat">
+          <div className="adm-stat__top">
+            <span className="adm-stat__label">Confirmed Guests</span>
+            <span className="adm-stat__icon adm-stat__icon--blue"><UserCheck size={15} /></span>
+          </div>
+          <div className="adm-stat__value adm-stat__value--blue">{stats.attending}</div>
+        </div>
       </div>
 
       {/* Toolbar */}
       <div className="adm-toolbar">
-        <div className="adm-search">
-          <span className="adm-search__icon">🔍</span>
-          <input className="adm-input adm-search__input" placeholder="Search guests…" value={search} onChange={e => setSearch(e.target.value)} />
+        <div className="adm-toolbar__left">
+          <div className="adm-search">
+            <span className="adm-search__icon" aria-hidden="true"><Search size={15} /></span>
+            <input
+              className="adm-input"
+              placeholder="Search guests, partners, or messages…"
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+            />
+          </div>
+
+          <div className="adm-filter-tabs" role="tablist" aria-label="Filter guests by RSVP status">
+            {([
+              ['all', 'All', stats.total],
+              ['accepted', 'Accepted', stats.accepted],
+              ['declined', 'Declined', stats.declined],
+              ['pending', 'Pending', stats.pending],
+            ] as const).map(([key, label, count]) => (
+              <button
+                key={key}
+                type="button"
+                role="tab"
+                aria-selected={filter === key}
+                className={`adm-filter-tab${filter === key ? ' adm-filter-tab--active' : ''}`}
+                onClick={() => setFilter(key)}
+              >
+                <span>{label}</span>
+                <span className="adm-filter-count">{count}</span>
+              </button>
+            ))}
+          </div>
         </div>
-        <select className="adm-select" style={{ width:'auto' }} value={filter} onChange={e => setFilter(e.target.value as typeof filter)}>
-          <option value="all">All</option>
-          <option value="accepted">Accepted</option>
-          <option value="declined">Declined</option>
-          <option value="pending">Pending</option>
-        </select>
-        <button className="adm-btn adm-btn--ghost" onClick={() => void load()} disabled={loading} aria-label="Refresh guest responses">Refresh</button>
-        <button className="adm-btn adm-btn--ghost" onClick={exportCsv}>⬇ Export CSV</button>
-        <button className="adm-btn adm-btn--primary" onClick={() => setCreate(true)}>+ New Invitation</button>
+
+        <div className="adm-toolbar__right">
+          <button className="adm-btn adm-btn--ghost" onClick={() => void load()} disabled={loading} aria-label="Refresh guest responses">
+            <RefreshCw size={14} className={loading ? 'adm-spin' : undefined} />
+            Refresh
+          </button>
+          <button className="adm-btn adm-btn--ghost" onClick={exportCsv}>
+            <Download size={14} />
+            Export CSV
+          </button>
+          <button className="adm-btn adm-btn--primary" onClick={() => setCreate(true)}>
+            <Plus size={15} />
+            New Invitation
+          </button>
+        </div>
       </div>
 
       {/* Table */}
       {loading ? (
-        <div className="adm-loading"><span className="adm-spinner" />Loading guests…</div>
+        <div className="adm-table-wrap">
+          <div className="adm-loading"><span className="adm-spinner" style={{ marginRight: 8 }} />Loading guest directory…</div>
+        </div>
       ) : (
         <div className="adm-table-wrap">
           <table className="adm-table">
             <thead>
               <tr>
-                <th>Name</th><th>Type</th><th>Max</th><th>Confirmed</th><th>RSVP</th><th>Guest Message</th><th>Link</th><th>Actions</th>
+                <th>Guest</th><th>Type</th><th>Max</th><th>Confirmed</th><th>RSVP Status</th><th>Guest Message</th><th>Invitation Link</th><th>Actions</th>
               </tr>
             </thead>
             <tbody>
               {filtered.length === 0 ? (
-                <tr><td colSpan={8} className="adm-empty">No guests found.</td></tr>
+                <tr><td colSpan={8} className="adm-empty">No guests match your current search or filter.</td></tr>
               ) : (
                 filtered.map(g => (
                   <GuestRow key={g.id} g={g} onEdit={setEditing} onRefresh={load} />
@@ -332,6 +449,6 @@ export default function AdminDashboard() {
           onSaved={() => { setCreate(false); setEditing(null); void load(); }}
         />
       )}
-    </div>
+    </main>
   );
 }

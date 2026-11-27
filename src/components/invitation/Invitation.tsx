@@ -421,8 +421,10 @@ export default function Invitation({ onReplay, music }: Props) {
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saving' | 'saved' | 'error'>('idle');
   const [saveErrorMsg, setSaveErrorMsg] = useState<string>('');
   const [confirmed, setConfirmed] = useState(false);
+  const [lockedGuests, setLockedGuests] = useState<number | null>(null);
 
   const maxGuests = guest ? guest.max_guests : 1;
+  const isGuestCountLocked = confirmed && lockedGuests !== null && lockedGuests > 0;
 
   // Pre-fill guest name and load existing RSVP from Supabase when token is valid
   useEffect(() => {
@@ -441,13 +443,17 @@ export default function Invitation({ onReplay, music }: Props) {
       .maybeSingle()
       .then(({ data }) => {
         if (!data) return;
+        const savedGuests = data.status === 'accepted'
+          ? Math.min(guest.max_guests, Math.max(1, data.confirmed_guests || 1))
+          : 0;
         setDraft(c => ({
           ...c,
           attendance: data.status === 'accepted' ? 'accept' : 'decline',
-          guests: String(Math.min(guest.max_guests, Math.max(1, data.confirmed_guests || 1))),
+          guests: String(savedGuests > 0 ? savedGuests : 1),
           message: data.message ?? '',
         }));
         setConfirmed(true);
+        setLockedGuests(savedGuests);
       });
   }, [guest]);
 
@@ -469,7 +475,9 @@ export default function Invitation({ onReplay, music }: Props) {
     setSaveStatus('saving');
     setSaveErrorMsg('');
     const confirmedGuests = draft.attendance === 'accept'
-      ? Math.min(guest.max_guests, Math.max(1, Number(draft.guests) || 1))
+      ? (isGuestCountLocked
+          ? lockedGuests
+          : Math.min(guest.max_guests, Math.max(1, Number(draft.guests) || 1)))
       : 0;
 
     const { error } = await supabase
@@ -490,6 +498,11 @@ export default function Invitation({ onReplay, music }: Props) {
 
     setSaveStatus('saved');
     setConfirmed(true);
+    if (confirmedGuests > 0) {
+      setLockedGuests(confirmedGuests);
+    } else if (lockedGuests === null) {
+      setLockedGuests(0);
+    }
     setPetalBurstKey(k => k + 1);
   };
 
@@ -727,20 +740,27 @@ export default function Invitation({ onReplay, music }: Props) {
                       {draft.attendance !== 'decline' && (
                         <div className="luxury-rsvp__field luxury-rsvp__field--inline">
                           <span className="luxury-rsvp__label">
-                            Guests <span>(max {maxGuests})</span>
+                            Guests{' '}
+                            <span>
+                              {isGuestCountLocked ? '(locked)' : `(max ${maxGuests})`}
+                            </span>
                           </span>
-                          <div className="guest-stepper">
+                          <div className={`guest-stepper${isGuestCountLocked ? ' guest-stepper--locked' : ''}`}>
                             <button
                               type="button"
                               className="guest-stepper__btn"
                               aria-label="Decrease guests"
+                              disabled={isGuestCountLocked}
                               onClick={() => changeDraft('guests', String(Math.max(1, Number(draft.guests) - 1)))}
                             >−</button>
-                            <span className="guest-stepper__val">{draft.guests}</span>
+                            <span className="guest-stepper__val">
+                              {isGuestCountLocked ? lockedGuests : draft.guests}
+                            </span>
                             <button
                               type="button"
                               className="guest-stepper__btn"
                               aria-label="Increase guests"
+                              disabled={isGuestCountLocked}
                               onClick={() => changeDraft('guests', String(Math.min(maxGuests, Number(draft.guests) + 1)))}
                             >+</button>
                           </div>
