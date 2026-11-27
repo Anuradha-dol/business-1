@@ -125,7 +125,7 @@ export default function Envelope({ onComplete, onArtworkReady }: EnvelopeProps) 
 
   const { contextSafe } = useGSAP(() => {
     gsap.set('.opening-back', { scaleY: 0 });
-    gsap.set('.sky-birds', { autoAlpha: 0, x: 0, y: 0, scale: 1, rotation: -4 });
+    gsap.set('.sky-birds', { autoAlpha: 0, x: 0, y: 0, scale: 0.95, rotation: -3 });
     gsap.set('.opening-lining', { opacity: 0 });
     gsap.set('.card-viewport', { autoAlpha: 0 });
     gsap.set('.floating-card', { xPercent: -2.1, yPercent: 29, scale: 0.94 });
@@ -156,14 +156,16 @@ export default function Envelope({ onComplete, onArtworkReady }: EnvelopeProps) 
       // Reveal inner lining BEFORE flap folds so the sea never peeks through
       .to('.opening-lining', { opacity: 1, duration: 0.45, ease: 'sine.out' }, 0.1)
       .to('.opening-flap', { scaleY: 0, duration: 1.15, ease: 'sine.inOut' }, 0.3)
+      // Distant doves enter the upper sky right as the envelope begins unsealing
+      .to('.sky-birds', { autoAlpha: 0.88, duration: 0.9, ease: 'sine.out' }, 0.45)
+      .to('.sky-birds', { x: '28vw', y: '-5svh', scale: 0.62, rotation: -1, duration: 2.55, ease: 'sine.out' }, 0.45)
+      .to('.sky-birds', { x: '56vw', y: '-9svh', scale: 0.24, rotation: 2, duration: 2.6, ease: 'sine.in' }, 3.0)
+      .to('.sky-birds', { autoAlpha: 0, duration: 1.4, ease: 'sine.in' }, 4.2)
       // Start raising the open back flap before the front flap disappears
       .to('.opening-back', { scaleY: 1, duration: 1.25, ease: 'sine.inOut' }, 0.95)
       .to('.opening-flap', { autoAlpha: 0, duration: 0.3, ease: 'sine.inOut' }, 1.15)
       .to('.card-viewport', { autoAlpha: 1, duration: 0.5, ease: 'sine.inOut' }, 1.85)
-      .to('.sky-birds', { autoAlpha: 0.96, duration: 0.75, ease: 'sine.out' }, 1.9)
-      .to('.sky-birds', { x: '62vw', y: '-11svh', scale: 0.2, rotation: 3, duration: 3.7, ease: 'sine.inOut' }, 1.9)
       .to('.floating-card', { yPercent: -15, scale: 0.8, rotation: -0.8, duration: 2.8, ease: 'sine.inOut' }, 2.15)
-      .to('.sky-birds', { autoAlpha: 0, duration: 1.2, ease: 'sine.in' }, 4.4)
       .to('.card-viewport', { clipPath: 'polygon(0% 0%,100% 0%,100% 100%,100% 100%,100% 100%,0% 100%,0% 100%,0% 100%)', duration: 0.55, ease: 'sine.inOut' }, 4.45)
       .set('.card-viewport', { zIndex: 5 }, 5.0)
       .add(() => root.current?.classList.add('gust'), 4.85)

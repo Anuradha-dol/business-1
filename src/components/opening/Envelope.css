@@ -582,13 +582,13 @@
   user-select: none;
 }
 
-/* Two graceful white doves enter from the left sky corner and soar into the distance. */
+/* Two graceful white doves soar across the distant golden-hour sky. */
 .sky-birds {
   position: absolute;
   z-index: 3;
-  top: 15%;
-  left: -3%;
-  width: min(16vw, 225px);
+  top: 14%;
+  left: 4%;
+  width: min(9.5vw, 132px);
   aspect-ratio: 720 / 600;
   pointer-events: none;
   opacity: 0;
@@ -602,18 +602,18 @@
   height: 100%;
   object-fit: contain;
   user-select: none;
-  filter: drop-shadow(0 6px 14px rgba(120, 72, 34, .16));
-  animation: sky-birds-glide 1.6s ease-in-out infinite alternate;
+  filter: brightness(1.06) contrast(.9) saturate(.92) drop-shadow(0 3px 10px rgba(180, 120, 55, .16));
+  animation: sky-birds-glide 1.8s ease-in-out infinite alternate;
 }
 @keyframes sky-birds-glide {
-  from { transform: translate3d(0, 3px, 0) rotate(-1deg); }
-  to { transform: translate3d(0, -4px, 0) rotate(1deg); }
+  from { transform: translate3d(0, 2px, 0) rotate(-1deg); }
+  to { transform: translate3d(0, -3px, 0) rotate(1deg); }
 }
 @media (max-aspect-ratio: 4/5) {
   .sky-birds {
-    top: 12%;
-    left: -6%;
-    width: min(36vw, 200px);
+    top: 11%;
+    left: 2%;
+    width: min(22vw, 120px);
   }
 }
 @media (prefers-reduced-motion: reduce) {
