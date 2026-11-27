@@ -8,9 +8,9 @@ export const wedding = {
   year: '2027',
   monogram: 'H&M',
   venue: {
-    name: 'Jetwing Lighthouse',
+    name: 'The Cinnamon Room',
     city: 'Galle, Sri Lanka',
-    address: 'Dadella, Galle 80000',
-    mapUrl: 'https://www.google.com/maps/search/?api=1&query=Jetwing+Lighthouse+Galle+Sri+Lanka',
+    address: 'At Jetwing Lighthouse, Dadella, Galle 80000',
+    mapUrl: 'https://www.google.com/maps/search/?api=1&query=The+Cinnamon+Room+at+Jetwing+Lighthouse+Galle+Sri+Lanka',
   },
 } as const;

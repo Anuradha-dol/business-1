@@ -230,7 +230,7 @@ export default function Envelope({ onComplete, onArtworkReady }: EnvelopeProps) 
   );
 
   return (
-    <main className={`invitation-opening${ready ? ' invitation-opening--ready' : ''}`} ref={root} aria-busy={state === 'opening' || !ready || preparingOpen}>
+    <main className={`invitation-opening${ready ? ' invitation-opening--ready' : ''}${state === 'opening' ? ' invitation-opening--opening' : ''}`} ref={root} aria-busy={state === 'opening' || !ready || preparingOpen}>
         <div className={`opening-loader${ready ? ' opening-loader--hidden' : ''}`} aria-hidden={ready} inert={ready}>
           <p className="opening-loader__eyebrow">A celebration of love</p>
           <div className="opening-loader__crest">{wedding.monogram}</div>
@@ -268,6 +268,26 @@ export default function Envelope({ onComplete, onArtworkReady }: EnvelopeProps) 
       } as CSSProperties}>
         <div className="opening-scene-content" inert={!ready}>
           <OpeningAtmosphere />
+          <div className="sky-birds" aria-hidden="true">
+            <svg className="sky-bird sky-bird--one" viewBox="0 0 160 100" focusable="false">
+              <g className="sky-bird__shape">
+                <path className="sky-bird__wing sky-bird__wing--left" d="M78 52C60 42 49 22 18 10c12 25 25 39 46 50-16-4-29 0-47 12 25-4 41-4 62-10Z" />
+                <path className="sky-bird__wing sky-bird__wing--right" d="M82 52c18-13 34-34 63-40-10 24-26 40-48 51 17-4 31-1 49 10-25-3-42-3-64-9Z" />
+                <path className="sky-bird__body" d="M52 54c17-10 38-14 59-8l31-8-20 17c-15 10-34 13-52 8L52 77l8-17-27 4 19-10Z" />
+                <path className="sky-bird__tail" d="M57 58 27 53l23 12-20 14 31-9M57 59 42 42l25 12" />
+                <path className="sky-bird__beak" d="m139 47 18-5-15 10Z" />
+              </g>
+            </svg>
+            <svg className="sky-bird sky-bird--two" viewBox="0 0 160 100" focusable="false">
+              <g className="sky-bird__shape">
+                <path className="sky-bird__wing sky-bird__wing--left" d="M78 52C60 42 49 22 18 10c12 25 25 39 46 50-16-4-29 0-47 12 25-4 41-4 62-10Z" />
+                <path className="sky-bird__wing sky-bird__wing--right" d="M82 52c18-13 34-34 63-40-10 24-26 40-48 51 17-4 31-1 49 10-25-3-42-3-64-9Z" />
+                <path className="sky-bird__body" d="M52 54c17-10 38-14 59-8l31-8-20 17c-15 10-34 13-52 8L52 77l8-17-27 4 19-10Z" />
+                <path className="sky-bird__tail" d="M57 58 27 53l23 12-20 14 31-9M57 59 42 42l25 12" />
+                <path className="sky-bird__beak" d="m139 47 18-5-15 10Z" />
+              </g>
+            </svg>
+          </div>
           <div className="scene">
             <div className="closed-view">
               <img className="art" src={`${ambientBase}closed-fixed-optimized.webp`} alt="" draggable={false} fetchPriority="high" />
