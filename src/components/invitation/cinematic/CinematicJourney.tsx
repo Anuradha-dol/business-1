@@ -4,6 +4,7 @@ import { RotateCcw } from 'lucide-react';
 import SceneArtwork from './SceneArtwork';
 import UnionArtwork from './UnionArtwork';
 import PromiseArtwork from './PromiseArtwork';
+import SilkLayer from './SilkLayer';
 import './CinematicJourney.css';
 
 const chapters = [
@@ -135,7 +136,7 @@ export default function CinematicJourney({ onReplayOpening }: { onReplayOpening?
         <div className="cinematic-journey__shore" />
         <div className="cinematic-journey__light" ref={lightRef} />
       </div>
-      <img className="cinematic-journey__silk" src={`${import.meta.env.BASE_URL}assets/images/cinematic/journey/silk.webp`} alt="" aria-hidden="true" />
+      <SilkLayer reducedMotion={reducedMotion} />
       <div className="cinematic-journey__scene">
         <div className="cinematic-journey__copy" ref={copyRef} aria-live="polite">
           <p className="cinematic-journey__eyebrow">{chapter === 4 ? 'A journey to forever' : `Chapter ${String(chapter + 1).padStart(2, '0')}  ·  ${current.title}`}</p>

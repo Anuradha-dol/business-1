@@ -12,6 +12,9 @@
 }
 .union-artwork__couple-rise { opacity: 0; transform: translateY(54px) scale(.86); transform-origin: 250px 380px; }
 .union-artwork__couple { transform-origin: 250px 372px; }
+.union-artwork__opened { opacity: 0; }
+.union-artwork.is-completed .union-artwork__opened { animation: union-opened-appear .65s ease-in forwards; }
+.union-artwork.is-completed .union-artwork__closed { animation: union-closed-away .65s ease-out forwards; }
 .union-artwork.is-completed .union-artwork__lid { animation: union-lid-open 2.1s ease-in-out forwards; }
 .union-artwork.is-completed .union-artwork__couple-rise { animation: union-couple-rise 2.5s 1s ease-out forwards; }
 .union-artwork.is-completed .union-artwork__couple { animation: union-couple-dance 2.2s 2.4s ease-in-out 2 alternate forwards; }
@@ -20,5 +23,7 @@
   .union-artwork * { animation-duration: .01ms !important; animation-delay: 0ms !important; animation-iteration-count: 1 !important; }
 }
 @keyframes union-lid-open { to { transform: scaleY(1); } }
+@keyframes union-opened-appear { to { opacity: 1; } }
+@keyframes union-closed-away { to { opacity: 0; } }
 @keyframes union-couple-rise { to { opacity: 1; transform: translateY(0) scale(1); } }
 @keyframes union-couple-dance { from { transform: rotate(-3deg); } to { transform: rotate(3deg); } }

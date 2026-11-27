@@ -1,0 +1,27 @@
+.journey-silk {
+  position: fixed;
+  z-index: 0;
+  left: 50%;
+  bottom: -3.5vh;
+  width: min(125vw, 1500px);
+  height: auto;
+  overflow: visible;
+  opacity: .78;
+  pointer-events: none;
+  transform-origin: 50% 100%;
+  animation: journey-silk-breeze 9s ease-in-out infinite alternate;
+}
+
+@keyframes journey-silk-breeze {
+  0% { transform: translate3d(-51%, 1%, 0) rotate(-1deg) skewX(-1deg); }
+  50% { transform: translate3d(-49%, -3%, 0) rotate(.4deg) skewX(1deg); }
+  100% { transform: translate3d(-50%, 0, 0) rotate(1deg) skewX(-.7deg); }
+}
+
+@media (max-width: 600px) {
+  .journey-silk { width: 150vw; bottom: -1vh; opacity: .8; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .journey-silk { animation: none; transform: translateX(-50%); }
+}

@@ -9,12 +9,14 @@
 }
 
 .cinematic-journey__world {
+  --beach-position: center center;
   position: fixed;
   z-index: -1;
   inset: 0;
   overflow: hidden;
   pointer-events: none;
   background: #e7d3b9 center / cover no-repeat;
+  background-position: var(--beach-position);
 }
 .cinematic-journey__world::after {
   content: '';
@@ -24,38 +26,36 @@
 }
 .cinematic-journey__sun {
   position: absolute;
-  left: 50%; top: 33%;
-  width: min(50vw, 660px); aspect-ratio: 1;
+  left: 13%; top: 51%;
+  width: min(24vw, 340px); aspect-ratio: 1;
   transform: translate(-50%, -50%);
-  background: radial-gradient(circle, rgba(255, 241, 205, .33), transparent 67%);
+  background: radial-gradient(circle, rgba(255, 241, 205, .22), transparent 68%);
   mix-blend-mode: screen;
 }
-.cinematic-journey__sea,
+/* A softly masked copy of the photographed water makes its real wave crests
+   drift without placing illustrated stripes over the beach. */
+.cinematic-journey__sea {
+  position: absolute;
+  inset: 0;
+  background-image: inherit;
+  background-size: cover;
+  background-position: var(--beach-position);
+  background-repeat: no-repeat;
+  mask-image: linear-gradient(to bottom, transparent 56%, #000 60%, #000 67%, transparent 73%);
+  opacity: .55;
+  animation: journey-water 8s ease-in-out infinite alternate;
+}
 .cinematic-journey__shore { display: none; }
+@keyframes journey-water {
+  from { transform: translate3d(0, -2px, 0) scale(1.004); }
+  to { transform: translate3d(0, 3px, 0) scale(1.006); }
+}
 .cinematic-journey__light {
   position: absolute;
   left: 20%; right: 20%; top: 15%; bottom: 0;
   opacity: 0;
   background: radial-gradient(ellipse, rgba(255, 242, 198, .8), transparent 65%);
   mix-blend-mode: screen;
-}
-.cinematic-journey__silk {
-  position: fixed;
-  z-index: 0;
-  left: -9%;
-  bottom: -14%;
-  width: 118%;
-  height: auto;
-  max-height: 34vh;
-  object-fit: fill;
-  opacity: .35;
-  pointer-events: none;
-  transform-origin: center bottom;
-  animation: journey-silk-drift 12s ease-in-out infinite alternate;
-}
-@keyframes journey-silk-drift {
-  from { transform: translate3d(-1%, 2%, 0) rotate(-1deg); }
-  to { transform: translate3d(1%, -2%, 0) rotate(1deg); }
 }
 .cinematic-journey__scene {
   position: relative;
@@ -171,14 +171,17 @@
 .cinematic-journey__skip { padding: 8px 12px 2px; opacity: .8; font-size: 9px; letter-spacing: .1em; }
 .cinematic-journey__skip span { font-size: 15px; }
 
+@media (max-width: 900px) and (orientation: portrait) {
+  /* Keep the original sun and its reflection in the narrow portrait crop. */
+  .cinematic-journey__world { --beach-position: 13% center; }
+  .cinematic-journey__sun { left: 14%; width: 46vw; }
+}
 @media (max-width: 600px) {
-  .cinematic-journey__world { background-position: 50% center; }
   .cinematic-journey__copy { padding-top: 2vh; }
   .cinematic-journey__eyebrow { font-size: 9px; letter-spacing: .14em; }
   .cinematic-journey__copy h1 { font-size: clamp(21px, 6vw, 28px); }
   .cinematic-journey__progress { margin-top: 10px; }
   .cinematic-journey__progress span { width: 18px; }
-  .cinematic-journey__silk { width: 160%; left: -30%; bottom: -5%; max-height: 24vh; }
   .cinematic-journey__art { width: 100%; }
   .cinematic-journey__bottom { min-height: 60px; }
 }
@@ -192,5 +195,5 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .cinematic-journey__hint, .cinematic-journey__progress span { transition: none; }
-  .cinematic-journey__silk { animation: none; }
+  .cinematic-journey__sea { animation: none; }
 }
