@@ -19,7 +19,14 @@
 }
 
 @media (max-width: 600px) {
-  .journey-silk { width: 150vw; bottom: -1vh; opacity: .8; }
+  /* Lift the drape into the artwork on a portrait screen instead of leaving
+     only a narrow strip below it. The scene and its controls sit above it. */
+  .journey-silk {
+    width: 190vw;
+    height: auto;
+    bottom: clamp(24px, 8vh, 75px);
+    opacity: .72;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

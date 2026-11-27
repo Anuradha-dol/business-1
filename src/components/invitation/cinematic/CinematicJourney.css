@@ -136,11 +136,13 @@
   position: relative;
   z-index: 10;
   flex: none;
-  min-height: 60px;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 2px;
+  padding: 2px 12px 4px;
 }
 .cinematic-journey__hint,
 .cinematic-journey__replay,
@@ -155,20 +157,22 @@
   cursor: pointer;
 }
 .cinematic-journey__hint {
-  padding: 9px 18px;
-  border: 1px solid rgba(151, 105, 53, .5);
+  min-height: 44px;
+  max-width: 100%;
+  padding: 10px 22px;
+  border: 1px solid rgba(151, 105, 53, .48);
   border-radius: 999px;
-  background: rgba(255, 248, 235, .4);
-  box-shadow: 0 4px 18px rgba(115, 74, 37, .08);
+  background: rgba(255, 249, 237, .9);
+  box-shadow: 0 4px 16px rgba(115, 74, 37, .15), inset 0 1px rgba(255, 255, 255, .7);
   transition: opacity .35s, background-color .25s, transform .25s;
 }
 .cinematic-journey__hint:not(:disabled):hover { background: rgba(255, 250, 239, .78); transform: translateY(-2px); }
 .cinematic-journey__hint:disabled { opacity: 0; cursor: default; }
 .cinematic-journey__hint span { font-size: 14px; vertical-align: -1px; }
-.cinematic-journey__replay { display: flex; align-items: center; gap: 8px; padding: 10px; }
+.cinematic-journey__replay { display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 10px; }
 .cinematic-journey__replay-actions { display: flex; justify-content: center; align-items: center; flex-wrap: wrap; }
 .cinematic-journey__replay--opening { opacity: .72; font-size: 9px; }
-.cinematic-journey__skip { padding: 8px 12px 2px; opacity: .8; font-size: 9px; letter-spacing: .1em; }
+.cinematic-journey__skip { min-height: 44px; padding: 10px 16px; opacity: .9; font-size: 9px; letter-spacing: .1em; }
 .cinematic-journey__skip span { font-size: 15px; }
 
 @media (max-width: 900px) and (orientation: portrait) {
@@ -183,15 +187,17 @@
   .cinematic-journey__progress { margin-top: 10px; }
   .cinematic-journey__progress span { width: 18px; }
   .cinematic-journey__art { width: 100%; }
-  .cinematic-journey__bottom { min-height: 60px; }
+  .cinematic-journey__bottom { padding-bottom: 4px; }
+  .cinematic-journey__hint { font-size: 11px; letter-spacing: .1em; }
+  .cinematic-journey__skip { font-size: 10px; }
 }
 @media (max-height: 600px) {
   .cinematic-journey__copy { padding-top: 0; }
   .cinematic-journey__eyebrow { margin-bottom: 3px; }
   .cinematic-journey__copy h1 { font-size: 20px; }
   .cinematic-journey__progress { margin-top: 5px; }
-  .cinematic-journey__hint { padding: 5px 14px; }
-  .cinematic-journey__bottom { min-height: 50px; }
+  .cinematic-journey__hint { padding: 8px 18px; }
+  .cinematic-journey__bottom { gap: 0; padding-top: 0; }
 }
 @media (prefers-reduced-motion: reduce) {
   .cinematic-journey__hint, .cinematic-journey__progress span { transition: none; }
