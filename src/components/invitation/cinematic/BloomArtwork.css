@@ -9,22 +9,29 @@
 .photo-calla-flower {
   transform-box: fill-box;
   transform-origin: center bottom;
-  transform: scaleX(.82);
+  transform: scaleX(.72);
 }
 
 .is-completed .photo-calla--left {
-  animation: art-calla-together-left 3.8s ease-in-out forwards;
+  animation: art-calla-together-left 4.8s cubic-bezier(.32,.04,.2,1) forwards;
 }
 
 .is-completed .photo-calla--right {
-  animation: art-calla-together-right 3.8s ease-in-out forwards;
+  animation: art-calla-together-right 4.8s cubic-bezier(.32,.04,.2,1) forwards;
 }
 
 .is-completed .photo-calla-flower {
-  animation: photo-calla-unfold 3.4s cubic-bezier(.25,.1,.25,1) forwards;
+  animation: photo-calla-unfold 1.9s cubic-bezier(.25,.1,.25,1) 2.9s both,
+    photo-calla-glow 1.6s ease-out 2.9s both;
 }
 
 @keyframes photo-calla-unfold {
-  from { transform: scaleX(.82); }
-  to { transform: scaleX(1); }
+  from { transform: scaleX(.72); }
+  to { transform: scaleX(1.04); }
+}
+
+@keyframes photo-calla-glow {
+  0% { filter: drop-shadow(0 0 0 rgba(220, 178, 102, 0)); }
+  55% { filter: drop-shadow(0 0 13px rgba(220, 178, 102, .4)); }
+  100% { filter: drop-shadow(0 0 6px rgba(220, 178, 102, .22)); }
 }
