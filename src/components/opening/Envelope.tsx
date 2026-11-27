@@ -33,7 +33,7 @@ const OPENING_ASSETS = [
   `${ambientBase}flap-clean.webp`,
   `${ambientBase}scalloped-card-883012c28e99.webp`,
   `${ambientBase}opening-clear-optimized.webp`,
-  `${ambientBase}sky-birds-flight.webp`,
+  `${ambientBase}sky-birds-flight-optimized.png`,
 ];
 
 const FIRST_CHAPTER_ASSETS = [
@@ -86,7 +86,6 @@ export default function Envelope({ onComplete, onArtworkReady }: EnvelopeProps) 
         openingAssetsReady.current = true;
       });
     }
-    setOpeningImagesRequested(true);
     return openingAssets.current;
   }, []);
 
@@ -96,6 +95,9 @@ export default function Envelope({ onComplete, onArtworkReady }: EnvelopeProps) 
     let resolveClosedScene: () => void = () => {};
     closedSceneReady.current = new Promise(resolve => { resolveClosedScene = resolve; });
     mounted.current = true;
+    // Warm the opening layers while the closed envelope is loading so a guest
+    // who taps as soon as it appears does not see the card build in piece by piece.
+    void preloadOpening();
     const showClosedScene = () => {
       if (cancelled || sceneShown) return;
       sceneShown = true;
@@ -110,11 +112,6 @@ export default function Envelope({ onComplete, onArtworkReady }: EnvelopeProps) 
       if (cancelled) return;
       onArtworkReady?.();
       BACKGROUND_CLOSED_ASSETS.forEach(src => { void preloadImage(src); });
-      // On slow connections, wait briefly after the closed scene paints before
-      // warming only the opening-flap layers; defer Home chapters until open().
-      setTimeout(() => {
-        if (!cancelled) void preloadOpening();
-      }, 350);
     });
     return () => {
       cancelled = true;
@@ -191,16 +188,17 @@ export default function Envelope({ onComplete, onArtworkReady }: EnvelopeProps) 
     // even if an opening image is slow or never completes.
     void preloadFirstChapter();
     const openingLoad = preloadOpening();
+    setOpeningImagesRequested(true);
     if (openingAssetsReady.current) {
       setPreparingOpen(false);
       playOpening();
       return;
     }
     setPreparingOpen(true);
-    // Keep the closed scene visible if the guest taps before the layers are
-    // decoded, with a short fallback for a stalled connection.
+    // Keep the closed scene visible until its layers are decoded. The fallback
+    // is only for a stalled connection; the normal path never opens half-loaded.
     let timeout: ReturnType<typeof setTimeout>;
-    const fallback = new Promise<void>(resolve => { timeout = setTimeout(resolve, 1800); });
+    const fallback = new Promise<void>(resolve => { timeout = setTimeout(resolve, 15000); });
     void Promise.race([openingLoad, fallback]).then(() => {
       clearTimeout(timeout);
       if (!mounted.current) return;
@@ -278,7 +276,7 @@ export default function Envelope({ onComplete, onArtworkReady }: EnvelopeProps) 
           <div className="sky-birds" aria-hidden="true">
             <img
               className="sky-birds__img"
-              src={openingImagesRequested ? `${ambientBase}sky-birds-flight.webp` : undefined}
+              src={openingImagesRequested ? `${ambientBase}sky-birds-flight-optimized.png` : undefined}
               alt=""
               draggable={false}
             />
