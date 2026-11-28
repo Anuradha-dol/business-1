@@ -11,6 +11,6 @@ export const wedding = {
     name: 'The Cinnamon Room',
     city: 'Galle, Sri Lanka',
     address: 'At Jetwing Lighthouse, Dadella, Galle 80000',
-    mapUrl: 'https://www.google.com/maps/search/?api=1&query=The+Cinnamon+Room+at+Jetwing+Lighthouse+Galle+Sri+Lanka',
+    mapUrl: 'https://maps.app.goo.gl/nrDfW9MAEAUDCQoi6',
   },
 } as const;
