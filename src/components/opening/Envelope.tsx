@@ -351,7 +351,7 @@ export default function Envelope({ onComplete, onArtworkReady, onOpeningStart }:
               <span className="wind-mote wind-mote--4" />
             </div>
 
-            {state === 'closed' && <button className="envelope-hit" type="button" onClick={open} aria-label="Open wedding invitation" />}
+            {state === 'closed' && <button className="envelope-hit" type="button" onClick={open} aria-label="Tap the seal to unseal your wedding invitation" />}
             <header className="heading">
               <p>With joyful hearts, together with our families</p>
               <h1>{names}</h1>
@@ -399,7 +399,7 @@ export default function Envelope({ onComplete, onArtworkReady, onOpeningStart }:
             )}
             {state === 'closed' && (
               <button className="open-action" onClick={open} type="button">
-                {preparingOpen ? 'Opening…' : 'Unseal Your Invitation'} <span aria-hidden="true">&#10023;</span>
+                {preparingOpen ? 'Opening…' : 'Tap the seal to unseal'} <span aria-hidden="true">&#10023;</span>
               </button>
             )}
           </div>
