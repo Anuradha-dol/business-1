@@ -105,20 +105,6 @@ export default function CinematicJourney({ onReplayOpening }: { onReplayOpening?
       .to(light, { opacity: 0, scale: reducedMotion ? 1 : 1.5, duration, ease: 'sine.inOut' }, 0);
   };
 
-  const skip = () => {
-    timelineRef.current?.kill();
-    lockedRef.current = true;
-    setPhase('leaving');
-    const tl = gsap.timeline({ onComplete: () => {
-      setCompleted(false);
-      setChapter(4);
-    } });
-    timelineRef.current = tl;
-    if (artRef.current && copyRef.current) {
-      tl.to([artRef.current, copyRef.current], { autoAlpha: 0, y: reducedMotion ? 0 : -12, duration: reducedMotion ? .01 : .35, ease: 'power1.in' });
-    }
-  };
-
   const replay = () => {
     timelineRef.current?.kill();
     lockedRef.current = true;
@@ -153,8 +139,17 @@ export default function CinematicJourney({ onReplayOpening }: { onReplayOpening?
           </div>
         </div>
         <div className="cinematic-journey__bottom">
-          {chapter < 4 && <><button type="button" className="cinematic-journey__hint" disabled={phase !== 'ready'} onClick={advance}><span aria-hidden="true">✧</span> {current.hint} <span aria-hidden="true">→</span></button><button type="button" className="cinematic-journey__skip" onClick={skip}>Skip to forever <span aria-hidden="true">→</span></button></>}
-          {chapter === 4 && <div className="cinematic-journey__replay-actions"><button type="button" className="cinematic-journey__replay" onClick={replay}><RotateCcw size={13} /> Replay experience</button>{onReplayOpening && <button type="button" className="cinematic-journey__replay cinematic-journey__replay--opening" onClick={onReplayOpening}>Replay opening</button>}</div>}
+          {chapter < 4 && <button type="button" className="cinematic-journey__hint" disabled={phase !== 'ready'} onClick={advance}><span aria-hidden="true">✧</span> {current.hint} <span aria-hidden="true">→</span></button>}
+          {chapter === 4 && <>
+            {phase === 'finale' && (
+              <div className="cinematic-journey__scroll-cue" aria-label="Scroll down to continue">
+                <span className="cinematic-journey__scroll-cue-line" aria-hidden="true" />
+                <span>Scroll down</span>
+                <span className="cinematic-journey__scroll-cue-arrow" aria-hidden="true">⌄</span>
+              </div>
+            )}
+            <div className="cinematic-journey__replay-actions"><button type="button" className="cinematic-journey__replay" onClick={replay}><RotateCcw size={13} /> Replay experience</button>{onReplayOpening && <button type="button" className="cinematic-journey__replay cinematic-journey__replay--opening" onClick={onReplayOpening}>Replay opening</button>}</div>
+          </>}
         </div>
       </div>
     </div>

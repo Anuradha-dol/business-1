@@ -151,8 +151,7 @@
   padding: 2px 12px 4px;
 }
 .cinematic-journey__hint,
-.cinematic-journey__replay,
-.cinematic-journey__skip {
+.cinematic-journey__replay {
   border: 0;
   background: transparent;
   color: #795329;
@@ -180,8 +179,38 @@
 .cinematic-journey__replay-actions { display: grid; justify-items: center; gap: 0; }
 .cinematic-journey__replay:not(.cinematic-journey__replay--opening) { border-bottom: 1px solid rgba(126, 82, 38, .55); }
 .cinematic-journey__replay--opening { opacity: .78; font-size: 9px; }
-.cinematic-journey__skip { min-height: 44px; padding: 10px 16px; opacity: .9; font-size: 9px; letter-spacing: .1em; }
-.cinematic-journey__skip span { font-size: 15px; }
+.cinematic-journey__scroll-cue {
+  display: grid;
+  justify-items: center;
+  gap: 2px;
+  margin: 3px 0 2px;
+  color: #795329;
+  font: 600 9px/1.2 Georgia, serif;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  text-shadow: 0 1px 3px rgba(255, 247, 232, .8);
+  opacity: 0;
+  transform: translateY(6px);
+  animation: cinematic-scroll-cue-in .8s .9s ease-out forwards, cinematic-scroll-cue-breathe 2.6s 1.7s ease-in-out infinite;
+}
+.cinematic-journey__scroll-cue-line {
+  width: 34px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(126, 82, 38, .58), transparent);
+}
+.cinematic-journey__scroll-cue-arrow {
+  color: #a67740;
+  font-size: 19px;
+  line-height: .7;
+  letter-spacing: 0;
+}
+@keyframes cinematic-scroll-cue-in {
+  to { opacity: .82; transform: translateY(0); }
+}
+@keyframes cinematic-scroll-cue-breathe {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(3px); }
+}
 
 @media (max-width: 900px) and (orientation: portrait) {
   /* Keep the original sun and its reflection in the narrow portrait crop. */
@@ -197,7 +226,6 @@
   .cinematic-journey__art { width: 100%; }
   .cinematic-journey__bottom { padding-bottom: 4px; }
   .cinematic-journey__hint { font-size: 11px; letter-spacing: .1em; }
-  .cinematic-journey__skip { font-size: 10px; }
 }
 @media (max-height: 600px) {
   .cinematic-journey__copy { padding-top: 0; }
@@ -209,5 +237,6 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .cinematic-journey__hint, .cinematic-journey__progress span { transition: none; }
+  .cinematic-journey__scroll-cue { animation: none; opacity: .82; transform: none; }
   .cinematic-journey__sea { animation: none; }
 }
