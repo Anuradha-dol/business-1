@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent } from 'react';
 
 const MUSIC_START = 20;
-const AMBIENCE_LEVEL = 0.65;
+const AMBIENCE_LEVEL = 0.45;
 const MUSIC_LEVEL = 0.68;
 const AUDIO_BASE = `${import.meta.env.BASE_URL}assets/audio/`;
 
